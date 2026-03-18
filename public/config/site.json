@@ -1,5 +1,5 @@
 {
-  "name": "PHANTOM.AI",
+  "name": "AA.AI",
   "author": "PHANTOM.AI",
   "email": "hello@phantom.ai",
   "copyrightYear": 2026,
@@ -10,11 +10,26 @@
     "linkedin": "https://linkedin.com"
   },
   "navItems": [
-    { "name": "nav.home", "path": "/" },
-    { "name": "nav.portfolio", "path": "/portfolio" },
-    { "name": "nav.ml-lab", "path": "/ml-lab" },
-    { "name": "nav.articles", "path": "/articles" },
-    { "name": "nav.about", "path": "/about" }
+    {
+      "name": "nav.home",
+      "path": "/"
+    },
+    {
+      "name": "nav.portfolio",
+      "path": "/portfolio"
+    },
+    {
+      "name": "nav.ml-lab",
+      "path": "/ml-lab"
+    },
+    {
+      "name": "nav.articles",
+      "path": "/articles"
+    },
+    {
+      "name": "nav.about",
+      "path": "/about"
+    }
   ],
   "hero": {
     "previewImage": "https://images.unsplash.com/photo-1639322537228-f710d846310a?q=80&w=1000&auto=format&fit=crop"
