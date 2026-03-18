@@ -1,0 +1,78 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+@import "tailwindcss";
+@plugin "@tailwindcss/typography";
+
+@theme {
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
+  
+  --color-brand-bg: var(--bg);
+  --color-brand-card: var(--card);
+  --color-brand-text: var(--text);
+  --color-brand-muted: var(--muted);
+  --color-brand-border: var(--border);
+  --color-brand-accent: var(--accent);
+}
+
+:root {
+  --bg: #fdfdfc; /* 极淡的暖白，减少蓝光刺激 */
+  --card: #f5f5f2;
+  --text: #1a1a1a; /* 柔和的深灰黑，而非纯黑 */
+  --muted: #6b6b6b;
+  --border: rgba(0, 0, 0, 0.06);
+  --accent: #2d2d2d;
+}
+
+.dark {
+  --bg: #141414; /* 稍微柔和的深灰，比纯黑更有质感 */
+  --card: #1c1c1c;
+  --text: #cecece; /* 降低文字亮度，减少在深色背景上的“光晕”效应 */
+  --muted: #7a7a7a;
+  --border: rgba(255, 255, 255, 0.05);
+  --accent: #d4d4d4;
+}
+
+@layer base {
+  body {
+    @apply bg-brand-bg text-brand-text font-sans selection:bg-brand-text selection:text-brand-bg;
+    -webkit-font-smoothing: antialiased;
+    transition: background-color 0.3s ease, color 0.3s ease;
+  }
+}
+
+@layer utilities {
+  .glass {
+    @apply bg-brand-text/[0.03] backdrop-blur-md border border-brand-border;
+  }
+  
+  .text-gradient {
+    @apply bg-clip-text text-transparent bg-gradient-to-b from-brand-text to-brand-text/40;
+  }
+  
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+/* Custom scrollbar for non-hidden cases */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--muted);
+}

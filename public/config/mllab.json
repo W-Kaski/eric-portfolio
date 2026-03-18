@@ -1,0 +1,33 @@
+{
+  "modules": [
+    {
+      "id": "rag-arch",
+      "category": "Architecture",
+      "folder": "NLP",
+      "date": "2024-03-10",
+      "image": "https://picsum.photos/seed/rag/1200/800"
+    },
+    {
+      "id": "latent-space",
+      "category": "Visualization",
+      "folder": "Embeddings",
+      "date": "2024-03-05",
+      "image": "https://picsum.photos/seed/latent/1200/800"
+    },
+    {
+      "id": "training-metrics",
+      "category": "Monitoring",
+      "folder": "Training",
+      "date": "2024-02-28",
+      "image": "https://picsum.photos/seed/metrics/1200/800"
+    },
+    {
+      "id": "core-logic",
+      "category": "Code",
+      "folder": "Implementation",
+      "date": "2024-02-15",
+      "image": "https://picsum.photos/seed/code/1200/800",
+      "snippet": "def retrieve_and_generate(query, db, llm):\n    # 1. Semantic Search\n    docs = db.similarity_search(query, k=3)\n    \n    # 2. Context Augmentation\n    context = \"\\n\".join([d.page_content for d in docs])\n    \n    # 3. Prompt Engineering\n    prompt = f\"\"\"\n    Use the context below to answer:\n    Context: {context}\n    Question: {query}\n    \"\"\"\n    \n    # 4. Inference\n    return llm.generate(prompt)"
+    }
+  ]
+}
