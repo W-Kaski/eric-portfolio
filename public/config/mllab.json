@@ -2,6 +2,10 @@
   "modules": [
     {
       "id": "rag-arch",
+      "featured": true,
+      "title": "RAG Pipeline Architecture",
+      "description": "End-to-end retrieval-augmented generation: from query embedding through vector search to grounded LLM response.",
+      "tags": ["NLP", "Architecture", "LLM"],
       "category": "Architecture",
       "folder": "NLP",
       "date": "2024-03-10",
@@ -9,6 +13,10 @@
     },
     {
       "id": "latent-space",
+      "featured": false,
+      "title": "Latent Space Explorer",
+      "description": "Interactive 3D visualization of high-dimensional word embeddings projected into navigable latent space.",
+      "tags": ["Embeddings", "3D", "Visualization"],
       "category": "Visualization",
       "folder": "Embeddings",
       "date": "2024-03-05",
@@ -16,6 +24,10 @@
     },
     {
       "id": "training-metrics",
+      "featured": false,
+      "title": "Training Convergence Monitor",
+      "description": "Real-time plotting of loss and accuracy curves across training epochs to diagnose model convergence.",
+      "tags": ["Training", "Monitoring", "PyTorch"],
       "category": "Monitoring",
       "folder": "Training",
       "date": "2024-02-28",
@@ -23,6 +35,10 @@
     },
     {
       "id": "core-logic",
+      "featured": false,
+      "title": "Core RAG Implementation",
+      "description": "Annotated Python walkthrough of the retrieval, augmentation, and generation steps in a minimal RAG pipeline.",
+      "tags": ["Python", "LangChain", "Code"],
       "category": "Code",
       "folder": "Implementation",
       "date": "2024-02-15",

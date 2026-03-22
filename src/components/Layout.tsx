@@ -1,6 +1,6 @@
 import React from 'react';
 import Navbar from './Navbar';
-import MusicPlayer from './MusicPlayer';
+// ...existing code...
 import { motion } from 'motion/react';
 import { useLocation } from 'react-router-dom';
 import { useConfig } from '../context/ConfigContext';
@@ -37,6 +37,7 @@ export default function Layout({ children }: LayoutProps) {
   return (
     <div className="min-h-screen flex flex-col overflow-x-hidden">
       <Navbar />
+      {/* MusicPlayer removed */}
       <motion.main
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
@@ -56,7 +57,7 @@ export default function Layout({ children }: LayoutProps) {
         </footer>
       )}
 
-      <MusicPlayer />
+      {/* MusicPlayer removed */}
     </div>
   );
 }

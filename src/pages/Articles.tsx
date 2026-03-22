@@ -213,55 +213,45 @@ export default function Articles() {
   }
 
   return (
-    <div className="px-6 max-w-7xl mx-auto pb-32">
-      <header className="mb-20">
-        <h1 className="text-5xl md:text-7xl font-bold tracking-tighter mb-6">{t('articles.title')}</h1>
-        <p className="text-brand-muted text-lg max-w-xl">{t('articles.subtitle')}</p>
-      </header>
+    <div className="px-6 max-w-7xl mx-auto pb-32 pt-2">
+      {/* Header + Controls — single row */}
+      <div className="flex items-center justify-between mb-12 border-b border-brand-border pb-5">
+        <h1 className="text-2xl font-bold tracking-tighter">{t('articles.title')}</h1>
 
-      {/* Controls */}
-      <div className="flex flex-col md:flex-row gap-6 mb-12 items-start md:items-center justify-between border-y border-brand-border py-6">
-        <div className="flex flex-wrap gap-4 items-center">
-          <div className="flex items-center gap-2 text-brand-muted text-sm font-medium">
-            <Filter size={16} /> {t('articles.filter')}:
-          </div>
-          <select 
-            value={activeCategory} 
-            onChange={(e) => setActiveCategory(e.target.value)}
-            className="bg-brand-card border border-brand-border rounded-lg px-3 py-1.5 text-sm focus:outline-none focus:ring-1 focus:ring-brand-text/20"
-          >
-            {categories.map(c => <option key={c} value={c}>{c}</option>)}
-          </select>
-
-          <div className="flex items-center gap-2 text-brand-muted text-sm font-medium ml-4">
-            <Folder size={16} /> {t('articles.folder')}:
-          </div>
-          <select 
-            value={activeFolder} 
-            onChange={(e) => setActiveFolder(e.target.value)}
-            className="bg-brand-card border border-brand-border rounded-lg px-3 py-1.5 text-sm focus:outline-none focus:ring-1 focus:ring-brand-text/20"
-          >
-            {folders.map(f => <option key={f} value={f}>{f}</option>)}
-          </select>
-        </div>
-
-        <div className="flex items-center gap-4">
-          <div className="flex items-center gap-2 text-brand-muted text-sm font-medium">
-            <SortAsc size={16} /> {t('articles.sort')}:
-          </div>
-          <div className="flex bg-brand-card border border-brand-border rounded-lg overflow-hidden">
-            <button 
-              onClick={() => setSortBy('date')}
-              className={cn("px-4 py-1.5 text-xs font-bold uppercase transition-colors", sortBy === 'date' ? 'bg-brand-text text-brand-bg' : 'hover:bg-brand-text/5')}
+        <div className="flex items-center gap-6">
+          {/* Folder */}
+          <div className="flex items-center gap-2">
+            <div className="flex items-center gap-1.5 text-brand-muted text-sm font-medium">
+              <Folder size={14} /> {t('articles.folder')}:
+            </div>
+            <select 
+              value={activeFolder} 
+              onChange={(e) => setActiveFolder(e.target.value)}
+              className="bg-brand-card border border-brand-border rounded-lg px-3 py-1.5 text-sm focus:outline-none focus:ring-1 focus:ring-brand-text/20 appearance-none cursor-pointer hover:bg-brand-text/5 transition-colors"
             >
-              {t('articles.sort.date')}
-            </button>
-            <button 
-              onClick={() => setSortBy('title')}
-              className={cn("px-4 py-1.5 text-xs font-bold uppercase transition-colors", sortBy === 'title' ? 'bg-brand-text text-brand-bg' : 'hover:bg-brand-text/5')}
-            >
-              {t('articles.sort.title')}
-            </button>
+              {folders.map(f => <option key={f} value={f}>{f}</option>)}
+            </select>
+          </div>
+
+          {/* Sort */}
+          <div className="flex items-center gap-2">
+            <div className="flex items-center gap-1.5 text-brand-muted text-sm font-medium">
+              <SortAsc size={14} /> {t('articles.sort')}:
+            </div>
+            <div className="flex bg-brand-card border border-brand-border rounded-lg overflow-hidden">
+              <button 
+                onClick={() => setSortBy('date')}
+                className={cn("px-3 py-1.5 text-xs font-bold uppercase transition-colors", sortBy === 'date' ? 'bg-brand-text text-brand-bg' : 'text-brand-muted hover:bg-brand-text/5')}
+              >
+                {t('articles.sort.date')}
+              </button>
+              <button 
+                onClick={() => setSortBy('title')}
+                className={cn("px-3 py-1.5 text-xs font-bold uppercase transition-colors", sortBy === 'title' ? 'bg-brand-text text-brand-bg' : 'text-brand-muted hover:bg-brand-text/5')}
+              >
+                {t('articles.sort.title')}
+              </button>
+            </div>
           </div>
         </div>
       </div>

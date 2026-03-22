@@ -15,21 +15,21 @@
 }
 
 :root {
-  --bg: #fdfdfc; /* 极淡的暖白，减少蓝光刺激 */
-  --card: #f5f5f2;
-  --text: #1a1a1a; /* 柔和的深灰黑，而非纯黑 */
-  --muted: #6b6b6b;
-  --border: rgba(0, 0, 0, 0.06);
-  --accent: #2d2d2d;
+  --bg:     #FAF8F5; /* warm parchment — amber undertone */
+  --card:   #F2EEE8; /* slightly deeper warm white */
+  --text:   #1C1813; /* rich espresso, not pure black */
+  --muted:  #7A7168; /* warm taupe */
+  --border: rgba(60, 45, 20, 0.08); /* amber-tinted border */
+  --accent: #2E2820;
 }
 
 .dark {
-  --bg: #141414; /* 稍微柔和的深灰，比纯黑更有质感 */
-  --card: #1c1c1c;
-  --text: #cecece; /* 降低文字亮度，减少在深色背景上的“光晕”效应 */
-  --muted: #7a7a7a;
-  --border: rgba(255, 255, 255, 0.05);
-  --accent: #d4d4d4;
+  --bg:     #18140F; /* deep espresso — warm, not cold */
+  --card:   #211D17; /* slightly lighter warm dark */
+  --text:   #D8D0C4; /* warm off-white, like candlelight */
+  --muted:  #7D7569; /* warm gray */
+  --border: rgba(220, 190, 140, 0.07); /* amber-tinted border */
+  --accent: #CFC5B4;
 }
 
 @layer base {

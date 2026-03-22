@@ -4,6 +4,10 @@ category: Machine Learning
 image: "https://picsum.photos/seed/p4/800/600"
 color: "#F59E0B"
 date: 2025-02-01
+tech: [Python, FastAPI, HuggingFace, Redis]
+github: "https://github.com"
+demo: ""
+featured: false
 ---
 
 Real-time sentiment analysis pipeline that processes social media feeds to gauge public opinion on trending topics. Uses fine-tuned LLMs for context-aware emotion detection.

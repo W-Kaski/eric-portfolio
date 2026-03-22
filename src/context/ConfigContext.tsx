@@ -27,6 +27,10 @@ interface AboutConfig {
 interface MLLabConfig {
   modules: {
     id: string;
+    featured?: boolean;
+    title?: string;
+    description?: string;
+    tags?: string[];
     category: string;
     folder: string;
     date: string;

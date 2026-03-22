@@ -14,6 +14,10 @@ export interface ProjectData {
   color: string;
   date: string; // YYYY-MM
   description: string;
+  tech: string[];
+  github: string;
+  demo: string;
+  featured: boolean;
 }
 
 export async function getAllProjects(): Promise<ProjectData[]> {
@@ -29,13 +33,12 @@ export async function getAllProjects(): Promise<ProjectData[]> {
     const pathParts = path.split('/');
     const id = pathParts[pathParts.length - 1].replace('.md', '');
 
-    // Format date specifically as YYYY-MM per standard UI requirement if string date given
     let formattedDate = data.date || '';
     if (formattedDate && typeof formattedDate !== 'string') {
-        const d = new Date(formattedDate);
-        formattedDate = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`;
+      const d = new Date(formattedDate);
+      formattedDate = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`;
     } else if (typeof formattedDate === 'string' && formattedDate.length >= 7) {
-        formattedDate = formattedDate.substring(0, 7);
+      formattedDate = formattedDate.substring(0, 7);
     }
 
     projects.push({
@@ -46,9 +49,12 @@ export async function getAllProjects(): Promise<ProjectData[]> {
       image: data.image || '',
       color: data.color || '#333333',
       description: body || '',
+      tech: data.tech || [],
+      github: data.github || '',
+      demo: data.demo || '',
+      featured: data.featured ?? false,
     });
   }
 
-  // Sort by date descending
   return projects.sort((a, b) => b.date.localeCompare(a.date));
 }
