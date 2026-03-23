@@ -136,8 +136,10 @@ export default function ProjectDetail() {
 
 
       {/* Markdown body */}
-      <div className="prose prose-invert max-w-none markdown-body">
-        <ReactMarkdown>{project.description}</ReactMarkdown>
+      <div className="prose prose-neutral dark:prose-invert max-w-none">
+        <div className="markdown-body text-brand-text/85 leading-[1.8] text-lg font-light">
+          <ReactMarkdown>{project.description}</ReactMarkdown>
+        </div>
       </div>
     </motion.div>
   );
