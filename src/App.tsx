@@ -10,6 +10,7 @@ import MLLab from './pages/MLLab';
 import Articles from './pages/Articles';
 import About from './pages/About';
 
+
 export default function App() {
   return (
     <ConfigProvider>
@@ -23,6 +24,7 @@ export default function App() {
               <Route path="/ml-lab" element={<MLLab />} />
               <Route path="/articles" element={<Articles />} />
               <Route path="/about" element={<About />} />
+
             </Routes>
           </Layout>
         </Router>
