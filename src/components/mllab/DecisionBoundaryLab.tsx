@@ -109,7 +109,7 @@ export default function DecisionBoundaryLab() {
         data[idx] = r;
         data[idx+1] = g;
         data[idx+2] = b;
-        data[idx+3] = 180; // Alpha
+        data[idx+3] = 220; // Alpha
       }
     }
     
@@ -118,16 +118,16 @@ export default function DecisionBoundaryLab() {
   }, [points, model]);
 
   return (
-    <div className="h-full flex flex-col p-6 rounded-3xl bg-black/20">
+    <div className="h-full flex flex-col p-6 bg-transparent">
       
       {/* Toolbar */}
       <div className="flex flex-wrap items-center justify-between mb-6 gap-4">
         
-        <div className="flex gap-2 bg-black/40 p-1 rounded-xl">
+        <div className="flex gap-2 bg-white/5 p-1 border border-white/10">
           {(['logistic', 'svm_rbf', 'nn'] as const).map(m => (
             <button key={m} onClick={() => setModel(m)}
-              className={`px-4 py-2 rounded-lg text-xs font-bold tracking-widest uppercase transition-colors ${
-                model === m ? 'bg-brand-text text-brand-bg' : 'text-brand-muted hover:text-white hover:bg-white/5'
+              className={`px-4 py-2 text-[10px] font-bold tracking-[0.2em] uppercase transition-colors ${
+                model === m ? 'bg-brand-text text-brand-bg' : 'text-white/70 hover:text-white hover:bg-white/5'
               }`}>
               {m === 'logistic' ? 'Logistic' : m === 'svm_rbf' ? 'SVM (RBF)' : 'Neural Net'}
             </button>
@@ -138,38 +138,39 @@ export default function DecisionBoundaryLab() {
           <div className="flex gap-2">
             {[0, 1].map(cls => (
               <button key={cls} onClick={() => setActiveClass(cls as 0|1)}
-                className={`w-8 h-8 rounded-full border-2 transition-transform ${
+                className={`w-6 h-6 border transition-transform ${
                   activeClass === cls ? 'scale-110 border-white' : 'border-transparent opacity-50 hover:opacity-100'
                 }`}
                 style={{ backgroundColor: colors[cls] }}
               />
             ))}
           </div>
-          <button onClick={() => setPoints([])} className="text-brand-muted hover:text-white">
-            <RefreshCw size={16} />
+          <button onClick={() => setPoints([])} className="text-brand-muted hover:text-white transition-colors">
+            <RefreshCw size={14} />
           </button>
         </div>
       </div>
 
       {/* Canvas Area */}
-      <div className="relative flex-grow rounded-2xl overflow-hidden border border-white/10 cursor-crosshair">
+      <div className="relative flex-grow overflow-hidden border border-white/10 cursor-crosshair bg-black/20">
         <canvas
           ref={canvasRef}
-          width={100} // low res for performance, CSS scales it up
+          width={100} 
           height={100}
           onClick={handleCanvasClick}
-          className="w-full h-full absolute inset-0 object-cover opacity-80"
+          className="w-full h-full absolute inset-0 object-cover opacity-85"
           style={{ imageRendering: 'pixelated' }}
         />
         
-        {/* Render Points via SVG overlay so they stay crisp */}
+        {/* Render Points via SVG overlay */}
         <svg className="absolute inset-0 w-full h-full pointer-events-none" viewBox="0 0 100 100" preserveAspectRatio="none">
           {points.map((p, i) => (
-            <circle
+            <rect
               key={i}
-              cx={p.x}
-              cy={p.y}
-              r={2}
+              x={p.x - 2}
+              y={p.y - 2}
+              width={4}
+              height={4}
               fill={colors[p.cls]}
               stroke="white"
               strokeWidth={0.5}
@@ -178,9 +179,9 @@ export default function DecisionBoundaryLab() {
         </svg>
 
         {points.length === 0 && (
-          <div className="absolute inset-0 flex flex-col items-center justify-center text-white/50 pointer-events-none">
-            <MousePointer2 size={32} className="mb-2 opacity-50" />
-            <p className="text-sm font-bold tracking-wider uppercase text-center">Click anywhere to<br/>add data points</p>
+          <div className="absolute inset-0 flex flex-col items-center justify-center text-white/30 pointer-events-none">
+            <MousePointer2 size={24} className="mb-3 opacity-30" />
+            <p className="text-[10px] font-bold tracking-[0.3em] uppercase text-center">Add Data Points</p>
           </div>
         )}
       </div>

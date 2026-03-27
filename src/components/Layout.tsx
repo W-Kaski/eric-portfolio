@@ -35,13 +35,13 @@ export default function Layout({ children }: LayoutProps) {
   const isFullScreen = isPortfolio || isHome;
 
   return (
-    <div className="min-h-screen flex flex-col overflow-x-hidden">
+    <div className="min-h-screen flex flex-col">
       <Navbar />
       {/* MusicPlayer removed */}
       <motion.main
-        initial={{ opacity: 0, y: 10 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5, ease: 'easeOut' }}
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.4 }}
         className={`flex-grow ${isFullScreen ? 'h-screen overflow-hidden' : 'pt-24'}`}
       >
         {children}

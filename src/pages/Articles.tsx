@@ -2,6 +2,8 @@ import React, { useState, useEffect, useMemo } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
+import remarkMath from 'remark-math';
+import rehypeKatex from 'rehype-katex';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { vscDarkPlus, prism } from 'react-syntax-highlighter/dist/esm/styles/prism';
 import { cn } from '@/src/lib/utils';
@@ -98,9 +100,9 @@ export default function Articles() {
   if (selectedArticle) {
     return (
       <div className="px-6 max-w-7xl mx-auto pb-32">
-        <div className="flex flex-col lg:flex-row gap-12">
+        <div className="flex flex-col lg:flex-row items-start gap-12">
           {/* Sidebar Outline */}
-          <aside className="hidden lg:block w-64 flex-shrink-0 sticky top-24 h-fit">
+          <aside className="hidden lg:block w-64 flex-shrink-0 sticky top-24 h-fit z-10">
             <div className="flex items-center gap-2 text-xs font-bold tracking-widest uppercase text-brand-muted mb-6">
               <List size={14} /> {t('articles.outline')}
             </div>
@@ -150,9 +152,10 @@ export default function Articles() {
             </header>
 
             <div className="prose prose-neutral dark:prose-invert max-w-none">
-              <div className="markdown-body text-brand-text/85 leading-[1.8] text-lg font-light">
+              <div className="text-brand-text/90 leading-[1.8] text-lg font-light prose-headings:text-brand-text prose-p:text-brand-text/90 prose-strong:text-brand-text prose-ul:text-brand-text/90">
                 <ReactMarkdown
-                  remarkPlugins={[remarkGfm]}
+                  remarkPlugins={[remarkGfm, remarkMath]}
+                  rehypePlugins={[rehypeKatex]}
                   components={{
                     h1: ({ children }) => {
                       const id = String(children).toLowerCase().replace(/[^\w\s-]/g, '').replace(/\s+/g, '-');
@@ -276,13 +279,13 @@ export default function Articles() {
               >
                 <div className="flex flex-col md:flex-row gap-8">
                   <div className="flex-grow">
-                    <div className="flex items-center gap-4 mb-4 text-[10px] font-bold tracking-[0.2em] uppercase text-brand-muted/60">
+                    <div className="flex items-center gap-4 mb-4 text-[10px] font-bold tracking-[0.2em] uppercase text-brand-muted">
                       <span className="flex items-center gap-1.5"><Folder size={12} /> {article.folder}</span>
                       <span className="w-1 h-1 bg-brand-border rounded-full" />
                       <span className="flex items-center gap-1.5"><Calendar size={12} /> {article.date}</span>
                     </div>
-                    <h2 className="text-3xl md:text-4xl font-bold mb-5 group-hover:translate-x-2 transition-transform duration-500 text-brand-text/90">{article.title}</h2>
-                    <p className="text-brand-muted/80 leading-relaxed mb-8 max-w-2xl font-light">{article.excerpt}</p>
+                    <h2 className="text-3xl md:text-4xl font-bold mb-5 group-hover:translate-x-2 transition-transform duration-500 text-brand-text">{article.title}</h2>
+                    <p className="text-brand-text/70 leading-relaxed mb-8 max-w-2xl font-light">{article.excerpt}</p>
                     <div className="flex flex-wrap gap-2">
                       {article.tags.map(tag => (
                         <span key={tag} className="text-[9px] font-bold tracking-widest uppercase px-2.5 py-1 bg-brand-muted/5 text-brand-muted/70 rounded border border-brand-border">{tag}</span>

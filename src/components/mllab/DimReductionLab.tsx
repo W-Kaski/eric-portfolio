@@ -8,7 +8,6 @@ export default function DimReductionLab() {
   const [algo, setAlgo] = useState<Algorithm>('tsne');
 
   const points = useMemo(() => {
-    // Generate some clusters based on the algorithm selected
     const clusters = [
       { center: [5, 5, 5], color: '#3B82F6' }, // Blue
       { center: [-5, -5, -5], color: '#EF4444' }, // Red
@@ -18,15 +17,12 @@ export default function DimReductionLab() {
     let items: any[] = [];
     clusters.forEach(c => {
       for (let i = 0; i < 150; i++) {
-        // PCA: more spread out, less clustered
-        // t-SNE: tight clusters
-        // UMAP: very tight, preserving topological structure
         const spread = algo === 'pca' ? 8 : algo === 'tsne' ? 2 : 1.5;
         items.push({
           position: [
             c.center[0] + (Math.random() - 0.5) * spread,
             c.center[1] + (Math.random() - 0.5) * spread,
-            algo === 'pca' ? c.center[2] + (Math.random() - 0.5) * spread : (Math.random() - 0.5) * spread * 0.5 // t-SNE/UMAP tend to flatten
+            algo === 'pca' ? c.center[2] + (Math.random() - 0.5) * spread : (Math.random() - 0.5) * spread * 0.5
           ],
           color: c.color,
         });
@@ -36,14 +32,14 @@ export default function DimReductionLab() {
   }, [algo]);
 
   return (
-    <div className="h-full flex flex-col relative overflow-hidden bg-black/50 rounded-3xl">
+    <div className="h-full flex flex-col relative overflow-hidden bg-transparent">
       
-      <div className="absolute top-6 left-6 z-10">
-        <div className="flex bg-black/40 p-1 rounded-xl backdrop-blur-md border border-white/10">
+      <div className="absolute top-8 left-8 z-10">
+        <div className="flex bg-white/5 p-1 border border-white/10 backdrop-blur-md">
           {(['pca', 'tsne', 'umap'] as Algorithm[]).map(a => (
             <button key={a} onClick={() => setAlgo(a)}
-              className={`px-4 py-2 rounded-lg text-xs font-bold tracking-widest uppercase transition-colors ${
-                algo === a ? 'bg-brand-text text-brand-bg' : 'text-brand-muted hover:text-white hover:bg-white/5'
+              className={`px-5 py-2 text-[10px] font-bold tracking-[0.2em] uppercase transition-colors ${
+                algo === a ? 'bg-brand-text text-brand-bg' : 'text-white/70 hover:text-white hover:bg-white/5'
               }`}>
               {a.toUpperCase()}
             </button>
@@ -59,8 +55,8 @@ export default function DimReductionLab() {
           <group>
             {points.map((p, i) => (
               <mesh key={i} position={p.position as [number, number, number]}>
-                <sphereGeometry args={[0.15, 8, 8]} />
-                <meshBasicMaterial color={p.color} transparent opacity={0.6} />
+                <boxGeometry args={[0.5, 0.5, 0.5]} />
+                <meshBasicMaterial color={p.color} transparent={false} opacity={1.0} />
               </mesh>
             ))}
           </group>
@@ -70,8 +66,8 @@ export default function DimReductionLab() {
         </Canvas>
       </div>
       
-      <div className="absolute bottom-6 left-6 z-10 pointer-events-none text-brand-muted text-xs font-mono">
-        Drag to rotate. Scroll to zoom.
+      <div className="absolute bottom-8 left-8 z-10 pointer-events-none text-brand-muted text-[9px] font-bold tracking-widest uppercase opacity-40">
+        Orbit: Drag / Zoom: Scroll
       </div>
     </div>
   );

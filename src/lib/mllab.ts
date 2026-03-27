@@ -20,7 +20,7 @@ export interface LabData {
 }
 
 export async function getAllLabs(): Promise<LabData[]> {
-  const modules = import.meta.glob('/src/content/mllab/*.md', { query: '?raw', import: 'default' });
+  const modules = import.meta.glob('/src/content/mllab/**/*.md', { query: '?raw', import: 'default' });
   
   const labs: LabData[] = [];
 
@@ -28,16 +28,20 @@ export async function getAllLabs(): Promise<LabData[]> {
     const rawContent = await modules[path]() as string;
     const { data, content: body } = matter(rawContent);
     
-    // Extract file name as ID
+    // Extract file name as ID and folder from path
     const pathParts = path.split('/');
     const id = pathParts[pathParts.length - 1].replace('.md', '');
+    
+    let folder = 'General';
+    if (pathParts.length >= 5) { // /src/content/mllab/FOLDER/FILE.md
+       folder = pathParts[pathParts.length - 2];
+       if (folder === 'mllab') folder = 'General';
+    }
 
-    let formattedDate = data.date || '';
-    if (formattedDate && typeof formattedDate !== 'string') {
-      const d = new Date(formattedDate);
-      formattedDate = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`;
-    } else if (typeof formattedDate === 'string' && formattedDate.length >= 7) {
-      formattedDate = formattedDate.substring(0, 7);
+    let formattedDate = '';
+    if (data.date) {
+      const d = new Date(data.date);
+      formattedDate = d.toISOString().split('T')[0];
     }
 
     labs.push({
@@ -45,7 +49,7 @@ export async function getAllLabs(): Promise<LabData[]> {
       title: data.title || id,
       date: formattedDate,
       category: data.category || 'ML Lab',
-      folder: data.folder || 'Models',
+      folder: folder,
       description: data.description || '',
       tags: data.tags || [],
       featured: data.featured ?? false,
