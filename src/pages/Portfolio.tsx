@@ -34,10 +34,11 @@ const LoopingPacMan = ({ springX }: { springX: MotionValue<number> }) => {
   return (
     <motion.div
       className="absolute pointer-events-none z-20"
-      style={{ left: '50%', top: 'calc(50% - 52px)', translateX: '-50%', opacity }}
+      style={{ left: '50%', top: '50%', translateX: '-50%', translateY: '-50%', opacity }}
     >
       <PacManPhantom />
     </motion.div>
+
   );
 };
 
@@ -171,13 +172,18 @@ export default function Portfolio() {
             {t('portfolio.title')}
           </motion.h1>
           <div className="flex items-center gap-6">
-            {['AI', 'WEB', 'DATA'].map(cat => (
-              <div key={cat} className="flex items-center gap-2">
-                <div className="w-1 h-1 rounded-full bg-brand-text/30" />
-                <span className="text-[9px] font-bold uppercase tracking-widest text-brand-muted/50">{cat}</span>
+            {[
+              { name: 'AI', color: '#8B5CF6' },
+              { name: 'WEB', color: '#3B82F6' },
+              { name: 'DATA', color: '#10B981' }
+            ].map(cat => (
+              <div key={cat.name} className="flex items-center gap-2">
+                <div className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: cat.color }} />
+                <span className="text-[9px] font-bold uppercase tracking-[0.2em]" style={{ color: `${cat.color}CC` }}>{cat.name}</span>
               </div>
             ))}
           </div>
+
         </div>
       </div>
 

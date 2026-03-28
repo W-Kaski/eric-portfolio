@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useMemo } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { motion, AnimatePresence } from 'motion/react';
 import {
   Folder, Calendar, ArrowLeft, Tag, Maximize2, SortAsc, ArrowRight,
@@ -128,6 +129,9 @@ const MiniCodePreview = ({ snippet }: { snippet?: string }) => {
 
 export default function MLLab() {
   const { t } = useApp();
+  const [searchParams, setSearchParams] = useSearchParams();
+  const targetId = searchParams.get('id');
+  
   const [modules, setModules] = useState<LabData[]>([]);
   const [loading, setLoading] = useState(true);
   
@@ -188,8 +192,16 @@ export default function MLLab() {
     getAllLabs().then(data => {
       setModules(data);
       setLoading(false);
+      
+      // Handle deep linking from URL
+      if (targetId) {
+        const module = data.find(m => m.id === targetId);
+        if (module) {
+          setSelectedModule(module);
+        }
+      }
     });
-  }, []);
+  }, [targetId]);
 
   const folders = useMemo(() => {
     const uniqueFolders = [...new Set(modules.map(m => m.folder))].sort();
@@ -257,7 +269,10 @@ export default function MLLab() {
           {/* Main Content */}
           <div className="flex-grow max-w-3xl">
             <button 
-              onClick={() => setSelectedModule(null)}
+              onClick={() => {
+                setSelectedModule(null);
+                setSearchParams({}); // Clear query param when going back
+              }}
               className="flex items-center gap-2 text-brand-muted hover:text-brand-text mb-12 transition-colors group"
             >
               <ArrowLeft size={18} className="group-hover:-translate-x-1 transition-transform" />

@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useMemo } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { motion, AnimatePresence } from 'motion/react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
@@ -21,6 +22,9 @@ interface Header {
 
 export default function Articles() {
   const { t, theme } = useApp();
+  const [searchParams, setSearchParams] = useSearchParams();
+  const targetId = searchParams.get('id');
+  
   const [articles, setArticles] = useState<Article[]>([]);
   const [selectedArticle, setSelectedArticle] = useState<Article | null>(null);
   const [activeCategory, setActiveCategory] = useState<string>(t('common.all'));
@@ -33,8 +37,16 @@ export default function Articles() {
     getAllArticles().then(data => {
       setArticles(data);
       setLoading(false);
+      
+      // Handle deep linking from URL
+      if (targetId) {
+        const article = data.find(a => a.id === targetId);
+        if (article) {
+          setSelectedArticle(article);
+        }
+      }
     });
-  }, []);
+  }, [targetId]);
 
   const categories = useMemo(() => [t('common.all'), ...new Set(articles.map(a => a.category))], [articles, t]);
   const folders = useMemo(() => [t('common.all'), ...new Set(articles.map(a => a.folder))], [articles, t]);
@@ -129,7 +141,10 @@ export default function Articles() {
           {/* Main Content */}
           <div className="flex-grow max-w-3xl">
             <button 
-              onClick={() => setSelectedArticle(null)}
+              onClick={() => {
+                setSelectedArticle(null);
+                setSearchParams({}); // Clear query param when going back
+              }}
               className="flex items-center gap-2 text-brand-muted hover:text-brand-text mb-12 transition-colors group"
             >
               <ArrowLeft size={18} className="group-hover:-translate-x-1 transition-transform" />
@@ -218,19 +233,22 @@ export default function Articles() {
   return (
     <div className="px-6 max-w-7xl mx-auto pb-32 pt-2">
       {/* Header + Controls — single row */}
-      <div className="flex items-center justify-between mb-12 border-b border-brand-border pb-5">
-        <h1 className="text-2xl font-bold tracking-tighter">{t('articles.title')}</h1>
+      <div className="flex items-center justify-between mb-16 border-b border-brand-border/40 pb-6">
+        <div className="space-y-1">
+          <h1 className="text-3xl font-black tracking-tighter uppercase">{t('articles.title')}</h1>
+          <p className="text-[10px] font-mono text-brand-muted/60 uppercase tracking-widest">Digital Archive / Knowledge Base</p>
+        </div>
 
         <div className="flex items-center gap-6">
           {/* Folder */}
-          <div className="flex items-center gap-2">
-            <div className="flex items-center gap-1.5 text-brand-muted text-sm font-medium">
-              <Folder size={14} /> {t('articles.folder')}:
+          <div className="hidden sm:flex items-center gap-2">
+            <div className="flex items-center gap-1.5 text-brand-muted text-[10px] font-bold uppercase tracking-widest">
+              <Folder size={12} /> {t('articles.folder')}:
             </div>
             <select 
               value={activeFolder} 
               onChange={(e) => setActiveFolder(e.target.value)}
-              className="bg-brand-card border border-brand-border rounded-lg px-3 py-1.5 text-sm focus:outline-none focus:ring-1 focus:ring-brand-text/20 appearance-none cursor-pointer hover:bg-brand-text/5 transition-colors"
+              className="bg-brand-card border border-brand-border rounded-lg px-3 py-1.5 text-[10px] font-bold uppercase tracking-widest focus:outline-none focus:ring-1 focus:ring-brand-text/20 appearance-none cursor-pointer hover:bg-brand-text/5 transition-colors"
             >
               {folders.map(f => <option key={f} value={f}>{f}</option>)}
             </select>
@@ -238,19 +256,16 @@ export default function Articles() {
 
           {/* Sort */}
           <div className="flex items-center gap-2">
-            <div className="flex items-center gap-1.5 text-brand-muted text-sm font-medium">
-              <SortAsc size={14} /> {t('articles.sort')}:
-            </div>
             <div className="flex bg-brand-card border border-brand-border rounded-lg overflow-hidden">
               <button 
                 onClick={() => setSortBy('date')}
-                className={cn("px-3 py-1.5 text-xs font-bold uppercase transition-colors", sortBy === 'date' ? 'bg-brand-text text-brand-bg' : 'text-brand-muted hover:bg-brand-text/5')}
+                className={cn("px-3 py-1.5 text-[10px] font-bold uppercase transition-colors tracking-widest", sortBy === 'date' ? 'bg-brand-text text-brand-bg' : 'text-brand-muted hover:bg-brand-text/5')}
               >
                 {t('articles.sort.date')}
               </button>
               <button 
                 onClick={() => setSortBy('title')}
-                className={cn("px-3 py-1.5 text-xs font-bold uppercase transition-colors", sortBy === 'title' ? 'bg-brand-text text-brand-bg' : 'text-brand-muted hover:bg-brand-text/5')}
+                className={cn("px-3 py-1.5 text-[10px] font-bold uppercase transition-colors tracking-widest", sortBy === 'title' ? 'bg-brand-text text-brand-bg' : 'text-brand-muted hover:bg-brand-text/5')}
               >
                 {t('articles.sort.title')}
               </button>
@@ -264,44 +279,98 @@ export default function Articles() {
           <div className="w-8 h-8 border-2 border-brand-text/20 border-t-brand-text rounded-full animate-spin" />
         </div>
       ) : (
-        <div className="grid grid-cols-1 gap-12">
-          <AnimatePresence mode="popLayout">
-            {filteredAndSortedArticles.map((article, index) => (
-              <motion.article
-                key={article.id}
-                layout
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, scale: 0.95 }}
-                transition={{ delay: index * 0.05 }}
-                onClick={() => setSelectedArticle(article)}
-                className="group cursor-pointer border-b border-brand-border pb-12"
-              >
-                <div className="flex flex-col md:flex-row gap-8">
-                  <div className="flex-grow">
-                    <div className="flex items-center gap-4 mb-4 text-[10px] font-bold tracking-[0.2em] uppercase text-brand-muted">
-                      <span className="flex items-center gap-1.5"><Folder size={12} /> {article.folder}</span>
-                      <span className="w-1 h-1 bg-brand-border rounded-full" />
-                      <span className="flex items-center gap-1.5"><Calendar size={12} /> {article.date}</span>
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12">
+          {/* Main Grid: Articles (65%) */}
+          <div className="lg:col-span-8 space-y-12">
+            <div className="flex items-center gap-4 mb-8">
+               <h2 className="text-xs font-black uppercase tracking-[0.3em] text-brand-muted">Core Articles</h2>
+               <div className="flex-grow h-px bg-brand-border/20" />
+            </div>
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-x-10 gap-y-12">
+              <AnimatePresence mode="popLayout">
+                {filteredAndSortedArticles.filter(a => a.folder !== 'papers').map((article, index) => (
+                  <motion.article
+                    key={article.id}
+                    layout
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, scale: 0.98 }}
+                    transition={{ delay: index * 0.05 }}
+                    onClick={() => setSelectedArticle(article)}
+                    className="group cursor-pointer border-l-2 border-brand-border/20 pl-6 py-2 hover:border-brand-text transition-colors relative"
+                  >
+                    <div className="space-y-3">
+                      <div className="flex items-center gap-4 text-[9px] font-bold tracking-[0.2em] uppercase text-brand-muted/60">
+                        <span>{article.date}</span>
+                        <span className="w-1 h-1 bg-brand-border rounded-full" />
+                        <span>{article.folder}</span>
+                      </div>
+                      <h3 className="text-xl font-bold uppercase tracking-tight group-hover:text-brand-text transition-colors leading-tight">
+                        {article.title}
+                      </h3>
+                      <p className="text-brand-muted text-xs leading-relaxed line-clamp-2 opacity-60 group-hover:opacity-100 transition-opacity">
+                        {article.excerpt}
+                      </p>
+                      <div className="flex flex-wrap gap-1.5 pt-2">
+                        {article.tags.slice(0, 2).map(tag => (
+                          <span key={tag} className="text-[7px] font-bold tracking-widest uppercase px-1.5 py-0.5 bg-brand-muted/5 text-brand-muted/60 border border-brand-border/40">
+                             {tag}
+                          </span>
+                        ))}
+                      </div>
                     </div>
-                    <h2 className="text-3xl md:text-4xl font-bold mb-5 group-hover:translate-x-2 transition-transform duration-500 text-brand-text">{article.title}</h2>
-                    <p className="text-brand-text/70 leading-relaxed mb-8 max-w-2xl font-light">{article.excerpt}</p>
-                    <div className="flex flex-wrap gap-2">
-                      {article.tags.map(tag => (
-                        <span key={tag} className="text-[9px] font-bold tracking-widest uppercase px-2.5 py-1 bg-brand-muted/5 text-brand-muted/70 rounded border border-brand-border">{tag}</span>
-                      ))}
-                    </div>
+                  </motion.article>
+                ))}
+              </AnimatePresence>
+            </div>
+            {filteredAndSortedArticles.filter(a => a.folder !== 'papers').length === 0 && (
+              <div className="py-20 text-center text-brand-muted uppercase text-[10px] font-bold tracking-[0.3em] border border-dashed border-brand-border/40">
+                {t('articles.empty')}
+              </div>
+            )}
+          </div>
+
+          {/* Sidebar: Research Papers (35%) */}
+          <div className="lg:col-span-4 space-y-12 bg-brand-card/20 p-8 border border-brand-border/30 backdrop-blur-sm self-start">
+             <div className="flex items-center gap-4 mb-8">
+                <h2 className="text-xs font-black uppercase tracking-[0.3em] text-brand-text">Research / Papers</h2>
+                <div className="flex-grow h-px bg-brand-text/10" />
+             </div>
+
+             <div className="space-y-8">
+                {filteredAndSortedArticles.filter(a => a.folder === 'papers').length > 0 ? (
+                  filteredAndSortedArticles.filter(a => a.folder === 'papers').map((paper, index) => (
+                    <motion.div 
+                      key={paper.id}
+                      initial={{ opacity: 0, x: 10 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ delay: index * 0.1 }}
+                      onClick={() => setSelectedArticle(paper)}
+                      className="group cursor-pointer space-y-3 border-b border-brand-border/20 pb-8 last:border-0"
+                    >
+                      <div className="flex items-center justify-between gap-3">
+                         <span className="text-[8px] font-mono p-1 bg-brand-text/5 text-brand-muted border border-brand-border/40">DOC_{index+1}</span>
+                         <span className="text-[8px] font-mono text-brand-muted/40 uppercase tracking-widest">{paper.date}</span>
+                      </div>
+                      <h4 className="text-sm font-black uppercase tracking-tight group-hover:text-brand-text transition-colors leading-snug">
+                         {paper.title}
+                      </h4>
+                    </motion.div>
+                  ))
+                ) : (
+                  <div className="py-12 text-center text-[9px] text-brand-muted/40 italic">
+                    NO PUBLISHED PAPERS FOUND.
                   </div>
-                  <div className="hidden md:flex items-center justify-center w-24 h-24 rounded-full border border-brand-border group-hover:bg-brand-text group-hover:text-brand-bg transition-all duration-500">
-                    <ArrowLeft size={32} className="rotate-180" />
-                  </div>
-                </div>
-              </motion.article>
-            ))}
-          </AnimatePresence>
-          {filteredAndSortedArticles.length === 0 && (
-            <div className="text-center py-20 text-brand-muted">{t('articles.empty')}</div>
-          )}
+                )}
+             </div>
+             
+             <div className="pt-8 border-t border-brand-border/20">
+                <p className="text-[9px] leading-relaxed text-brand-muted/60 font-light">
+                  Academic research focusing on geometric machine learning, latent space navigation, and human-computer interaction patterns.
+                </p>
+             </div>
+          </div>
         </div>
       )}
     </div>

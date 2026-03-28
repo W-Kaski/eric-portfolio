@@ -6,6 +6,8 @@ import { useApp } from '../context/AppContext';
 import { useConfig } from '../context/ConfigContext';
 import { getAllProjects, ProjectData } from '../lib/projects';
 import { getAllArticles, Article } from '../lib/articles';
+import { getAllLabs, LabData } from '../lib/mllab';
+import { InteractiveParticleCore } from '../components/InteractiveParticleCore';
 
 // --- CosmicCore Sub-component ---
 const CosmicCore = ({ icon: Icon, particleCount = 6 }: { icon: any, particleCount?: number }) => {
@@ -189,7 +191,7 @@ const ProjectStack = ({ projects, hoveredId, onHover }: { projects: ProjectData[
           return (
             <motion.div
               key={project.id}
-              onClick={() => navigate(`/portfolio?id=${project.id}`)}
+              onClick={() => navigate(`/portfolio/${project.id}`)}
               onMouseEnter={() => onHover(project.id)}
               onMouseLeave={() => onHover(null)}
               initial={{ opacity: 0, scale: 0.9, x: 20, y: 20 }}
@@ -239,6 +241,7 @@ export default function Home() {
   const { t } = useApp();
   const [featuredProjects, setFeaturedProjects] = useState<ProjectData[]>([]);
   const [latestArticles, setLatestArticles] = useState<Article[]>([]);
+  const [featuredLabs, setFeaturedLabs] = useState<LabData[]>([]);
   const [currentScene, setCurrentScene] = useState(0);
   const [hoveredProjectId, setHoveredProjectId] = useState<string | null>(null);
 
@@ -298,6 +301,7 @@ export default function Home() {
   useEffect(() => {
     getAllProjects().then(data => setFeaturedProjects(data.slice(0, 3)));
     getAllArticles().then(data => setLatestArticles(data.slice(0, 3)));
+    getAllLabs().then(data => setFeaturedLabs(data.slice(0, 3)));
   }, []);
 
   return (
@@ -407,7 +411,7 @@ export default function Home() {
             </div>
             <div className="space-y-4">
               {featuredProjects.map((project, i) => (
-                <Link key={project.id} to={`/portfolio?id=${project.id}`} onMouseEnter={() => setHoveredProjectId(project.id)} onMouseLeave={() => setHoveredProjectId(null)}>
+                <Link key={project.id} to={`/portfolio/${project.id}`} onMouseEnter={() => setHoveredProjectId(project.id)} onMouseLeave={() => setHoveredProjectId(null)}>
                   <motion.div initial={{ opacity: 0, x: -20 }} whileInView={{ opacity: 1, x: 0 }} transition={{ delay: i * 0.1 }} className="group flex items-center justify-between p-6 rounded-sm border border-brand-border hover:bg-brand-bg transition-all overflow-hidden relative">
                     <div className="flex items-center gap-4 relative z-10">
                       <span className="text-xs font-mono text-brand-muted">0{i + 1}</span>
@@ -429,60 +433,157 @@ export default function Home() {
       </section>
 
       {/* Other sections remain unchanged for brevity but properly included in the final file */}
-      <section className="h-screen w-full snap-start bg-brand-bg relative flex items-center justify-center overflow-hidden">
-        <div className="absolute inset-0 opacity-10"><div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-brand-text blur-[120px] rounded-full" /></div>
-        <div className="relative z-10 text-center max-w-3xl px-6 space-y-12">
-          <div className="w-20 h-20 rounded-3xl bg-brand-card border border-brand-border flex items-center justify-center mx-auto rotate-12"><Brain size={40} className="text-brand-text" /></div>
-          <div className="space-y-4">
-            <h2 className="text-5xl font-bold tracking-tighter uppercase">{t('home.lab.title')}</h2>
-            <p className="text-xl text-brand-muted leading-relaxed">{t('home.lab.desc')}</p>
+      {/* SECTION 3: ML Lab (Plan 2: Balanced Widescreen) */}
+      <section className="h-screen w-full snap-start relative flex flex-col overflow-hidden bg-brand-bg">
+        {/* Top: 65% Interactive Laboratory Core (Balanced) */}
+        <div className="h-[65vh] relative border-b border-brand-border/20">
+          <div className="absolute inset-0 opacity-[0.03] pointer-events-none bg-[radial-gradient(circle,currentColor_1px,transparent_1px)] bg-[size:36px_36px] text-brand-text" />
+          
+          <div className="max-w-7xl mx-auto h-full px-12 md:px-24 grid grid-cols-1 md:grid-cols-12 items-center gap-12 relative z-20">
+            {/* Left Col: Info (45%) */}
+            <div className="md:col-span-5 space-y-2">
+              <h2 className="text-5xl font-bold tracking-tight uppercase">
+                {t('home.lab.title')}
+              </h2>
+              <p className="text-brand-muted max-w-md">
+                {t('home.lab.desc')}
+              </p>
+            </div>
+
+            {/* Right Col: The Sphere (55%) */}
+            <div className="md:col-span-7 h-full relative py-12">
+              <InteractiveParticleCore className="w-full h-full" />
+            </div>
           </div>
-          <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-            {[{ icon: Microscope, label: t('home.lab.research') }, { icon: Brain, label: t('home.lab.neuralNets') }, { icon: Sparkles, label: t('home.lab.generative') }].map((item, i) => (
-              <div key={i} className="p-4 rounded-2xl border border-brand-border bg-brand-card/50 backdrop-blur-sm space-y-2"><item.icon size={20} className="mx-auto text-brand-muted" /><span className="text-[10px] font-bold uppercase tracking-widest">{item.label}</span></div>
-            ))}
-          </div>
-          <Link to="/ml-lab"><motion.button whileHover={{ scale: 1.05 }} className="mt-8 px-8 py-4 border border-brand-text rounded-full font-bold text-sm flex items-center gap-2 mx-auto">{t('home.lab.button')} <ArrowRight size={18} /></motion.button></Link>
+        </div>
+
+        {/* Bottom: 35% Data Control Panel */}
+        <div className="h-[35vh] w-full bg-brand-card/20 backdrop-blur-md flex flex-col">
+          {featuredLabs.map((lab, i) => (
+            <Link 
+              key={lab.id} 
+              to={`/ml-lab?id=${lab.id}`} 
+              className="group flex-1 border-b border-brand-border/40 last:border-0 hover:bg-brand-text/[0.02] transition-colors relative overflow-hidden"
+            >
+              <div className="h-full w-full px-12 md:px-24 flex items-center justify-between gap-12 relative z-10">
+                {/* Index & Category */}
+                <div className="flex items-center gap-8 min-w-[120px]">
+                  <span className="text-xs font-mono text-brand-muted opacity-40">0{i + 1}</span>
+                  <div className="hidden md:flex flex-col">
+                    <span className="text-[8px] font-bold uppercase tracking-widest text-brand-muted/60">Module</span>
+                    <span className="text-[10px] font-mono uppercase text-brand-text/50">{lab.category}</span>
+                  </div>
+                </div>
+
+                {/* Title */}
+                <h3 className="flex-1 text-base md:text-xl font-bold uppercase tracking-wide group-hover:translate-x-2 transition-transform duration-500 truncate">
+                  {lab.title}
+                </h3>
+
+                {/* Metadata & Toggle */}
+                <div className="flex items-center gap-12">
+                   <div className="hidden lg:flex flex-col items-end">
+                      <span className="text-[8px] font-bold uppercase tracking-widest text-brand-muted/60">Status</span>
+                      <span className="text-[9px] font-mono text-brand-text/40">[ ACTIVE_NODE ]</span>
+                   </div>
+                   <div className="w-10 h-10 rounded-full border border-brand-border/60 flex items-center justify-center group-hover:bg-brand-text group-hover:text-brand-bg transition-all">
+                      <ArrowRight size={18} className="group-hover:translate-x-0.5 transition-transform" />
+                   </div>
+                </div>
+              </div>
+              
+              {/* Subtle Scanline Hover Effect */}
+              <div className="absolute inset-0 bg-gradient-to-r from-transparent via-brand-text/[0.01] to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000 ease-in-out" />
+            </Link>
+          ))}
         </div>
       </section>
 
-      <section className="h-screen w-full snap-start bg-brand-card relative flex items-center overflow-hidden">
-        <div className="max-w-7xl mx-auto w-full px-12 md:px-24 grid grid-cols-1 md:grid-cols-2 gap-24">
-          <div className="space-y-8">
+      {/* SECTION 4: Articles & Connect (The Registry Finale) */}
+      <section className="min-h-screen w-full snap-start bg-brand-bg relative flex items-center overflow-hidden py-24">
+        {/* Background Decorative Layer */}
+        <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-brand-border/40 to-transparent" />
+        <div className="absolute inset-0 opacity-[0.02] pointer-events-none bg-[radial-gradient(circle,currentColor_1px,transparent_1px)] bg-[size:32px_32px] text-brand-text" />
+
+
+        <div className="max-w-7xl mx-auto w-full px-12 md:px-24 grid grid-cols-1 lg:grid-cols-12 gap-16 lg:gap-24 relative z-10">
+          {/* Left: Archive Library (Articles Index) - 60% approx */}
+          <div className="lg:col-span-7 space-y-12">
             <div className="space-y-2">
               <h2 className="text-5xl font-bold tracking-tight uppercase">{t('home.articles.title')}</h2>
-              <p className="text-brand-muted">{t('home.articles.desc')}</p>
+              <p className="text-brand-muted max-w-md">{t('home.articles.desc')}</p>
             </div>
-            <div className="space-y-6">
-              {latestArticles.length > 0 ? latestArticles.map((article) => (
-                <Link key={article.id} to={`/articles`} className="group block">
-                  <div className="flex items-center justify-between py-4 border-b border-brand-border">
-                    <div className="space-y-1">
-                      <span className="text-[8px] font-bold uppercase tracking-widest text-brand-muted/60">{article.category}</span>
-                      <h3 className="text-lg font-medium group-hover:text-brand-text transition-colors uppercase">{article.title}</h3>
+            
+            <div className="space-y-0 border-t border-brand-border/40">
+              {latestArticles.length > 0 ? latestArticles.map((article, i) => (
+                <Link key={article.id} to={`/articles?id=${article.id}`} className="group block border-b border-brand-border/40 py-6 hover:bg-brand-text/[0.02] transition-colors relative">
+                  <div className="flex items-center justify-between gap-6 px-4">
+                    <div className="flex items-center gap-6">
+                      <span className="text-[10px] font-mono text-brand-muted opacity-40">0{i + 1}</span>
+                      <div className="space-y-1">
+                        <div className="flex items-center gap-3">
+                          <span className="text-[8px] font-bold uppercase tracking-[0.2em] text-brand-muted/60">{article.category}</span>
+                        </div>
+                        <h3 className="text-lg font-bold uppercase tracking-tight group-hover:text-brand-text transition-colors">
+                          {article.title}
+                        </h3>
+                      </div>
                     </div>
-                    <BookOpen size={18} className="text-brand-muted opacity-0 group-hover:opacity-100 transition-all translate-x-4 group-hover:translate-x-0" />
+                    <div className="flex items-center gap-4">
+                       <span className="hidden md:inline-block text-[8px] font-mono text-brand-muted/30 opacity-0 group-hover:opacity-100 transition-opacity">
+                         ID: ARTICLE_REC_{article.id.substring(0, 4).toUpperCase()}
+                       </span>
+                       <BookOpen size={18} className="text-brand-muted group-hover:text-brand-text transition-colors" />
+                    </div>
                   </div>
                 </Link>
-              )) : [1, 2, 3].map((_, i) => <div key={i} className="py-4 border-b border-brand-border animate-pulse"><div className="h-4 w-3/4 bg-brand-border rounded mb-2" /><div className="h-2 w-1/4 bg-brand-border rounded" /></div>)}
+              )) : [1, 2, 3].map((_, i) => (
+                 <div key={i} className="py-8 border-b border-brand-border/40 animate-pulse">
+                    <div className="h-4 w-3/4 bg-brand-border/20 rounded mb-2" />
+                    <div className="h-2 w-1/4 bg-brand-border/10 rounded" />
+                 </div>
+              ))}
             </div>
-            <Link to="/articles" className="inline-flex items-center gap-2 text-sm font-bold uppercase tracking-widest hover:text-brand-muted transition-colors">{t('home.articles.all')} <ArrowRight size={16} /></Link>
+            
+            <Link to="/articles" className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-[0.2em] text-brand-muted hover:text-brand-text transition-colors pt-4">
+              {t('home.articles.all')} <ArrowRight size={14} className="ml-1" />
+            </Link>
           </div>
-          <div className="space-y-12">
-            <div className="space-y-4">
-              <h2 className="text-4xl font-bold tracking-tight uppercase">{t('home.connect.title')}</h2>
-              <p className="text-brand-muted text-lg">{t('home.connect.desc')}</p>
-            </div>
-            <div className="space-y-4">
-              <a href={`mailto:${siteConfig?.email}`} className="block text-2xl font-bold hover:text-brand-muted transition-colors underline underline-offset-8 decoration-brand-border">{siteConfig?.email}</a>
-              <div className="flex gap-6 text-sm font-bold uppercase tracking-widest text-brand-muted">
-                <a href={siteConfig?.socials?.twitter} className="hover:text-brand-text transition-colors">{t('home.connect.twitter')}</a>
-                <a href={siteConfig?.socials?.github} className="hover:text-brand-text transition-colors">{t('home.connect.github')}</a>
-                <a href={siteConfig?.socials?.linkedin} className="hover:text-brand-text transition-colors">{t('home.connect.linkedin')}</a>
-              </div>
-            </div>
-            <div className="pt-12 border-t border-brand-border">
-              <p className="text-xs text-brand-muted font-mono uppercase tracking-widest">© {siteConfig?.copyrightYear} {siteConfig?.author} / {t('home.footer.rights')}</p>
+
+          {/* Right: Connection Node (Contact) - 40% approx */}
+          <div className="lg:col-span-5 flex flex-col justify-center">
+            <div className="bg-brand-card/40 backdrop-blur-3xl border border-brand-border/30 rounded-2xl p-10 md:p-14 shadow-2xl space-y-12 relative overflow-hidden group">
+               {/* Decorative corner element */}
+               <div className="absolute top-0 right-0 w-24 h-24 bg-brand-text/[0.03] rotate-45 translate-x-12 -translate-y-12 pointer-events-none" />
+               
+               <div className="space-y-4 relative">
+                  <div className="w-8 h-px bg-brand-text/30 mb-6" />
+                  <h2 className="text-4xl font-bold tracking-tighter uppercase">{t('home.connect.title')}</h2>
+                  <p className="text-brand-muted text-sm leading-relaxed max-w-xs">{t('home.connect.desc')}</p>
+               </div>
+
+               <div className="space-y-8 relative">
+                  <a href={`mailto:${siteConfig?.email}`} className="group/email block">
+                    <span className="text-[10px] font-mono font-bold uppercase tracking-widest text-brand-muted/60 mb-2 block">Direct Access</span>
+                    <span className="block text-2xl md:text-3xl font-bold hover:text-brand-muted transition-all duration-500 overflow-hidden text-ellipsis decoration-brand-border underline underline-offset-8">
+                       {siteConfig?.email}
+                    </span>
+                  </a>
+
+                  <div className="flex flex-wrap gap-x-8 gap-y-4 pt-4">
+                    {siteConfig?.socials?.github && (
+                      <a href={siteConfig.socials.github} className="text-[10px] font-bold uppercase tracking-widest text-brand-muted hover:text-brand-text transition-colors border-b border-transparent hover:border-brand-text">{t('home.connect.github')}</a>
+                    )}
+                    {siteConfig?.socials?.linkedin && (
+                      <a href={siteConfig.socials.linkedin} className="text-[10px] font-bold uppercase tracking-widest text-brand-muted hover:text-brand-text transition-colors border-b border-transparent hover:border-brand-text">{t('home.connect.linkedin')}</a>
+                    )}
+                  </div>
+               </div>
+
+               <div className="pt-10 border-t border-brand-border/20 flex items-center justify-between opacity-40">
+                  <span className="text-[8px] font-mono uppercase tracking-widest">© {siteConfig?.copyrightYear} {siteConfig?.author}</span>
+                  <span className="text-[8px] font-mono uppercase tracking-widest">Protocol.V4.0</span>
+               </div>
             </div>
           </div>
         </div>
