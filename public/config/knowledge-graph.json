@@ -1,0 +1,85 @@
+{
+  "nodes": [
+    {
+      "id": "archive",
+      "type": "root",
+      "data": { "label": "KNOWLEDGE ARCHIVE" },
+      "position": { "x": 400, "y": 0 }
+    },
+
+    {
+      "id": "domain-ml",
+      "type": "folder",
+      "data": { "label": "MACHINE LEARNING" },
+      "position": { "x": 0, "y": 180 }
+    },
+    {
+      "id": "domain-design",
+      "type": "folder",
+      "data": { "label": "DESIGN + HCI" },
+      "position": { "x": 800, "y": 180 }
+    },
+
+    {
+      "id": "branch-dl",
+      "type": "branch",
+      "data": { "label": "DEEP LEARNING" },
+      "position": { "x": -200, "y": 340 }
+    },
+    {
+      "id": "branch-repr",
+      "type": "branch",
+      "data": { "label": "REPRESENTATION LEARNING" },
+      "position": { "x": 200, "y": 340 }
+    },
+    {
+      "id": "branch-rl",
+      "type": "branch",
+      "data": { "label": "REINFORCEMENT LEARNING" },
+      "position": { "x": 0, "y": 520 }
+    },
+    {
+      "id": "branch-genui",
+      "type": "branch",
+      "data": { "label": "GENERATIVE INTERFACES" },
+      "position": { "x": 800, "y": 340 }
+    },
+
+    {
+      "id": "paper-transformers",
+      "type": "article",
+      "data": { "label": "Understanding Transformers", "latticeFile": "transformers" },
+      "position": { "x": -380, "y": 500 }
+    },
+    {
+      "id": "paper-latent-nav",
+      "type": "article",
+      "data": { "label": "Latent Space Navigation", "latticeFile": "latent-navigation" },
+      "position": { "x": 200, "y": 520 }
+    },
+    {
+      "id": "paper-gen-ai-ui",
+      "type": "article",
+      "data": { "label": "Future of Generative AI UI", "latticeFile": "gen-ai-ui" },
+      "position": { "x": 800, "y": 520 }
+    }
+  ],
+
+  "edges": [
+    { "id": "e1",  "source": "archive",    "target": "domain-ml",       "label": "CONTAINS",  "type": "registry" },
+    { "id": "e2",  "source": "archive",    "target": "domain-design",   "label": "CONTAINS",  "type": "registry" },
+
+    { "id": "e3",  "source": "domain-ml",  "target": "branch-dl",       "label": "BRANCH",    "type": "registry" },
+    { "id": "e4",  "source": "domain-ml",  "target": "branch-repr",     "label": "BRANCH",    "type": "registry" },
+    { "id": "e5",  "source": "branch-repr","target": "branch-rl",       "label": "EXTENDS",   "type": "registry" },
+
+    { "id": "e6",  "source": "domain-design","target": "branch-genui",  "label": "BRANCH",    "type": "registry" },
+
+    { "id": "e7",  "source": "branch-dl",  "target": "paper-transformers","label": "PAPER",   "type": "registry" },
+    { "id": "e8",  "source": "branch-repr","target": "paper-latent-nav", "label": "PAPER",    "type": "registry" },
+    { "id": "e9",  "source": "branch-genui","target": "paper-gen-ai-ui", "label": "PAPER",    "type": "registry" },
+
+    { "id": "e10", "source": "paper-latent-nav","target": "paper-transformers","label": "USES","type": "registry" },
+    { "id": "e11", "source": "paper-gen-ai-ui", "target": "paper-latent-nav",  "label": "INSPIRED BY","type": "registry" }
+  ]
+}

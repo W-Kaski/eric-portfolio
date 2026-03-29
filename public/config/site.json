@@ -23,6 +23,10 @@
       "path": "/ml-lab"
     },
     {
+      "name": "nav.exploration",
+      "path": "/exploration"
+    },
+    {
       "name": "nav.articles",
       "path": "/articles"
     },
