@@ -32,7 +32,8 @@ export default function Layout({ children }: LayoutProps) {
 
   const isPortfolio = location.pathname === '/portfolio';
   const isHome = location.pathname === '/';
-  const isFullScreen = isPortfolio || isHome;
+  const isExploration = location.pathname === '/exploration';
+  const isFullScreen = isPortfolio || isHome || isExploration;
 
   return (
     <div className="min-h-screen flex flex-col">

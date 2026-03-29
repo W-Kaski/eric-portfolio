@@ -165,12 +165,13 @@ export default function Portfolio() {
 
   return (
     <div className="flex flex-col h-full overflow-hidden bg-brand-bg">
-      <div className="px-6 max-w-7xl mx-auto w-full pt-20 pb-4 shrink-0 border-b border-brand-border/30">
-        <div className="flex items-center justify-between">
+      <div className="px-6 max-w-7xl mx-auto w-full pt-[104px] pb-5 shrink-0 border-b border-brand-border/40 flex items-end justify-between">
+        <div className="space-y-1">
           <motion.h1 initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
-            className="text-2xl font-bold tracking-tighter uppercase">
+            className="text-3xl font-black tracking-tighter uppercase leading-none">
             {t('portfolio.title')}
           </motion.h1>
+        </div>
           <div className="flex items-center gap-6">
             {[
               { name: 'AI', color: '#8B5CF6' },
@@ -183,8 +184,6 @@ export default function Portfolio() {
               </div>
             ))}
           </div>
-
-        </div>
       </div>
 
       <div

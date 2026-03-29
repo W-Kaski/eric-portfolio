@@ -5,27 +5,29 @@ import KnowledgeGraph from '../components/KnowledgeGraph';
 import { cn } from '../lib/utils';
 import {
   X, ChevronRight, ChevronDown, Folder, FileText, Share2, Layers,
-  PanelLeftClose, PanelLeftOpen, Search, Library
+  PanelLeftClose, PanelLeftOpen, Search, Library, PlusSquare, MinusSquare, RefreshCcw
 } from 'lucide-react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import {
-  getGraphRoots, getLatticeGraphByRoot,
+  getGraphRoots, getFullLatticeTree,
   GraphRoot, LatticeNode, LatticeEdge
 } from '../lib/lattice';
 
 // ─── Recursive sidebar tree item ─────────────────────────────────────────────
 
 function SidebarItem({
-  node, depth, activeId, onSelect, edgeMap, nodeMap, query,
+  node, depth, activeId, onSelect, edgeMap, nodeMap, query, expandedIds, toggleExpand
 }: {
   node: LatticeNode;
   depth: number;
   activeId: string | null;
-  onSelect: (id: string) => void;
+  onSelect: (node: LatticeNode) => void;
   edgeMap: Record<string, string[]>;
   nodeMap: Record<string, LatticeNode>;
   query: string;
+  expandedIds: Set<string>;
+  toggleExpand: (id: string, force?: boolean) => void;
 }) {
   const childIds = edgeMap[node.id] ?? [];
   const children = childIds.map(id => nodeMap[id]).filter(Boolean) as LatticeNode[];
@@ -34,34 +36,47 @@ function SidebarItem({
   const childrenFiltered = children.filter(c => nodeMatchesQuery(c, query, edgeMap, nodeMap));
   if (!matchesSelf && childrenFiltered.length === 0) return null;
 
-  const [open, setOpen] = useState(depth < 2 || !!query);
+  const open = expandedIds.has(node.id) || !!query;
   const isActive = activeId === node.id;
   const hasChildren = children.length > 0;
 
   const Icon = node.type === 'root' ? Layers : node.type === 'domain' ? Share2 : node.type === 'branch' ? Folder : FileText;
 
-  // Obsidian-style font hierarchy: standard 13/14px sans-serif, normal casing
   const textClass = 
-    node.type === 'root'   ? 'text-[14px] font-bold text-brand-text' :
-    node.type === 'domain' ? 'text-[13px] font-semibold text-brand-text/90' :
-    node.type === 'branch' ? 'text-[13px] font-medium text-brand-muted hover:text-brand-text/80' :
-                             'text-[13px] font-normal text-brand-muted hover:text-brand-text';
+    node.type === 'root'   ? 'text-[14px] font-bold text-zinc-100' :
+    node.type === 'domain' ? 'text-[13px] font-semibold text-zinc-100/90' :
+    node.type === 'branch' ? 'text-[13px] font-medium text-zinc-300 hover:text-zinc-100' :
+                             'text-[13px] font-normal text-zinc-400 hover:text-zinc-200';
+
+  const iconClass =
+    node.type === 'root'   ? 'text-zinc-100 opacity-90' :
+    node.type === 'domain' ? 'text-zinc-100 opacity-70' :
+    node.type === 'branch' ? 'text-zinc-100 opacity-50' :
+                             'text-zinc-100 opacity-40';
 
   return (
     <div>
       <div
-        onClick={() => { if (hasChildren) setOpen(!open); onSelect(node.id); }}
+        onClick={() => { if (hasChildren) toggleExpand(node.id); onSelect(node); }}
         style={{ paddingLeft: `${8 + depth * 12}px` }}
         className="pr-2 py-[2px] cursor-pointer group"
       >
         <div className={cn(
           'flex items-center gap-1.5 px-2 py-1 transition-colors rounded-md min-w-0',
-          isActive ? 'bg-brand-text/15 text-brand-text' : 'hover:bg-brand-text/5'
+          isActive ? 'bg-zinc-100/15 text-zinc-100' : 'hover:bg-zinc-100/5'
         )}>
-          <span className="shrink-0 text-brand-muted/70 group-hover:text-brand-text/70 transition-colors">
+          <span
+            className="shrink-0 text-zinc-400/70 group-hover:text-zinc-100/90 transition-colors"
+            onClick={(e) => {
+              if (hasChildren) {
+                e.stopPropagation();
+                toggleExpand(node.id);
+              }
+            }}
+          >
             {hasChildren ? (open ? <ChevronDown size={14} /> : <ChevronRight size={14} />) : <span className="w-3.5" />}
           </span>
-          <Icon size={14} className={cn('shrink-0', isActive ? 'text-brand-text' : 'text-brand-muted/70')} />
+          <Icon size={14} className={cn('shrink-0', isActive ? 'text-zinc-100 opacity-100' : iconClass)} />
           <span className={cn('truncate leading-tight', textClass)}>
             {query ? highlightMatch(node.label, query) : node.label}
           </span>
@@ -69,17 +84,13 @@ function SidebarItem({
       </div>
 
       {hasChildren && open && (
-        <div className="ml-[14px] border-l border-brand-border/10">
+        <div className="ml-[14px] border-l border-white/10">
           {children.map(child => (
             <SidebarItem
-              key={child.id}
-              node={child}
-              depth={depth + 1}
-              activeId={activeId}
-              onSelect={onSelect}
-              edgeMap={edgeMap}
-              nodeMap={nodeMap}
-              query={query}
+              key={child.id} node={child} depth={depth + 1}
+              activeId={activeId} onSelect={onSelect}
+              edgeMap={edgeMap} nodeMap={nodeMap} query={query}
+              expandedIds={expandedIds} toggleExpand={toggleExpand}
             />
           ))}
         </div>
@@ -104,7 +115,7 @@ function highlightMatch(text: string, query: string): React.ReactNode {
   return (
     <>
       {text.slice(0, idx)}
-      <mark className="bg-brand-text/30 text-brand-text px-0.5 rounded-sm bg-transparent">{text.slice(idx, idx + query.length)}</mark>
+      <mark className="bg-zinc-100/30 text-zinc-100 px-0.5 rounded-sm bg-transparent">{text.slice(idx, idx + query.length)}</mark>
       {text.slice(idx + query.length)}
     </>
   );
@@ -117,47 +128,46 @@ type SidebarTab = 'files' | 'search';
 export default function KnowledgeBase() {
   const { t } = useApp();
 
-  // Multi-graph state
-  const [graphRoots, setGraphRoots] = useState<GraphRoot[]>([]);
-  const [activeGraph, setActiveGraph] = useState<string>('');
+  // Unified global data for File Explorer
+  const [globalNodes, setGlobalNodes] = useState<LatticeNode[]>([]);
+  const [globalEdges, setGlobalEdges] = useState<LatticeEdge[]>([]);
+  
+  // Controlled Tree State
+  const [expandedIds, setExpandedIds] = useState<Set<string>>(new Set());
 
-  // Current graph nodes/edges (for sidebar)
-  const [graphNodes, setGraphNodes] = useState<LatticeNode[]>([]);
-  const [graphEdges, setGraphEdges] = useState<LatticeEdge[]>([]);
+  // Graph Canvas State
+  const [activeGraph, setActiveGraph] = useState<string>('');
+  const [activeNodeId, setActiveNodeId] = useState<string | null>(null);
 
   // UI state
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [sidebarWidth, setSidebarWidth] = useState(300);
   const [activeTab, setActiveTab] = useState<SidebarTab>('files');
-  const [activeNodeId, setActiveNodeId] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedArticle, setSelectedArticle] = useState<LatticeNode | null>(null);
   const [loading, setLoading] = useState(true);
   
-  // Resizing state
   const isResizing = useRef(false);
 
-  // Load graph roots
+  // Load complete workspace once on mount
   useEffect(() => {
-    getGraphRoots().then(roots => {
-      setGraphRoots(roots);
-      if (roots.length > 0) setActiveGraph(roots[0].id);
-    });
-  }, []);
-
-  // Load graph data for sidebar when active graph changes
-  useEffect(() => {
-    if (!activeGraph) return;
-    setLoading(true);
-    setActiveNodeId(null);
-    getLatticeGraphByRoot(activeGraph).then(({ nodes, edges }) => {
-      setGraphNodes(nodes);
-      setGraphEdges(edges);
+    getFullLatticeTree().then(({ nodes, edges }) => {
+      setGlobalNodes(nodes);
+      setGlobalEdges(edges);
+      
+      // Auto-expand all root domains by default
+      const rootIds = new Set(nodes.filter(n => n.type === 'root').map(n => n.id));
+      setExpandedIds(rootIds);
+      
+      // Default to first graph
+      if (rootIds.size > 0 && !activeGraph) {
+        setActiveGraph(Array.from(rootIds)[0]);
+      }
       setLoading(false);
     });
   }, [activeGraph]);
 
-  // Handle resizing
+  // Handle sidebar drag resize
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
       if (!isResizing.current) return;
@@ -181,85 +191,118 @@ export default function KnowledgeBase() {
     };
   }, []);
 
-  // Build sidebar maps (only hierarchy edges)
-  const nodeMap = useMemo(() => Object.fromEntries(graphNodes.map(n => [n.id, n])), [graphNodes]);
+  // Maps for tree rendering
+  const nodeMap = useMemo(() => Object.fromEntries(globalNodes.map(n => [n.id, n])), [globalNodes]);
   const edgeMap = useMemo(() => {
     const map: Record<string, string[]> = {};
-    graphEdges.filter(e => !e.dashed).forEach(e => {
+    globalEdges.filter(e => !e.dashed).forEach(e => {
       if (!map[e.source]) map[e.source] = [];
       map[e.source].push(e.target);
     });
     return map;
-  }, [graphEdges]);
+  }, [globalEdges]);
 
-  const rootNode = graphNodes.find(n => n.type === 'root');
-  const handleSelect = useCallback((id: string) => setActiveNodeId(id), []);
+  // Tree Handlers
+  const toggleExpand = useCallback((id: string, force?: boolean) => {
+    setExpandedIds(prev => {
+      const next = new Set(prev);
+      if (force === true) next.add(id);
+      else if (force === false) next.delete(id);
+      else if (next.has(id)) next.delete(id);
+      else next.add(id);
+      return next;
+    });
+  }, []);
+
+  const handleExpandAll = useCallback(() => {
+    const internalIds = globalNodes.filter(n => n.type !== 'article').map(n => n.id);
+    setExpandedIds(new Set(internalIds));
+  }, [globalNodes]);
+
+  const handleCollapseAll = useCallback(() => {
+    // Keep roots expanded to prevent completely blank sidebar
+    const rootIds = globalNodes.filter(n => n.type === 'root').map(n => n.id);
+    setExpandedIds(new Set(rootIds));
+  }, [globalNodes]);
+
+  const handleSelect = useCallback((node: LatticeNode) => {
+    setActiveNodeId(node.id);
+    // Find the domain graph this node belongs to and set it active
+    const rootId = node.id.split('__')[0];
+    if (rootId) setActiveGraph(rootId);
+  }, []);
+
+  const rootNodes = globalNodes.filter(n => n.type === 'root');
 
   return (
-    <div className="h-screen flex bg-brand-bg overflow-hidden pt-16">
+    <div className="h-screen flex flex-col bg-brand-bg overflow-hidden">
 
-      {/* ── Sidebar ────────────────────────────────────────── */}
-      <motion.aside
-        animate={{ width: sidebarOpen ? sidebarWidth : 0 }}
-        transition={{ duration: 0.2, ease: 'easeInOut' }}
-        className="flex shrink-0 relative border-r border-brand-border/40 bg-[#0c0c0c]"
-        style={{ minWidth: 0 }}
-      >
-        <div className="flex w-full h-full overflow-hidden">
-          
-          {/* Obsidian-style Icon Bar (Left edge of sidebar) */}
-          <div className="w-12 h-full flex flex-col items-center py-4 border-r border-brand-border/20 shrink-0 gap-4 bg-black/20">
-            <button 
-              onClick={() => setActiveTab('files')}
-              className={cn('p-2 rounded-md transition-colors', activeTab === 'files' ? 'bg-brand-text/10 text-brand-text' : 'text-brand-muted hover:text-brand-text hover:bg-brand-text/5')}
-              title="Files"
-            >
-              <Library size={18} strokeWidth={2} />
-            </button>
-            <button 
-              onClick={() => setActiveTab('search')}
-              className={cn('p-2 rounded-md transition-colors', activeTab === 'search' ? 'bg-brand-text/10 text-brand-text' : 'text-brand-muted hover:text-brand-text hover:bg-brand-text/5')}
-              title="Search"
-            >
-              <Search size={18} strokeWidth={2} />
-            </button>
-          </div>
+      {/* ── Page Header (Matches ML Lab layout) ───────────────────────── */}
+      <div className="px-6 max-w-7xl mx-auto w-full shrink-0 pt-[104px] pb-5 border-b border-brand-border/40 flex items-end justify-between">
+        <div className="space-y-1">
+          <h1 className="text-3xl font-black tracking-tighter uppercase leading-none text-brand-text/90">
+            {t('nav.exploration')}
+          </h1>
+        </div>
+      </div>
 
-          {/* Sidebar Content Area */}
-          <div className="flex-1 flex flex-col min-w-0 h-full">
-            {/* Context Header (Graph Switcher) */}
-            <div className="px-3 py-3 border-b border-brand-border/20 flex items-center gap-2 overflow-x-auto custom-scrollbar shrink-0">
-              {graphRoots.map(root => (
-                <button
-                  key={root.id}
-                  onClick={() => setActiveGraph(root.id)}
-                  className={cn(
-                    'shrink-0 px-2 py-1 text-[12px] font-medium rounded-md transition-all whitespace-nowrap',
-                    activeGraph === root.id
-                      ? 'bg-brand-text/10 text-brand-text'
-                      : 'text-brand-muted/70 hover:text-brand-text hover:bg-brand-text/5'
-                  )}
-                >
-                  {root.label}
-                </button>
-              ))}
+      {/* ── Main Workspace ─────────────────────────────────────────── */}
+      <div className="flex-1 flex overflow-hidden border-t border-brand-border/30 bg-[#0c0c0c]">
+        {/* ── Sidebar ────────────────────────────────────────── */}
+        <motion.aside
+          animate={{ width: sidebarOpen ? sidebarWidth : 0 }}
+          transition={{ duration: 0.2, ease: 'easeInOut' }}
+          className="flex shrink-0 relative border-r border-white/10"
+          style={{ minWidth: 0, height: '100%' }}
+        >
+          <div className="flex flex-col w-full h-full overflow-hidden">
+            
+            {/* Top Toolbar (Horizontal Icon Tabs + Functions) */}
+            <div className="px-3 py-2 border-b border-white/10 flex items-center justify-between shrink-0 bg-[#0c0c0c]">
+            {/* View Tabs */}
+            <div className="flex items-center gap-1">
+              <button 
+                onClick={() => setActiveTab('files')}
+                className={cn('p-1.5 rounded-md transition-colors', activeTab === 'files' ? 'bg-zinc-100/15 text-zinc-100' : 'text-zinc-400 hover:text-zinc-100 hover:bg-zinc-100/5')}
+                title="Files"
+              >
+                <Library size={16} strokeWidth={2} />
+              </button>
+              <button 
+                onClick={() => setActiveTab('search')}
+                className={cn('p-1.5 rounded-md transition-colors', activeTab === 'search' ? 'bg-zinc-100/15 text-zinc-100' : 'text-zinc-400 hover:text-zinc-100 hover:bg-zinc-100/5')}
+                title="Global Search"
+              >
+                <Search size={16} strokeWidth={2} />
+              </button>
             </div>
 
-            {/* Main view panel */}
-            <div className="flex-1 overflow-y-auto px-1 py-2 custom-scrollbar flex flex-col min-w-0">
+            {/* Tree Functions */}
+            <div className="flex items-center gap-1 opacity-70 hover:opacity-100 transition-opacity">
+              <button onClick={handleExpandAll} title="Expand All" className="p-1.5 text-zinc-400 hover:text-zinc-100 hover:bg-zinc-100/10 rounded-md">
+                <PlusSquare size={15} />
+              </button>
+              <button onClick={handleCollapseAll} title="Collapse All" className="p-1.5 text-zinc-400 hover:text-zinc-100 hover:bg-zinc-100/10 rounded-md">
+                <MinusSquare size={15} />
+              </button>
+            </div>
+          </div>
+
+          {/* View Body */}
+          <div className="flex-1 overflow-y-auto px-1 py-2 custom-scrollbar flex flex-col min-w-0 relative">
               {activeTab === 'search' && (
-                <div className="px-2 pb-3 pt-1 sticky top-0 bg-[#0c0c0c]/90 backdrop-blur-sm z-10 shrink-0">
-                  <div className="relative flex items-center">
-                    <Search size={14} className="absolute left-2.5 text-brand-muted" />
+                <div className="px-2 pb-3 sticky top-0 bg-[#0c0c0c]/90 backdrop-blur-sm z-10 shrink-0">
+                  <div className="relative flex items-center mt-2">
+                    <Search size={14} className="absolute left-3.5 text-zinc-400" />
                     <input
                       type="text"
                       value={searchQuery}
                       onChange={e => setSearchQuery(e.target.value)}
-                      placeholder="Search nodes..."
-                      className="w-full bg-brand-bg border border-brand-border/50 rounded-md py-1.5 pl-8 pr-8 text-[13px] text-brand-text placeholder:text-brand-muted outline-none focus:border-brand-text/50 transition-colors"
+                      placeholder="Type to search..."
+                      className="w-full bg-zinc-900/50 border border-white/10 rounded-md py-1.5 pl-8 pr-8 text-[13px] text-zinc-100 placeholder:text-zinc-500 outline-none focus:border-white/20 transition-colors mx-1"
                     />
                     {searchQuery && (
-                      <button onClick={() => setSearchQuery('')} className="absolute right-2 text-brand-muted hover:text-brand-text p-1">
+                      <button onClick={() => setSearchQuery('')} className="absolute right-3 text-zinc-400 hover:text-zinc-100 p-1">
                         <X size={12} />
                       </button>
                     )}
@@ -268,34 +311,39 @@ export default function KnowledgeBase() {
               )}
 
               {loading ? (
-                <div className="px-4 py-4 text-[13px] text-brand-muted">Loading graph...</div>
-              ) : rootNode ? (
-                <SidebarItem
-                  node={rootNode}
-                  depth={0}
-                  activeId={activeNodeId}
-                  onSelect={handleSelect}
-                  edgeMap={edgeMap}
-                  nodeMap={nodeMap}
-                  query={activeTab === 'search' ? searchQuery : ''}
-                />
+                <div className="px-4 py-4 text-[13px] text-brand-muted text-center pt-10 flex flex-col items-center gap-3">
+                  <RefreshCcw size={18} className="animate-spin text-brand-muted/50" />
+                  Building unified lattice...
+                </div>
               ) : (
-                <div className="px-4 py-4 text-[13px] text-brand-muted">No nodes found.</div>
+                <div className="pb-8">
+                  {rootNodes.map(root => (
+                    <SidebarItem
+                      key={root.id}
+                      node={root}
+                      depth={0}
+                      activeId={activeNodeId}
+                      onSelect={handleSelect}
+                      edgeMap={edgeMap}
+                      nodeMap={nodeMap}
+                      query={activeTab === 'search' ? searchQuery : ''}
+                      expandedIds={expandedIds}
+                      toggleExpand={toggleExpand}
+                    />
+                  ))}
+                </div>
               )}
             </div>
             
-            {/* Footer path indicator */}
             <div className="px-3 py-2 border-t border-brand-border/20 shrink-0 bg-black/10">
-              <p className="text-[11px] font-mono text-brand-muted/50 truncate" title={`src/content/lattice/${activeGraph}/**`}>
-                src/content/lattice/{activeGraph}/**
+              <p className="text-[11px] font-mono text-brand-muted/50 truncate" title={`Active Domain: ${activeGraph}`}>
+                Domain: {activeGraph || 'Loading...'}
               </p>
             </div>
-          </div>
         </div>
 
-        {/* Drag Handle for Resizing */}
         <div 
-          className="absolute top-0 right-0 w-1.5 h-full cursor-col-resize hover:bg-brand-text/20 active:bg-brand-text/40 transition-colors z-50"
+          className="absolute top-0 right-0 w-1.5 h-full cursor-col-resize hover:bg-zinc-100/20 active:bg-zinc-100/40 transition-colors z-50"
           onMouseDown={() => {
             isResizing.current = true;
             document.body.style.cursor = 'col-resize';
@@ -305,11 +353,10 @@ export default function KnowledgeBase() {
       </motion.aside>
 
       {/* ── Canvas + Toggle ──────────────────────────────────── */}
-      <div className="flex-1 relative min-w-0 flex flex-col bg-brand-bg">
-        {/* Obsidian style Sidebar Toggle (Fixed absolute left gap) */}
+      <div className="flex-1 relative min-w-0 flex flex-col bg-[#0c0c0c]">
         <button
           onClick={() => setSidebarOpen(!sidebarOpen)}
-          className="absolute top-4 left-4 z-20 flex items-center justify-center bg-brand-bg border border-brand-border/60 hover:border-brand-text/50 w-8 h-8 rounded-md text-brand-muted hover:text-brand-text transition-all shadow-md group"
+          className="absolute top-4 left-4 z-20 flex items-center justify-center bg-zinc-900 border border-white/10 hover:border-white/30 w-8 h-8 rounded-md text-zinc-400 hover:text-zinc-100 transition-all shadow-md group"
           title={sidebarOpen ? 'Collapse sidebar' : 'Expand sidebar'}
         >
           {sidebarOpen ? <PanelLeftClose size={16} /> : <PanelLeftOpen size={16} />}
@@ -323,6 +370,8 @@ export default function KnowledgeBase() {
             highlightedFolder={activeNodeId ?? 'all'}
           />
         )}
+      </div>
+      {/* ── End Main Workspace ───────────────────────────────── */}
       </div>
 
       {/* ── Article Modal ────────────────────────────────────── */}

@@ -349,8 +349,10 @@ export default function MLLab() {
   return (
     <div className="px-6 max-w-7xl mx-auto pb-32 pt-2">
       {/* Header + Controls — single row */}
-      <div className="flex items-center justify-between mb-12 border-b border-brand-border pb-5">
-        <h1 className="text-2xl font-bold tracking-tighter">{t('lab.title')}</h1>
+      <div className="flex items-end justify-between mb-12 border-b border-brand-border/40 pb-5">
+        <div className="space-y-1">
+          <h1 className="text-3xl font-black tracking-tighter uppercase leading-none">{t('lab.title')}</h1>
+        </div>
 
         <div className="flex items-center gap-6">
           {/* Folder */}

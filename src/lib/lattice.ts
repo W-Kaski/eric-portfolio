@@ -166,3 +166,20 @@ export async function getLatticeGraphByRoot(rootFolder: string): Promise<Lattice
 
   return { nodes, edges };
 }
+
+// ─── Unified Workspace Fetcher ────────────────────────────────────────────────
+
+export async function getFullLatticeTree(): Promise<{ nodes: LatticeNode[], edges: LatticeEdge[] }> {
+  const roots = await getGraphRoots();
+  
+  const allNodes: LatticeNode[] = [];
+  const allEdges: LatticeEdge[] = [];
+
+  for (const root of roots) {
+    const { nodes, edges } = await getLatticeGraphByRoot(root.id);
+    allNodes.push(...nodes);
+    allEdges.push(...edges);
+  }
+
+  return { nodes: allNodes, edges: allEdges };
+}

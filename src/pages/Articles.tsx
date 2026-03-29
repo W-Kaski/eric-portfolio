@@ -233,11 +233,8 @@ export default function Articles() {
   return (
     <div className="px-6 max-w-7xl mx-auto pb-32 pt-2">
       {/* Header + Controls — single row */}
-      <div className="flex items-center justify-between mb-16 border-b border-brand-border/40 pb-6">
-        <div className="space-y-1">
-          <h1 className="text-3xl font-black tracking-tighter uppercase">{t('articles.title')}</h1>
-          <p className="text-[10px] font-mono text-brand-muted/60 uppercase tracking-widest">Digital Archive / Knowledge Base</p>
-        </div>
+      <div className="flex items-end justify-between mb-12 border-b border-brand-border/40 pb-5">
+        <h1 className="text-3xl font-black tracking-tighter uppercase leading-none">{t('articles.title')}</h1>
 
         <div className="flex items-center gap-6">
           {/* Folder */}
