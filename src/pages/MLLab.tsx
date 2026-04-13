@@ -29,6 +29,9 @@ import DimReductionLab from '../components/mllab/DimReductionLab';
 import RLLab from '../components/mllab/RLLab';
 import GradientDescentLab from '../components/mllab/GradientDescentLab';
 import KMeansLab from '../components/mllab/KMeansLab';
+import SelfAttentionLab from '../components/mllab/SelfAttentionLab';
+import RAGExplorerLab from '../components/mllab/RAGExplorerLab';
+import ReActAgentLab from '../components/mllab/ReActAgentLab';
 
 // ─── Bento mini-preview components (Refactored to sharp edges) ──────────────
 
@@ -114,6 +117,42 @@ const MiniKMeans = () => (
   </div>
 );
 
+const MiniSelfAttention = () => (
+  <div className="w-full h-full relative overflow-hidden bg-black/40 flex items-center justify-center border-b border-brand-border/30">
+    <div className="absolute inset-0 bg-blue-500/5" />
+    <svg className="w-full h-full absolute inset-0 opacity-40">
+       <path d="M 20 80 Q 50 20 80 80" fill="none" stroke="#3B82F6" strokeWidth="2" />
+       <path d="M 40 80 Q 50 40 60 80" fill="none" stroke="#3B82F6" strokeWidth="1" />
+    </svg>
+    <div className="flex gap-4 z-10 bottom-4 absolute">
+       <div className="w-4 h-1 bg-brand-text/80 rounded" />
+       <div className="w-4 h-1 bg-white/20 rounded" />
+       <div className="w-4 h-1 bg-brand-text/30 rounded" />
+    </div>
+  </div>
+);
+
+const MiniRAGExplorer = () => (
+  <div className="w-full h-full relative overflow-hidden bg-black/40 flex items-center justify-center border-b border-brand-border/30">
+    <div className="absolute inset-0 flex items-center justify-center">
+      <svg className="absolute w-full h-full"><circle cx="50%" cy="50%" r="40" fill="none" stroke="rgba(16,185,129,0.3)" strokeDasharray="2 2" /></svg>
+      <div className="w-2 h-2 bg-emerald-500/80 rounded-full shadow-[0_0_10px_rgba(16,185,129,0.8)] absolute z-10" />
+      <div className="w-1.5 h-1.5 bg-brand-text/80 rounded-full absolute ml-8 -mt-6" />
+      <div className="w-1.5 h-1.5 bg-brand-text/80 rounded-full absolute -ml-6 mt-8" />
+      <div className="w-1 h-1 bg-white/20 rounded-full absolute ml-12 mt-4" />
+    </div>
+  </div>
+);
+
+const MiniReActAgent = () => (
+  <div className="w-full h-full relative overflow-hidden bg-black/40 flex flex-col justify-center p-6 border-b border-brand-border/30 opacity-60">
+    <div className="flex items-center gap-2 mb-3"><div className="w-2 h-2 flex-shrink-0 bg-brand-text/50 rounded-sm" /><div className="h-1 w-12 bg-white/20 rounded" /></div>
+    <div className="flex items-center gap-2 mb-3 ml-4"><div className="w-2 h-2 flex-shrink-0 bg-blue-500/50 rounded-sm" /><div className="h-1 w-16 bg-white/20 rounded" /></div>
+    <div className="flex items-center gap-2 mb-3 ml-8"><div className="w-2 h-2 flex-shrink-0 bg-emerald-500/50 rounded-sm" /><div className="h-1 w-10 bg-white/20 rounded" /></div>
+    <div className="flex items-center gap-2"><div className="w-2 h-2 flex-shrink-0 bg-brand-text/80 rounded-sm shadow-[0_0_8px_rgba(216,208,196,0.5)]" /><div className="h-1 w-14 bg-white/40 rounded" /></div>
+  </div>
+);
+
 const MiniCodePreview = ({ snippet }: { snippet?: string }) => {
   const lines = (snippet || '').split('\n').slice(0, 4).join('\n');
   return (
@@ -139,6 +178,7 @@ export default function MLLab() {
   const [activeHeader, setActiveHeader] = useState<string>('');
   const [activeFolder, setActiveFolder] = useState<string>(t('common.all'));
   const [sortBy, setSortBy] = useState<'date' | 'title'>('date');
+  const [currentPage, setCurrentPage] = useState(1);
 
   // Extract headers for outline
   const headers = useMemo(() => {
@@ -217,6 +257,14 @@ export default function MLLab() {
       });
   }, [modules, activeFolder, sortBy]);
 
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [activeFolder, sortBy]);
+
+  const itemsPerPage = 6;
+  const totalPages = Math.ceil(filteredModules.length / itemsPerPage);
+  const paginatedModules = filteredModules.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
+
   if (loading) {
     return (
       <div className="flex justify-center py-32">
@@ -236,34 +284,52 @@ export default function MLLab() {
       case 'reinforcement-learning': InteractiveComponent = <RLLab />; break;
       case 'gradient-descent': InteractiveComponent = <GradientDescentLab />; break;
       case 'kmeans-clustering': InteractiveComponent = <KMeansLab />; break;
+      case 'self-attention': InteractiveComponent = <SelfAttentionLab />; break;
+      case 'rag-explorer': InteractiveComponent = <RAGExplorerLab />; break;
+      case 'react-agent': InteractiveComponent = <ReActAgentLab />; break;
     }
 
     return (
       <div className="px-6 max-w-7xl mx-auto pb-32">
         <div className="flex flex-col lg:flex-row items-start gap-12">
           {/* Sidebar Outline */}
-          <aside className="hidden lg:block w-64 flex-shrink-0 sticky top-24 h-fit z-10">
-            <div className="flex items-center gap-2 text-xs font-bold tracking-widest uppercase text-brand-muted mb-6">
-              <List size={14} /> {t('articles.outline')}
-            </div>
-            <nav className="space-y-1">
-              {headers.map((header) => (
-                <button
-                  key={header.id}
-                  onClick={() => scrollToHeader(header.id)}
-                  className={cn(
-                    "block w-full text-left text-sm py-1.5 transition-all hover:text-brand-text",
-                    header.level === 1 ? "font-bold" : "pl-4 text-brand-muted",
-                    activeHeader === header.id ? "text-brand-text border-l-2 border-brand-text pl-3 bg-brand-text/5" : "border-l border-brand-border/50 text-brand-muted/60"
+          <aside className="hidden lg:block w-64 flex-shrink-0 relative">
+            <div className="fixed top-24 w-64 flex flex-col h-[calc(100vh-8rem)] z-10 pb-8">
+              <button 
+                onClick={() => {
+                  setSelectedModule(null);
+                  setSearchParams({});
+                }}
+                className="flex items-center gap-2 text-brand-muted hover:text-brand-text transition-colors group w-fit"
+              >
+                <ArrowLeft size={18} className="group-hover:-translate-x-1 transition-transform" />
+                {t('lab.back')}
+              </button>
+
+              <div className="mt-12 max-h-[calc(100vh-14rem)] flex flex-col">
+                <div className="flex items-center gap-2 text-xs font-bold tracking-widest uppercase text-brand-muted mb-6">
+                  <List size={14} /> {t('articles.outline')}
+                </div>
+                <nav className="space-y-1 overflow-y-auto scrollbar-hide pr-4">
+                  {headers.map((header) => (
+                    <button
+                      key={header.id}
+                      onClick={() => scrollToHeader(header.id)}
+                      className={cn(
+                        "block w-full text-left text-sm py-1.5 transition-all hover:text-brand-text",
+                        header.level === 1 ? "font-bold" : "pl-4 text-brand-muted",
+                        activeHeader === header.id ? "text-brand-text border-l-2 border-brand-text pl-3 bg-brand-text/5" : "border-l border-brand-border/50 text-brand-muted/60"
+                      )}
+                    >
+                      {header.text}
+                    </button>
+                  ))}
+                  {headers.length === 0 && (
+                     <p className="text-[10px] text-brand-muted/40 italic px-4">{t('articles.noHeaders')}</p>
                   )}
-                >
-                  {header.text}
-                </button>
-              ))}
-              {headers.length === 0 && (
-                <p className="text-[10px] text-brand-muted/40 italic px-4">{t('articles.noHeaders')}</p>
-              )}
-            </nav>
+                </nav>
+              </div>
+            </div>
           </aside>
 
           {/* Main Content */}
@@ -273,7 +339,7 @@ export default function MLLab() {
                 setSelectedModule(null);
                 setSearchParams({}); // Clear query param when going back
               }}
-              className="flex items-center gap-2 text-brand-muted hover:text-brand-text mb-12 transition-colors group"
+              className="lg:hidden flex items-center gap-2 text-brand-muted hover:text-brand-text mb-12 transition-colors group"
             >
               <ArrowLeft size={18} className="group-hover:-translate-x-1 transition-transform" />
               {t('lab.back')}
@@ -347,9 +413,9 @@ export default function MLLab() {
   // ── Main List View (Minimalist Grid) ──────────────────────────────────────
 
   return (
-    <div className="px-6 max-w-7xl mx-auto pb-32 pt-2">
+    <div className="px-6 max-w-7xl mx-auto pb-2 pt-2 flex flex-col">
       {/* Header + Controls — single row */}
-      <div className="flex items-end justify-between mb-12 border-b border-brand-border/40 pb-5">
+      <div className="flex items-end justify-between mb-6 border-b border-brand-border/40 pb-4 flex-shrink-0">
         <div className="space-y-1">
           <h1 className="text-3xl font-black tracking-tighter uppercase leading-none">{t('lab.title')}</h1>
         </div>
@@ -400,7 +466,7 @@ export default function MLLab() {
           </div>
         ) : (
           <motion.div layout className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 border-l border-t border-brand-border">
-            {filteredModules.map((module, index) => {
+            {paginatedModules.map((module, index) => {
               let miniPreview = null;
               if (module.id === 'decision-boundary') {
                 miniPreview = <MiniDecisionBoundary />;
@@ -414,6 +480,12 @@ export default function MLLab() {
                 miniPreview = <MiniGradientDescent />;
               } else if (module.id === 'kmeans-clustering') {
                 miniPreview = <MiniKMeans />;
+              } else if (module.id === 'self-attention') {
+                miniPreview = <MiniSelfAttention />;
+              } else if (module.id === 'rag-explorer') {
+                miniPreview = <MiniRAGExplorer />;
+              } else if (module.id === 'react-agent') {
+                miniPreview = <MiniReActAgent />;
               } else {
                 miniPreview = <MiniCodePreview snippet={module.snippet} />;
               }
@@ -428,34 +500,34 @@ export default function MLLab() {
                   transition={{ delay: index * 0.03 }}
                   onClick={() => setSelectedModule(module)}
                   className={cn(
-                    'group relative cursor-pointer border-r border-b border-brand-border bg-brand-bg flex flex-col',
+                    'group relative cursor-pointer border-r border-b border-brand-border bg-brand-bg flex flex-col h-full min-h-[300px] lg:min-h-[380px]',
                     'hover:bg-brand-text/[0.02] transition-colors duration-500'
                   )}
                 >
-                  <div className="aspect-[16/10] relative overflow-hidden">
+                  <div className="relative overflow-hidden flex-shrink-0 h-[140px] lg:h-[180px] border-b border-brand-border/20">
                     {miniPreview}
                     <div className="absolute top-4 right-4 text-white/0 group-hover:text-white/40 transition-colors duration-500">
                       <ArrowRight size={16} />
                     </div>
                   </div>
                   
-                  <div className="p-8 flex flex-col flex-1">
-                    <div className="flex items-center justify-between mb-4">
-                       <span className="text-[9px] font-bold tracking-widest uppercase text-brand-muted/60">{module.folder}</span>
-                       <span className="text-[9px] font-bold tracking-widest uppercase text-brand-muted/30">{module.date}</span>
+                  <div className="p-4 lg:p-6 flex flex-col flex-1 min-h-0">
+                    <div className="flex items-center justify-between mb-2">
+                       <span className="text-[9px] font-bold tracking-widest uppercase text-brand-muted">{module.folder}</span>
+                       <span className="text-[9px] font-bold tracking-widest uppercase text-brand-muted/60">{module.date}</span>
                     </div>
                     
-                    <h2 className="text-2xl font-black tracking-tight leading-[0.95] uppercase mb-4 transition-transform group-hover:translate-x-1 duration-500">
+                    <h2 className="text-lg lg:text-xl font-black tracking-tight leading-[0.95] uppercase mb-2 transition-transform group-hover:translate-x-1 duration-500">
                       {module.title}
                     </h2>
                     
-                    <p className="text-brand-muted text-xs leading-relaxed font-light line-clamp-2 mb-6 opacity-60 group-hover:opacity-100 transition-opacity">
+                    <p className="text-brand-text/70 text-xs leading-relaxed font-normal line-clamp-2 md:line-clamp-1 lg:line-clamp-2 mb-3 lg:mb-4 group-hover:text-brand-text transition-colors">
                       {module.description}
                     </p>
                     
-                    <div className="mt-auto pt-6 border-t border-brand-border/30 flex flex-wrap gap-2">
+                    <div className="mt-auto pt-3 border-t border-brand-border/30 flex flex-wrap gap-2">
                        {module.tags.slice(0, 2).map(tag => (
-                         <span key={tag} className="text-[8px] font-bold tracking-widest uppercase text-brand-muted/50 border border-brand-border/50 px-1.5 py-0.5">
+                         <span key={tag} className="text-[8px] font-bold tracking-widest uppercase text-brand-muted/90 border border-brand-border/80 px-1.5 py-0.5">
                             {tag}
                          </span>
                        ))}
@@ -467,6 +539,45 @@ export default function MLLab() {
           </motion.div>
         )}
       </AnimatePresence>
+
+      {/* Pagination Controls */}
+      {totalPages > 1 && !selectedModule && (
+        <div className="flex items-center justify-between mt-4 border-t border-brand-border/40 pt-4">
+          <div className="text-[10px] text-brand-muted/60 font-bold uppercase tracking-widest">
+            Page {currentPage} / {totalPages}
+          </div>
+          <div className="flex items-center gap-2">
+            <button
+              onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
+              disabled={currentPage === 1}
+              className="px-3 py-1.5 border border-brand-border rounded text-[10px] font-bold uppercase transition-colors hover:bg-brand-text/5 disabled:opacity-30 disabled:hover:bg-transparent"
+            >
+              Prev
+            </button>
+            <div className="flex gap-1">
+              {Array.from({ length: totalPages }).map((_, i) => (
+                <button
+                  key={i}
+                  onClick={() => setCurrentPage(i + 1)}
+                  className={cn(
+                    "w-7 h-7 flex items-center justify-center border rounded text-[10px] font-bold transition-colors",
+                    currentPage === i + 1 ? "border-brand-text bg-brand-text text-brand-bg" : "border-brand-border text-brand-muted hover:bg-brand-text/5"
+                  )}
+                >
+                  {i + 1}
+                </button>
+              ))}
+            </div>
+            <button
+              onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
+              disabled={currentPage === totalPages}
+              className="px-3 py-1.5 border border-brand-border rounded text-[10px] font-bold uppercase transition-colors hover:bg-brand-text/5 disabled:opacity-30 disabled:hover:bg-transparent"
+            >
+              Next
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

@@ -1,0 +1,41 @@
+Pengxiang (Eric) Wang /envel⌢peericwang7717@gmail.com
+/linkedinlinkedin.com/in/-ericwang-
+/gl⌢beek-flowity.site
+Summary
+•Third-year Computer Science student at the University of Toronto specializing in training and optimizing deep
+learning models for efficient inference and generalization. Experienced in model distillation, speech synthesis,
+and LLM-based retrieval systems with measurable improvements in accuracy and latency. Strong foundation in
+PyTorch, Transformer architectures, and experimental analysis. Seeking ML Engineer Internship.
+Education
+•University of TorontoToronto, ON
+Bachelor of Science in Computer Science (Specialist); GPA: 3.89/4.00 Sep. 2023 – May. 2028 (Expected)
+Projects
+•Expressive and Efficient TTS via Model Distillation (PyTorch, Transformer)Dec. 2025
+◦Designed and trained a 0.5B phoneme-based Transformer TTS model distilled from a 3B teacher to
+optimize latency–accuracy tradeoff.
+◦Implemented knowledge distillation with temperature scaling and masking-based auxiliary loss to
+disentangle prosody from speaker identity.
+◦Conducted ablation studies on masking strategies and distillation hyperparameters, improving training
+stability and reducing WER variance across unseen speakers.
+◦Achieved 2.89% WER (clean) and 2.16×faster inference compared to 3B baseline, maintaining real-time
+deployment feasibility.
+◦Generated 33+ hours of high-fidelity synthetic speech across 7 emotional categories; performed data filtering
+and phoneme balance validation.
+◦Open Source:github.com/BarryFutureman/NeuTTS-Express
+•LLM Agent with RAG Optimization (Spring AI, PGVector)Sep. 2024
+◦Built a production LLM system integrating retrieval-augmented generation and multi-model routing for
+structured reasoning tasks.
+◦Designed a PGVector-based semantic retrieval pipeline with custom ranking strategies; improved retrieval
+precision by 45%.
+◦Implemented streaming inference (SSE) and asynchronous execution to reduce time-to-first-token by 60%
+and increase concurrency by 2.5×.
+◦Integrated local and cloud LLM backends for cost-efficient inference and privacy control.
+◦Live Demo:ek-flowity.site/projects/ai-agent/
+Skills
+•AI/ML:PyTorch, Transformers, Model Distillation,
+LLM Fine-Tuning, RAG, TTS
+•ML Concepts:Optimization (SGD/Adam), Regu-
+larization, Generalization, Evaluation Metrics
+•Language:Python, Java, TypeScript, SQL•Systems:REST APIs, Redis, SSE, Distributed Sys-
+tems
+•Cloud/Tools:Docker, Nginx, Linux, Git, PGVector

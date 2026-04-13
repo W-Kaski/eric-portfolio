@@ -46,6 +46,18 @@
     @apply bg-brand-text/[0.03] backdrop-blur-md border border-brand-border;
   }
   
+  .dark-glow {
+    @apply transition-shadow duration-300;
+  }
+  
+  .dark .dark-glow {
+    box-shadow: 0 0 30px rgba(216, 208, 196, 0.05);
+  }
+  
+  .dark .dark-glow:hover {
+    box-shadow: 0 0 40px rgba(216, 208, 196, 0.1);
+  }
+
   .text-gradient {
     @apply bg-clip-text text-transparent bg-gradient-to-b from-brand-text to-brand-text/40;
   }

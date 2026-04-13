@@ -11,29 +11,6 @@ async function startServer() {
   const app = express();
   const PORT = 3000;
 
-  // API route to list music files
-  app.get("/api/music", (req, res) => {
-    const musicDir = path.join(process.cwd(), "public", "music");
-    
-    if (!fs.existsSync(musicDir)) {
-      fs.mkdirSync(musicDir, { recursive: true });
-    }
-
-    try {
-      const files = fs.readdirSync(musicDir);
-      const musicFiles = files
-        .filter(file => file.endsWith(".mp3"))
-        .map(file => ({
-          name: file.replace(".mp3", ""),
-          url: `/music/${file}`,
-          filename: file
-        }));
-      res.json(musicFiles);
-    } catch (error) {
-      console.error("Error reading music directory:", error);
-      res.status(500).json({ error: "Failed to read music directory" });
-    }
-  });
 
   // Vite middleware for development
   if (process.env.NODE_ENV !== "production") {

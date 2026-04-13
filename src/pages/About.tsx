@@ -63,7 +63,7 @@ export default function About() {
 
           <div className="flex flex-wrap justify-center lg:justify-start gap-3">
             <SocialLink icon={<Github size={16} />} href={siteConfig.socials.github} label="GITHUB" />
-            <SocialLink icon={<Twitter size={16} />} href={siteConfig.socials.twitter} label="TWITTER" />
+
             <SocialLink icon={<Linkedin size={16} />} href={siteConfig.socials.linkedin} label="LINKEDIN" />
             <SocialLink icon={<Mail size={16} />} href={`mailto:${siteConfig.email}`} label="EMAIL" />
           </div>

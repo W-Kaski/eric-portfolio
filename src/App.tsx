@@ -8,7 +8,6 @@ import Portfolio from './pages/Portfolio';
 import ProjectDetail from './pages/ProjectDetail';
 import MLLab from './pages/MLLab';
 import Articles from './pages/Articles';
-import KnowledgeBase from './pages/KnowledgeBase';
 import About from './pages/About';
 
 
@@ -23,7 +22,6 @@ export default function App() {
               <Route path="/portfolio" element={<Portfolio />} />
               <Route path="/portfolio/:id" element={<ProjectDetail />} />
               <Route path="/ml-lab" element={<MLLab />} />
-              <Route path="/exploration" element={<KnowledgeBase />} />
               <Route path="/articles" element={<Articles />} />
               <Route path="/about" element={<About />} />
 

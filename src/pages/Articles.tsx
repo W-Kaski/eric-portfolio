@@ -114,28 +114,43 @@ export default function Articles() {
       <div className="px-6 max-w-7xl mx-auto pb-32">
         <div className="flex flex-col lg:flex-row items-start gap-12">
           {/* Sidebar Outline */}
-          <aside className="hidden lg:block w-64 flex-shrink-0 sticky top-24 h-fit z-10">
-            <div className="flex items-center gap-2 text-xs font-bold tracking-widest uppercase text-brand-muted mb-6">
-              <List size={14} /> {t('articles.outline')}
-            </div>
-            <nav className="space-y-1">
-              {headers.map((header) => (
-                <button
-                  key={header.id}
-                  onClick={() => scrollToHeader(header.id)}
-                  className={cn(
-                    "block w-full text-left text-sm py-1.5 transition-all hover:text-brand-text",
-                    header.level === 1 ? "font-bold" : "pl-4 text-brand-muted",
-                    activeHeader === header.id ? "text-brand-text border-l-2 border-brand-text pl-3 bg-brand-text/5" : "border-l border-brand-border/50 text-brand-muted/60"
+          <aside className="hidden lg:block w-64 flex-shrink-0 relative">
+            <div className="fixed top-24 w-64 flex flex-col h-[calc(100vh-8rem)] z-10 pb-8">
+              <button 
+                onClick={() => {
+                  setSelectedArticle(null);
+                  setSearchParams({});
+                }}
+                className="flex items-center gap-2 text-brand-muted hover:text-brand-text transition-colors group w-fit"
+              >
+                <ArrowLeft size={18} className="group-hover:-translate-x-1 transition-transform" />
+                {t('articles.back')}
+              </button>
+
+              <div className="mt-12 max-h-[calc(100vh-14rem)] flex flex-col">
+                <div className="flex items-center gap-2 text-xs font-bold tracking-widest uppercase text-brand-muted mb-6">
+                  <List size={14} /> {t('articles.outline')}
+                </div>
+                <nav className="space-y-1 overflow-y-auto scrollbar-hide pr-4">
+                  {headers.map((header) => (
+                    <button
+                      key={header.id}
+                      onClick={() => scrollToHeader(header.id)}
+                      className={cn(
+                        "block w-full text-left text-sm py-1.5 transition-all hover:text-brand-text",
+                        header.level === 1 ? "font-bold" : "pl-4 text-brand-muted",
+                        activeHeader === header.id ? "text-brand-text border-l-2 border-brand-text pl-3 bg-brand-text/5" : "border-l border-brand-border/50 text-brand-muted/60"
+                      )}
+                    >
+                      {header.text}
+                    </button>
+                  ))}
+                  {headers.length === 0 && (
+                    <p className="text-[10px] text-brand-muted/40 italic px-4">{t('articles.noHeaders')}</p>
                   )}
-                >
-                  {header.text}
-                </button>
-              ))}
-              {headers.length === 0 && (
-                <p className="text-[10px] text-brand-muted/40 italic px-4">{t('articles.noHeaders')}</p>
-              )}
-            </nav>
+                </nav>
+              </div>
+            </div>
           </aside>
 
           {/* Main Content */}
@@ -145,7 +160,7 @@ export default function Articles() {
                 setSelectedArticle(null);
                 setSearchParams({}); // Clear query param when going back
               }}
-              className="flex items-center gap-2 text-brand-muted hover:text-brand-text mb-12 transition-colors group"
+              className="lg:hidden flex items-center gap-2 text-brand-muted hover:text-brand-text mb-12 transition-colors group"
             >
               <ArrowLeft size={18} className="group-hover:-translate-x-1 transition-transform" />
               {t('articles.back')}

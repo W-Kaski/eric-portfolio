@@ -66,6 +66,7 @@ export default function Navbar() {
               onClick={toggleTheme}
               className="p-2 rounded-full hover:bg-brand-text/5 text-brand-muted hover:text-brand-text transition-all"
               title="Toggle Theme"
+              aria-label="Toggle Theme"
             >
               {theme === 'dark' ? <Sun size={18} /> : <Moon size={18} />}
             </button>
@@ -73,6 +74,7 @@ export default function Navbar() {
               onClick={toggleLang}
               className="p-2 rounded-full hover:bg-brand-text/5 text-brand-muted hover:text-brand-text transition-all flex items-center gap-1"
               title="Toggle Language"
+              aria-label="Toggle Language"
             >
               <Languages size={18} />
               <span className="text-[10px] font-bold uppercase">{lang}</span>

@@ -1,13 +1,13 @@
 {
-  "name": "ABA.AI",
-  "author": "PHANTOM.AI",
-  "email": "hello@phantom.ai",
+  "name": "Animus",
+  "author": "",
+  "email": "ericwang7717@gmail.com",
   "copyrightYear": 2026,
-  "footerMessage": "Built with passion for ML & Design.",
+  "footerMessage": "Built and maintained by Eric.",
   "socials": {
-    "github": "https://github.com",
+    "github": "https://github.com/W-Kaski",
     "twitter": "https://twitter.com",
-    "linkedin": "https://linkedin.com"
+    "linkedin": "https://www.linkedin.com/in/-ericwang-"
   },
   "navItems": [
     {
@@ -21,10 +21,6 @@
     {
       "name": "nav.ml-lab",
       "path": "/ml-lab"
-    },
-    {
-      "name": "nav.exploration",
-      "path": "/exploration"
     },
     {
       "name": "nav.articles",

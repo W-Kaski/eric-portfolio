@@ -259,38 +259,38 @@ export default function Home() {
     mouseY.set(e.clientY - window.innerHeight / 2);
   };
 
-  const scenes = [
-    {
-      id: "PERCEPTION",
-      title: "Genesis",
-      tag: "STEP 01 / PERCEPTION",
-      pronunciation: "/ ˈdʒɛnəsɪs /",
-      definition: "Intelligence begins with the echo of data. It is the raw ability to mirror the world through silicon sensors—the origin of ABA.AI's vision.",
-      details: ["Signal Acquisition", "Pattern Synthesis", "Raw Feature Mapping"],
-      icon: Cpu,
-      stars: 4
-    },
-    {
-      id: "ABSTRACTION",
-      title: "Structure",
-      tag: "STEP 02 / LOGIC",
-      pronunciation: "/ ˈstrʌktʃər /",
-      definition: "From noise comes order. We build models that map chaos into logic, turning information into an internal architecture of pure mathematics.",
-      details: ["Neural Layers", "Latent Space Mapping", "Inference Engine"],
-      icon: Brain,
-      stars: 8
-    },
-    {
-      id: "AGENCY",
-      title: "Evolution",
-      tag: "STEP 03 / AGENCY",
-      pronunciation: "/ ˌɛvəˈluːʃ(ə)n /",
-      definition: "The final spark. When a system no longer just reacts, but adapts and creates. This is human-machine synergy, curated by PHANTOM.AI.",
-      details: ["Autonomous Adaptation", "Creative Synthesis", "Proactive Agency"],
-      icon: Zap,
-      stars: 12
-    }
-  ];
+const scenes = [
+  {
+    id: "PERCEPTION",
+    title: "Input",
+    tag: "01 / CAPTURE",
+    pronunciation: "/ ˈɪnpʊt /",
+    definition: "Intelligence starts with clean data. It is the ability to see and record the world exactly as it is through digital sensors.",
+    details: ["Data Acquisition", "Signal Filtering", "Environment Mapping"],
+    icon: Cpu,
+    stars: 4
+  },
+  {
+    id: "ABSTRACTION",
+    title: "Logic",
+    tag: "02 / REASON",
+    pronunciation: "/ ˈlɒdʒɪk /",
+    definition: "Turning noise into order. We build models that find the rules behind the data, creating a clear map of how things work.",
+    details: ["Pattern Sorting", "Neural Mapping", "Model Inference"],
+    icon: Brain,
+    stars: 8
+  },
+  {
+    id: "AGENCY",
+    title: "Action",
+    tag: "03 / EXECUTE",
+    pronunciation: "/ ˈækʃ(ə)n /",
+    definition: "The goal of intelligence. A system that doesn't just react, but learns and acts on its own to solve complex problems.",
+    details: ["Self-Learning", "Task Execution", "Autonomous Response"],
+    icon: Zap,
+    stars: 12
+  }
+];
 
   const current = scenes[currentScene];
   const tokens = current.definition.split(' ');
@@ -366,7 +366,7 @@ export default function Home() {
                 <button onClick={nextScene} className="p-3 rounded-full border border-brand-border hover:bg-brand-text hover:text-brand-bg transition-all active:scale-95"><ChevronRight size={18} /></button>
               </div>
               <div className="h-4 w-px bg-brand-border/40" />
-              <Link to="/portfolio" className="text-[10px] font-bold uppercase tracking-widest text-brand-muted hover:text-brand-text transition-colors flex items-center gap-2">Explore Work <ArrowRight size={14} /></Link>
+              
             </div>
           </div>
 
@@ -433,69 +433,44 @@ export default function Home() {
       </section>
 
       {/* Other sections remain unchanged for brevity but properly included in the final file */}
-      {/* SECTION 3: ML Lab (Plan 2: Balanced Widescreen) */}
-      <section className="h-screen w-full snap-start relative flex flex-col overflow-hidden bg-brand-bg">
-        {/* Top: 65% Interactive Laboratory Core (Balanced) */}
-        <div className="h-[65vh] relative border-b border-brand-border/20">
-          <div className="absolute inset-0 opacity-[0.03] pointer-events-none bg-[radial-gradient(circle,currentColor_1px,transparent_1px)] bg-[size:36px_36px] text-brand-text" />
+      {/* SECTION 3: ML Lab (Unified Grid Layout) */}
+      <section className="h-screen w-full snap-start bg-brand-bg relative flex items-center px-12 md:px-24">
+        {/* Subtle Background Pattern */}
+        <div className="absolute inset-0 opacity-[0.03] pointer-events-none bg-[radial-gradient(circle,currentColor_1px,transparent_1px)] bg-[size:36px_36px] text-brand-text" />
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center w-full max-w-7xl mx-auto relative z-10">
           
-          <div className="max-w-7xl mx-auto h-full px-12 md:px-24 grid grid-cols-1 md:grid-cols-12 items-center gap-12 relative z-20">
-            {/* Left Col: Info (45%) */}
-            <div className="md:col-span-5 space-y-2">
-              <h2 className="text-5xl font-bold tracking-tight uppercase">
-                {t('home.lab.title')}
-              </h2>
-              <p className="text-brand-muted max-w-md">
-                {t('home.lab.desc')}
-              </p>
+          {/* Left: Info & MLLab List */}
+          <div className="space-y-8 order-2 md:order-1">
+            <div className="space-y-2">
+              <h2 className="text-5xl font-bold tracking-tight uppercase">{t('home.lab.title')}</h2>
+              <p className="text-brand-muted max-w-md">{t('home.lab.desc')}</p>
             </div>
-
-            {/* Right Col: The Sphere (55%) */}
-            <div className="md:col-span-7 h-full relative py-12">
-              <InteractiveParticleCore className="w-full h-full" />
-            </div>
-          </div>
-        </div>
-
-        {/* Bottom: 35% Data Control Panel */}
-        <div className="h-[35vh] w-full bg-brand-card/20 backdrop-blur-md flex flex-col">
-          {featuredLabs.map((lab, i) => (
-            <Link 
-              key={lab.id} 
-              to={`/ml-lab?id=${lab.id}`} 
-              className="group flex-1 border-b border-brand-border/40 last:border-0 hover:bg-brand-text/[0.02] transition-colors relative overflow-hidden"
-            >
-              <div className="h-full w-full px-12 md:px-24 flex items-center justify-between gap-12 relative z-10">
-                {/* Index & Category */}
-                <div className="flex items-center gap-8 min-w-[120px]">
-                  <span className="text-xs font-mono text-brand-muted opacity-40">0{i + 1}</span>
-                  <div className="hidden md:flex flex-col">
-                    <span className="text-[8px] font-bold uppercase tracking-widest text-brand-muted/60">Module</span>
-                    <span className="text-[10px] font-mono uppercase text-brand-text/50">{lab.category}</span>
+            
+            <div className="space-y-4">
+              {featuredLabs.map((lab, i) => (
+                <Link key={lab.id} to={`/ml-lab?id=${lab.id}`} className="group flex items-center justify-between p-6 rounded-sm border border-brand-border hover:bg-brand-card transition-all overflow-hidden relative">
+                  <div className="flex items-center gap-4 relative z-10">
+                    <span className="text-xs font-mono text-brand-muted">0{i + 1}</span>
+                    <h3 className="text-xl font-bold transition-all duration-300 group-hover:pl-2 uppercase">{lab.title}</h3>
                   </div>
-                </div>
+                  <ArrowRight className="opacity-0 group-hover:opacity-100 -translate-x-4 group-hover:translate-x-0 transition-all h-5 w-5" />
+                  <div className="absolute inset-0 bg-brand-text/[0.02] translate-x-[-101%] group-hover:translate-x-0 transition-transform duration-500 ease-out" />
+                </Link>
+              ))}
+            </div>
 
-                {/* Title */}
-                <h3 className="flex-1 text-base md:text-xl font-bold uppercase tracking-wide group-hover:translate-x-2 transition-transform duration-500 truncate">
-                  {lab.title}
-                </h3>
-
-                {/* Metadata & Toggle */}
-                <div className="flex items-center gap-12">
-                   <div className="hidden lg:flex flex-col items-end">
-                      <span className="text-[8px] font-bold uppercase tracking-widest text-brand-muted/60">Status</span>
-                      <span className="text-[9px] font-mono text-brand-text/40">[ ACTIVE_NODE ]</span>
-                   </div>
-                   <div className="w-10 h-10 rounded-full border border-brand-border/60 flex items-center justify-center group-hover:bg-brand-text group-hover:text-brand-bg transition-all">
-                      <ArrowRight size={18} className="group-hover:translate-x-0.5 transition-transform" />
-                   </div>
-                </div>
-              </div>
-              
-              {/* Subtle Scanline Hover Effect */}
-              <div className="absolute inset-0 bg-gradient-to-r from-transparent via-brand-text/[0.01] to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000 ease-in-out" />
+            {/* In a real scenario, you can add an 'All Labs' link if needed, or keep it perfectly aligned with 'Explore Work' */}
+            <Link to="/ml-lab" className="inline-flex items-center gap-2 text-sm font-bold uppercase tracking-widest hover:text-brand-muted transition-colors">
+              Enter Laboratory <ArrowRight size={16} />
             </Link>
-          ))}
+          </div>
+
+          {/* Right: Interactive Particle Sphere */}
+          <div className="hidden md:flex relative w-full h-[60vh] min-h-[400px] flex-col items-center justify-center order-1 md:order-2">
+            <InteractiveParticleCore className="w-full h-full scale-[1.1] opacity-90" />
+          </div>
+          
         </div>
       </section>
 
@@ -565,7 +540,7 @@ export default function Home() {
                <div className="space-y-8 relative">
                   <a href={`mailto:${siteConfig?.email}`} className="group/email block">
                     <span className="text-[10px] font-mono font-bold uppercase tracking-widest text-brand-muted/60 mb-2 block">Direct Access</span>
-                    <span className="block text-2xl md:text-3xl font-bold hover:text-brand-muted transition-all duration-500 overflow-hidden text-ellipsis decoration-brand-border underline underline-offset-8">
+                    <span className="block text-base md:text-xl font-bold hover:text-brand-muted transition-all duration-500 truncate decoration-brand-border underline underline-offset-8">
                        {siteConfig?.email}
                     </span>
                   </a>
@@ -580,9 +555,8 @@ export default function Home() {
                   </div>
                </div>
 
-               <div className="pt-10 border-t border-brand-border/20 flex items-center justify-between opacity-40">
+               <div className="pt-10 border-t border-brand-border/20 flex items-center justify-start opacity-40">
                   <span className="text-[8px] font-mono uppercase tracking-widest">© {siteConfig?.copyrightYear} {siteConfig?.author}</span>
-                  <span className="text-[8px] font-mono uppercase tracking-widest">Protocol.V4.0</span>
                </div>
             </div>
           </div>
