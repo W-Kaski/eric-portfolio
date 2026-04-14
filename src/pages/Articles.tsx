@@ -8,9 +8,11 @@ import rehypeKatex from 'rehype-katex';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { vscDarkPlus, prism } from 'react-syntax-highlighter/dist/esm/styles/prism';
 import { cn } from '@/src/lib/utils';
-import { Calendar, Clock, ArrowLeft, Filter, SortAsc, Folder, ChevronDown, List } from 'lucide-react';
+import { Calendar, Clock, ArrowLeft, Filter, SortAsc, Folder, ChevronDown, List, Network, FolderTree, LayoutGrid } from 'lucide-react';
 import { getAllArticles, Article } from '@/src/lib/articles';
 import { useApp } from '@/src/context/AppContext';
+import { ArticleTreeView } from '@/src/components/ArticleTreeView';
+import { ArticleGraphView } from '@/src/components/ArticleGraphView';
 
 type SortBy = 'date' | 'title';
 
@@ -25,22 +27,29 @@ export default function Articles() {
   const [searchParams, setSearchParams] = useSearchParams();
   const navigate = useNavigate();
   const targetId = searchParams.get('id');
-  
+
   const [articles, setArticles] = useState<Article[]>([]);
   const [selectedArticle, setSelectedArticle] = useState<Article | null>(null);
   const [activeCategory, setActiveCategory] = useState<string>(t('common.all'));
   const [activeFolder, setActiveFolder] = useState<string>(t('common.all'));
   const [sortBy, setSortBy] = useState<SortBy>('date');
+  const [viewMode, setViewModeState] = useState<'grid' | 'tree' | 'graph'>(
+    (localStorage.getItem('articleViewMode') as 'grid' | 'tree' | 'graph') || 'grid'
+  );
+  const setViewMode = (mode: 'grid' | 'tree' | 'graph') => {
+    localStorage.setItem('articleViewMode', mode);
+    setViewModeState(mode);
+  };
   const [loading, setLoading] = useState(true);
   const [activeHeader, setActiveHeader] = useState<string>('');
   const [currentPage, setCurrentPage] = useState(1);
-  const ITEMS_PER_PAGE = 6;
+  const ITEMS_PER_PAGE = 9;
 
   useEffect(() => {
     getAllArticles().then(data => {
       setArticles(data);
       setLoading(false);
-      
+
       // Handle deep linking from URL
       if (targetId) {
         const article = data.find(a => a.id === targetId);
@@ -95,7 +104,7 @@ export default function Articles() {
   // Handle scroll to highlight active header
   useEffect(() => {
     if (!selectedArticle) return;
-    
+
     const handleScroll = () => {
       const headerElements = headers.map(h => document.getElementById(h.id));
       const scrollPosition = window.scrollY + 100;
@@ -130,7 +139,7 @@ export default function Articles() {
           {/* Sidebar Outline */}
           <aside className="hidden lg:block w-64 flex-shrink-0 relative">
             <div className="fixed top-24 w-64 flex flex-col h-[calc(100vh-8rem)] z-10 pb-8">
-              <button 
+              <button
                 onClick={() => {
                   setSelectedArticle(null);
                   setSearchParams({});
@@ -169,7 +178,7 @@ export default function Articles() {
 
           {/* Main Content */}
           <div className="flex-grow max-w-3xl">
-            <button 
+            <button
               onClick={() => {
                 setSelectedArticle(null);
                 setSearchParams({}); // Clear query param when going back
@@ -265,31 +274,41 @@ export default function Articles() {
       <div className="flex items-end justify-between mb-12 border-b border-brand-border/40 pb-5">
         <h1 className="text-3xl font-black tracking-tighter uppercase leading-none">{t('articles.title')}</h1>
 
-        <div className="flex items-center gap-6">
-          {/* Folder */}
-          <div className="hidden sm:flex items-center gap-2">
-            <div className="flex items-center gap-1.5 text-brand-muted text-[10px] font-bold uppercase tracking-widest">
-              <Folder size={12} /> {t('articles.folder')}:
-            </div>
-            <select 
-              value={activeFolder} 
-              onChange={(e) => setActiveFolder(e.target.value)}
-              className="bg-brand-card border border-brand-border rounded-lg px-3 py-1.5 text-[10px] font-bold uppercase tracking-widest focus:outline-none focus:ring-1 focus:ring-brand-text/20 appearance-none cursor-pointer hover:bg-brand-text/5 transition-colors"
+        <div className="flex flex-wrap items-center gap-6 justify-end">
+          {/* View Mode */}
+          <div className="flex bg-brand-card border border-brand-border rounded-lg overflow-hidden">
+            <button
+              onClick={() => setViewMode('grid')}
+              className={cn("px-3 py-1.5 text-[10px] font-bold flex items-center gap-1.5 uppercase transition-colors tracking-widest", viewMode === 'grid' ? 'bg-brand-text text-brand-bg' : 'text-brand-muted hover:bg-brand-text/5')}
             >
-              {folders.map(f => <option key={f} value={f}>{f}</option>)}
-            </select>
+              <LayoutGrid size={12} /> Grid
+            </button>
+            <button
+              onClick={() => setViewMode('tree')}
+              className={cn("px-3 py-1.5 text-[10px] font-bold flex items-center gap-1.5 uppercase transition-colors tracking-widest", viewMode === 'tree' ? 'bg-brand-text text-brand-bg' : 'text-brand-muted hover:bg-brand-text/5')}
+            >
+              <FolderTree size={12} /> Tree
+            </button>
+            <button
+              onClick={() => setViewMode('graph')}
+              className={cn("px-3 py-1.5 text-[10px] font-bold flex items-center gap-1.5 uppercase transition-colors tracking-widest", viewMode === 'graph' ? 'bg-brand-text text-brand-bg' : 'text-brand-muted hover:bg-brand-text/5')}
+            >
+              <Network size={12} /> Graph
+            </button>
           </div>
+
+
 
           {/* Sort */}
           <div className="flex items-center gap-2">
             <div className="flex bg-brand-card border border-brand-border rounded-lg overflow-hidden">
-              <button 
+              <button
                 onClick={() => setSortBy('date')}
                 className={cn("px-3 py-1.5 text-[10px] font-bold uppercase transition-colors tracking-widest", sortBy === 'date' ? 'bg-brand-text text-brand-bg' : 'text-brand-muted hover:bg-brand-text/5')}
               >
                 {t('articles.sort.date')}
               </button>
-              <button 
+              <button
                 onClick={() => setSortBy('title')}
                 className={cn("px-3 py-1.5 text-[10px] font-bold uppercase transition-colors tracking-widest", sortBy === 'title' ? 'bg-brand-text text-brand-bg' : 'text-brand-muted hover:bg-brand-text/5')}
               >
@@ -304,16 +323,24 @@ export default function Articles() {
         <div className="flex justify-center py-20">
           <div className="w-8 h-8 border-2 border-brand-text/20 border-t-brand-text rounded-full animate-spin" />
         </div>
+      ) : viewMode === 'graph' ? (
+        <div className="w-full relative mt-4">
+          <ArticleGraphView articles={articles} />
+        </div>
+      ) : viewMode === 'tree' ? (
+        <div className="w-full mt-4 p-6 bg-brand-card/30 border border-brand-border/40 rounded-xl">
+          <ArticleTreeView articles={filteredAndSortedArticles} />
+        </div>
       ) : (
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12">
           {/* Main Grid: Articles (65%) */}
           <div className="lg:col-span-8 space-y-12">
             <div className="flex items-center gap-4 mb-8">
-               <h2 className="text-xs font-black uppercase tracking-[0.3em] text-brand-muted">Core Articles</h2>
-               <div className="flex-grow h-px bg-brand-border/20" />
+              <h2 className="text-xs font-black uppercase tracking-[0.3em] text-brand-muted">Core Articles</h2>
+              <div className="flex-grow h-px bg-brand-border/20" />
             </div>
-            
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-x-10 gap-y-12 mb-8">
+
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-x-10 gap-y-12 mb-8">
               <AnimatePresence mode="popLayout">
                 {paginatedArticles.map((article, index) => (
                   <motion.article
@@ -341,7 +368,7 @@ export default function Articles() {
                       <div className="flex flex-wrap gap-1.5 pt-2">
                         {article.tags.slice(0, 2).map(tag => (
                           <span key={tag} className="text-[7px] font-bold tracking-widest uppercase px-1.5 py-0.5 bg-brand-muted/5 text-brand-muted/60 border border-brand-border/40">
-                             {tag}
+                            {tag}
                           </span>
                         ))}
                       </div>
@@ -355,7 +382,7 @@ export default function Articles() {
                 {t('articles.empty')}
               </div>
             )}
-            
+
             {/* Pagination Controls */}
             {totalPages > 1 && (
               <div className="flex items-center justify-between mt-8 border-t border-brand-border/40 pt-4">
@@ -384,43 +411,43 @@ export default function Articles() {
 
           {/* Sidebar: Research Papers (35%) */}
           <div className="lg:col-span-4 space-y-12 bg-brand-card/20 p-8 border border-brand-border/30 backdrop-blur-sm self-start">
-             <div className="flex items-center gap-4 mb-8">
-                <h2 className="text-xs font-black uppercase tracking-[0.3em] text-brand-text">Research / Papers</h2>
-                <div className="flex-grow h-px bg-brand-text/10" />
-             </div>
+            <div className="flex items-center gap-4 mb-8">
+              <h2 className="text-xs font-black uppercase tracking-[0.3em] text-brand-text">Research / Papers</h2>
+              <div className="flex-grow h-px bg-brand-text/10" />
+            </div>
 
-             <div className="space-y-8">
-                {filteredAndSortedArticles.filter(a => a.folder === 'papers').length > 0 ? (
-                  filteredAndSortedArticles.filter(a => a.folder === 'papers').map((paper, index) => (
-                    <motion.div 
-                      key={paper.id}
-                      initial={{ opacity: 0, x: 10 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      transition={{ delay: index * 0.1 }}
-                      onClick={() => navigate(`/articles/${paper.id}`)}
-                      className="group cursor-pointer space-y-3 border-b border-brand-border/20 pb-8 last:border-0"
-                    >
-                      <div className="flex items-center justify-between gap-3">
-                         <span className="text-[8px] font-mono p-1 bg-brand-text/5 text-brand-muted border border-brand-border/40">DOC_{index+1}</span>
-                         <span className="text-[8px] font-mono text-brand-muted/40 uppercase tracking-widest">{paper.date}</span>
-                      </div>
-                      <h4 className="text-sm font-black uppercase tracking-tight group-hover:text-brand-text transition-colors leading-snug">
-                         {paper.title}
-                      </h4>
-                    </motion.div>
-                  ))
-                ) : (
-                  <div className="py-12 text-center text-[9px] text-brand-muted/40 italic">
-                    NO PUBLISHED PAPERS FOUND.
-                  </div>
-                )}
-             </div>
-             
-             <div className="pt-8 border-t border-brand-border/20">
-                <p className="text-[9px] leading-relaxed text-brand-muted/60 font-light">
-                  Academic research focusing on geometric machine learning, latent space navigation, and human-computer interaction patterns.
-                </p>
-             </div>
+            <div className="space-y-8">
+              {filteredAndSortedArticles.filter(a => a.folder === 'papers').length > 0 ? (
+                filteredAndSortedArticles.filter(a => a.folder === 'papers').map((paper, index) => (
+                  <motion.div
+                    key={paper.id}
+                    initial={{ opacity: 0, x: 10 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: index * 0.1 }}
+                    onClick={() => navigate(`/articles/${paper.id}`)}
+                    className="group cursor-pointer space-y-3 border-b border-brand-border/20 pb-8 last:border-0"
+                  >
+                    <div className="flex items-center justify-between gap-3">
+                      <span className="text-[8px] font-mono p-1 bg-brand-text/5 text-brand-muted border border-brand-border/40">DOC_{index + 1}</span>
+                      <span className="text-[8px] font-mono text-brand-muted/40 uppercase tracking-widest">{paper.date}</span>
+                    </div>
+                    <h4 className="text-sm font-black uppercase tracking-tight group-hover:text-brand-text transition-colors leading-snug">
+                      {paper.title}
+                    </h4>
+                  </motion.div>
+                ))
+              ) : (
+                <div className="py-12 text-center text-[9px] text-brand-muted/40 italic">
+                  NO PUBLISHED PAPERS FOUND.
+                </div>
+              )}
+            </div>
+
+            <div className="pt-8 border-t border-brand-border/20">
+              <p className="text-[9px] leading-relaxed text-brand-muted/60 font-light">
+                Academic research focusing on geometric machine learning, latent space navigation, and human-computer interaction patterns.
+              </p>
+            </div>
           </div>
         </div>
       )}

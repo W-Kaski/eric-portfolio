@@ -15,6 +15,8 @@ export interface Article {
   excerpt: string;
   content: string;
   folder: string;
+  pathSegments: string[];
+  outboundLinks: string[];
   pdfUrl?: string;
 }
 
@@ -32,6 +34,25 @@ export async function getAllArticles(): Promise<Article[]> {
     const folder = pathParts[pathParts.length - 2];
     const id = pathParts[pathParts.length - 1].replace('.md', '');
 
+    // Extract pathSegments relative to /src/content/articles/
+    const prefix = '/src/content/articles/';
+    let relativePath = path;
+    if (path.startsWith(prefix)) {
+      relativePath = path.substring(prefix.length);
+    }
+    const pathSegments = relativePath.split('/').slice(0, -1);
+
+    // Extract Obsidian links [[Target|Alias]] or [[Target]]
+    const outboundLinks: string[] = [];
+    const linkRegex = /\[\[(.*?)\]\]/g;
+    let match;
+    while ((match = linkRegex.exec(body)) !== null) {
+      const linkText = match[1];
+      const linkTarget = linkText.split('|')[0].trim();
+      // Only keep the clean ID if it ends up differing from title
+      outboundLinks.push(linkTarget);
+    }
+
     articles.push({
       id,
       title: data.title || id,
@@ -41,6 +62,8 @@ export async function getAllArticles(): Promise<Article[]> {
       excerpt: data.excerpt || '',
       content: body,
       folder: folder === 'articles' ? 'root' : folder,
+      pathSegments,
+      outboundLinks,
       pdfUrl: data.pdfUrl || data.pdf || data.paper || '',
     });
   }
