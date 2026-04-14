@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import { useSearchParams } from 'react-router-dom';
+import { useSearchParams, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'motion/react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
@@ -23,6 +23,7 @@ interface Header {
 export default function Articles() {
   const { t, theme } = useApp();
   const [searchParams, setSearchParams] = useSearchParams();
+  const navigate = useNavigate();
   const targetId = searchParams.get('id');
   
   const [articles, setArticles] = useState<Article[]>([]);
@@ -32,6 +33,8 @@ export default function Articles() {
   const [sortBy, setSortBy] = useState<SortBy>('date');
   const [loading, setLoading] = useState(true);
   const [activeHeader, setActiveHeader] = useState<string>('');
+  const [currentPage, setCurrentPage] = useState(1);
+  const ITEMS_PER_PAGE = 6;
 
   useEffect(() => {
     getAllArticles().then(data => {
@@ -60,6 +63,17 @@ export default function Articles() {
         return a.title.localeCompare(b.title);
       });
   }, [articles, activeCategory, activeFolder, sortBy]);
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [activeCategory, activeFolder, sortBy]);
+
+  const coreArticles = useMemo(() => filteredAndSortedArticles.filter(a => a.folder !== 'papers'), [filteredAndSortedArticles]);
+  const totalPages = Math.ceil(coreArticles.length / ITEMS_PER_PAGE);
+  const paginatedArticles = useMemo(() => {
+    const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
+    return coreArticles.slice(startIndex, startIndex + ITEMS_PER_PAGE);
+  }, [coreArticles, currentPage]);
 
   // Extract headers for outline
   const headers = useMemo(() => {
@@ -299,9 +313,9 @@ export default function Articles() {
                <div className="flex-grow h-px bg-brand-border/20" />
             </div>
             
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-x-10 gap-y-12">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-x-10 gap-y-12 mb-8">
               <AnimatePresence mode="popLayout">
-                {filteredAndSortedArticles.filter(a => a.folder !== 'papers').map((article, index) => (
+                {paginatedArticles.map((article, index) => (
                   <motion.article
                     key={article.id}
                     layout
@@ -309,7 +323,7 @@ export default function Articles() {
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, scale: 0.98 }}
                     transition={{ delay: index * 0.05 }}
-                    onClick={() => setSelectedArticle(article)}
+                    onClick={() => navigate(`/articles/${article.id}`)}
                     className="group cursor-pointer border-l-2 border-brand-border/20 pl-6 py-2 hover:border-brand-text transition-colors relative"
                   >
                     <div className="space-y-3">
@@ -336,9 +350,34 @@ export default function Articles() {
                 ))}
               </AnimatePresence>
             </div>
-            {filteredAndSortedArticles.filter(a => a.folder !== 'papers').length === 0 && (
+            {coreArticles.length === 0 && (
               <div className="py-20 text-center text-brand-muted uppercase text-[10px] font-bold tracking-[0.3em] border border-dashed border-brand-border/40">
                 {t('articles.empty')}
+              </div>
+            )}
+            
+            {/* Pagination Controls */}
+            {totalPages > 1 && (
+              <div className="flex items-center justify-between mt-8 border-t border-brand-border/40 pt-4">
+                <div className="text-[10px] text-brand-muted/60 font-bold uppercase tracking-widest">
+                  Page {currentPage} / {totalPages}
+                </div>
+                <div className="flex items-center gap-2">
+                  <button
+                    onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
+                    disabled={currentPage === 1}
+                    className="p-2 border border-brand-border rounded hover:bg-brand-text/5 disabled:opacity-30 disabled:hover:bg-transparent transition-colors"
+                  >
+                    <ArrowLeft size={14} />
+                  </button>
+                  <button
+                    onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
+                    disabled={currentPage === totalPages}
+                    className="p-2 border border-brand-border rounded hover:bg-brand-text/5 disabled:opacity-30 disabled:hover:bg-transparent transition-colors"
+                  >
+                    <ArrowLeft size={14} className="rotate-180" />
+                  </button>
+                </div>
               </div>
             )}
           </div>
@@ -358,7 +397,7 @@ export default function Articles() {
                       initial={{ opacity: 0, x: 10 }}
                       animate={{ opacity: 1, x: 0 }}
                       transition={{ delay: index * 0.1 }}
-                      onClick={() => setSelectedArticle(paper)}
+                      onClick={() => navigate(`/articles/${paper.id}`)}
                       className="group cursor-pointer space-y-3 border-b border-brand-border/20 pb-8 last:border-0"
                     >
                       <div className="flex items-center justify-between gap-3">

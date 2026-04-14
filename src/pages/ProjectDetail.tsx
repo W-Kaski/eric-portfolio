@@ -45,7 +45,10 @@ export default function ProjectDetail() {
     if (!project) return [];
     const lines = project.description?.split('\n') || [];
     const extracted: Header[] = [];
+    let inCodeFence = false;
     lines.forEach(line => {
+      if (line.trimStart().startsWith('```')) { inCodeFence = !inCodeFence; return; }
+      if (inCodeFence) return;
       const match = line.match(/^(#{1,6})\s+(.*)$/);
       if (match) {
         const level = match[1].length;
@@ -60,13 +63,15 @@ export default function ProjectDetail() {
   useEffect(() => {
     if (!project) return;
     const handleScroll = () => {
-      const headerElements = headers.map(h => document.getElementById(h.id));
-      const scrollPosition = window.scrollY + 100;
-      for (let i = headerElements.length - 1; i >= 0; i--) {
-        const el = headerElements[i];
-        if (el && el.offsetTop <= scrollPosition) {
-          setActiveHeader(headers[i].id);
-          break;
+      const scrollPosition = window.scrollY + 120;
+      for (let i = headers.length - 1; i >= 0; i--) {
+        const el = document.getElementById(headers[i].id);
+        if (el) {
+          const top = el.getBoundingClientRect().top + window.scrollY;
+          if (top <= scrollPosition) {
+            setActiveHeader(headers[i].id);
+            break;
+          }
         }
       }
     };
@@ -77,7 +82,8 @@ export default function ProjectDetail() {
   const scrollToHeader = (id: string) => {
     const element = document.getElementById(id);
     if (element) {
-      window.scrollTo({ top: element.offsetTop - 80, behavior: 'smooth' });
+      const top = element.getBoundingClientRect().top + window.scrollY - 80;
+      window.scrollTo({ top, behavior: 'smooth' });
     }
   };
 
@@ -186,10 +192,6 @@ export default function ProjectDetail() {
         {/* Tech stack chips */}
         {project.tech.length > 0 && (
           <div className="flex flex-wrap gap-2 mb-8">
-            <div className="flex items-center gap-1.5 text-brand-muted/50 mr-1">
-              <Code2 size={13} />
-              <span className="text-[10px] font-bold uppercase tracking-widest">Stack</span>
-            </div>
             {project.tech.map(tech => (
               <span
                 key={tech}
@@ -229,55 +231,115 @@ export default function ProjectDetail() {
       </div>
 
 
-      {/* Markdown body */}
-      <div className="prose prose-neutral dark:prose-invert max-w-none">
-        <div className="text-brand-text/90 leading-[1.8] text-lg font-light prose-headings:text-brand-text prose-p:text-brand-text/90 prose-strong:text-brand-text prose-ul:text-brand-text/90">
+      <div className="max-w-none">
+        <div className="text-brand-text leading-[1.8] text-base">
           <ReactMarkdown
             remarkPlugins={[remarkGfm, remarkMath]}
             rehypePlugins={[rehypeKatex]}
             components={{
               h1: ({ children }) => {
                 const id = String(children).toLowerCase().replace(/[^\w\s-]/g, '').replace(/\s+/g, '-');
-                return <h1 id={id} className="text-3xl font-bold mt-12 mb-6">{children}</h1>;
+                return <h1 id={id} className="text-3xl font-bold mt-12 mb-6 text-brand-text border-b border-brand-border/30 pb-3">{children}</h1>;
               },
               h2: ({ children }) => {
                 const id = String(children).toLowerCase().replace(/[^\w\s-]/g, '').replace(/\s+/g, '-');
-                return <h2 id={id} className="text-2xl font-bold mt-10 mb-4">{children}</h2>;
+                return <h2 id={id} className="text-2xl font-bold mt-10 mb-4 text-brand-text">{children}</h2>;
               },
               h3: ({ children }) => {
                 const id = String(children).toLowerCase().replace(/[^\w\s-]/g, '').replace(/\s+/g, '-');
-                return <h3 id={id} className="text-xl font-bold mt-8 mb-3">{children}</h3>;
+                return <h3 id={id} className="text-xl font-semibold mt-8 mb-3 text-brand-text">{children}</h3>;
               },
+              h4: ({ children }) => {
+                const id = String(children).toLowerCase().replace(/[^\w\s-]/g, '').replace(/\s+/g, '-');
+                return <h4 id={id} className="text-lg font-semibold mt-6 mb-2 text-brand-text">{children}</h4>;
+              },
+              p: ({ children }) => {
+                const childArr = React.Children.toArray(children).filter(
+                  c => !(typeof c === 'string' && c.trim() === '')
+                );
+                const allImgs = childArr.length > 0 && childArr.every(
+                  c => React.isValidElement(c) && (c.type === 'img' || (c as any).props?.src)
+                );
+                if (allImgs) return <div className="flex flex-wrap gap-2 my-3">{children}</div>;
+                return <p className="mb-5 text-brand-text/85 leading-[1.85]">{children}</p>;
+              },
+              strong: ({ children }) => <strong className="font-bold text-brand-text">{children}</strong>,
+              em: ({ children }) => <em className="italic text-brand-text/80">{children}</em>,
+              a: ({ href, children }) => {
+                if (href?.startsWith('#')) {
+                  return (
+                    <a
+                      href={href}
+                      onClick={(e) => {
+                        e.preventDefault();
+                        const element = document.getElementById(href.substring(1));
+                        if (element) {
+                          const top = element.getBoundingClientRect().top + window.scrollY - 80;
+                          window.scrollTo({ top, behavior: 'smooth' });
+                        }
+                      }}
+                      className="text-brand-text underline underline-offset-4 decoration-brand-border hover:decoration-brand-text transition-colors"
+                    >
+                      {children}
+                    </a>
+                  );
+                }
+                return (
+                  <a href={href} target="_blank" rel="noopener noreferrer" className="text-brand-text underline underline-offset-4 decoration-brand-border hover:decoration-brand-text transition-colors">
+                    {children}
+                  </a>
+                );
+              },
+              ul: ({ children }) => <ul className="mb-5 pl-6 space-y-1.5 list-disc text-brand-text/85">{children}</ul>,
+              ol: ({ children }) => <ol className="mb-5 pl-6 space-y-1.5 list-decimal text-brand-text/85">{children}</ol>,
+              li: ({ children }) => <li className="text-brand-text/85 leading-relaxed">{children}</li>,
+              blockquote: ({ children }) => (
+                <blockquote className="my-6 pl-5 border-l-4 border-brand-text/30 text-brand-muted italic bg-brand-card/30 py-3 pr-3 rounded-r">
+                  {children}
+                </blockquote>
+              ),
+              hr: () => <hr className="my-10 border-brand-border/40" />,
+              table: ({ children }) => (
+                <div className="my-8 overflow-x-auto rounded-lg border border-brand-border/40">
+                  <table className="w-full text-sm text-brand-text">{children}</table>
+                </div>
+              ),
+              thead: ({ children }) => <thead className="bg-brand-card/50 border-b border-brand-border/40">{children}</thead>,
+              th: ({ children }) => <th className="px-4 py-3 text-left text-xs font-bold uppercase tracking-widest text-brand-muted">{children}</th>,
+              td: ({ children }) => <td className="px-4 py-3 text-brand-text/80 border-t border-brand-border/20">{children}</td>,
+              img: ({ src, alt }) => <img src={src} alt={alt} className="rounded-lg max-w-full my-6 border border-brand-border/30" />,
               code({ node, inline, className, children, ...props }: any) {
                 const match = /language-(\w+)/.exec(className || '');
-                return !inline && match ? (
-                  <div className="my-10 rounded-2xl overflow-hidden border border-brand-border bg-brand-card/50 shadow-2xl backdrop-blur-sm">
-                    <div className="flex items-center justify-between px-5 py-3 bg-brand-text/5 border-b border-brand-border">
-                      <span className="text-[10px] font-bold tracking-[0.2em] uppercase text-brand-muted/80">{match[1]}</span>
-                      <div className="flex gap-2">
-                        <div className="w-2.5 h-2.5 rounded-full bg-brand-border" />
-                        <div className="w-2.5 h-2.5 rounded-full bg-brand-border" />
-                        <div className="w-2.5 h-2.5 rounded-full bg-brand-border" />
+                const lang = match ? match[1] : '';
+                const codeContent = String(children).replace(/\n$/, '');
+                const isMultiLine = codeContent.includes('\n');
+                // Only use block style for: explicitly fenced multi-line OR has language tag
+                if (!inline && (match || isMultiLine)) {
+                  return (
+                    <div className="my-8 rounded-xl overflow-hidden border border-brand-border/60 shadow-lg">
+                      <div className="flex items-center justify-between px-5 py-2.5 bg-[#1e1e1e] border-b border-white/10">
+                        <span className="text-[10px] font-bold tracking-[0.2em] uppercase text-white/50">{lang || 'code'}</span>
+                        <div className="flex gap-1.5">
+                          <div className="w-3 h-3 rounded-full bg-[#ff5f57]" />
+                          <div className="w-3 h-3 rounded-full bg-[#febc2e]" />
+                          <div className="w-3 h-3 rounded-full bg-[#28c840]" />
+                        </div>
                       </div>
+                      <SyntaxHighlighter
+                        style={vscDarkPlus}
+                        language={lang || 'text'}
+                        PreTag="div"
+                        customStyle={{ margin: 0, padding: '1.25rem 1.5rem', fontSize: '0.825rem', lineHeight: '1.7', background: '#1e1e1e' }}
+                        {...props}
+                      >
+                        {codeContent}
+                      </SyntaxHighlighter>
                     </div>
-                    <SyntaxHighlighter
-                      style={theme === 'dark' ? vscDarkPlus : prism}
-                      language={match[1]}
-                      PreTag="div"
-                      customStyle={{
-                        margin: 0,
-                        padding: '1.5rem',
-                        fontSize: '0.875rem',
-                        lineHeight: '1.7',
-                        background: 'transparent',
-                      }}
-                      {...props}
-                    >
-                      {String(children).replace(/\n$/, '')}
-                    </SyntaxHighlighter>
-                  </div>
-                ) : (
-                  <code className={cn("px-1.5 py-0.5 rounded bg-brand-text/10 font-mono text-sm", className)} {...props}>
+                  );
+                }
+                // Inline code (short snippets, single-line without language)
+                return (
+                  <code className="px-1.5 py-0.5 rounded bg-brand-text/10 font-mono text-[0.85em] text-brand-text border border-brand-border/30" {...props}>
                     {children}
                   </code>
                 );

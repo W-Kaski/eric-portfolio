@@ -85,6 +85,7 @@ export default function Portfolio() {
   const [isDragging, setIsDragging] = useState(false);
   const [hoveredId, setHoveredId] = useState<string | null>(null);
   const [projectsData, setProjectsData] = useState<ProjectData[]>([]);
+  const [activeCategory, setActiveCategory] = useState<string>('ALL');
 
   const x = useMotionValue(0);
 
@@ -113,6 +114,11 @@ export default function Portfolio() {
       animate(x, -project.x + window.innerWidth / 2, { type: "spring", stiffness: 100, damping: 20 });
     }
   }, [projectsWithPos, searchParams, x]);
+
+  const categories = useMemo(() => {
+    const cats = projectsData.map(p => p.category || 'OTHER').filter(Boolean);
+    return ['ALL', ...Array.from(new Set(cats))];
+  }, [projectsData]);
 
   const years = useMemo(() => {
     const y = projectsData.map(p => parseInt(p.date.split('-')[0]));
@@ -172,16 +178,17 @@ export default function Portfolio() {
             {t('portfolio.title')}
           </motion.h1>
         </div>
-          <div className="flex items-center gap-6">
-            {[
-              { name: 'AI', color: '#8B5CF6' },
-              { name: 'WEB', color: '#3B82F6' },
-              { name: 'DATA', color: '#10B981' }
-            ].map(cat => (
-              <div key={cat.name} className="flex items-center gap-2">
-                <div className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: cat.color }} />
-                <span className="text-[9px] font-bold uppercase tracking-[0.2em]" style={{ color: `${cat.color}CC` }}>{cat.name}</span>
-              </div>
+          <div className="flex flex-wrap items-center gap-2 lg:gap-3 justify-end">
+            {categories.map(cat => (
+              <button 
+                key={cat} 
+                onClick={() => setActiveCategory(cat)}
+                className={`px-4 py-1.5 rounded-full transition-all duration-300 border ${activeCategory === cat ? 'bg-brand-text text-brand-bg border-transparent shadow-md font-bold' : 'bg-transparent border-brand-border text-brand-muted hover:border-brand-text/40 hover:text-brand-text font-medium'}`}
+              >
+                <span className="text-[11px] sm:text-xs tracking-wider uppercase">
+                  {cat}
+                </span>
+              </button>
             ))}
           </div>
       </div>
@@ -205,8 +212,8 @@ export default function Portfolio() {
         >
           {rulerMarks.map((mark, i) => (
             <div key={i} className="absolute top-1/2 flex flex-col items-center" style={{ left: mark.x }}>
-              <div className={`w-px ${mark.isMajor ? 'h-6 bg-brand-text' : 'h-3 bg-brand-text/30'}`} />
-              <span className={`mt-4 text-[9px] font-mono font-bold uppercase tracking-widest ${mark.isMajor ? 'text-brand-text/80' : 'text-brand-muted/40'}`}>
+              <div className={`w-px ${mark.isMajor ? 'h-6 bg-brand-text' : 'h-3 bg-brand-text/60'}`} />
+              <span className={`mt-4 text-[9px] font-mono font-bold uppercase tracking-widest ${mark.isMajor ? 'text-brand-text' : 'text-brand-text/70'}`}>
                 {mark.label}
               </span>
             </div>
@@ -217,15 +224,17 @@ export default function Portfolio() {
               stroke="currentColor" strokeWidth="0.5" className="text-brand-text/5" />
           ))}
 
-          {projectsWithPos.map((project) => (
-            <div key={project.id} className="absolute top-1/2 -translate-y-1/2" style={{ left: project.x }}>
+          {projectsWithPos.map((project) => {
+            const isMatch = activeCategory === 'ALL' || project.category === activeCategory;
+            return (
+            <div key={project.id} className="absolute top-1/2 -translate-y-1/2 transition-opacity duration-500" style={{ left: project.x, opacity: isMatch ? 1 : 0.15 }}>
               <div className="relative flex flex-col items-center">
                 <AnimatePresence>
                   {hoveredId === project.id && <HoverCard project={project} />}
                 </AnimatePresence>
 
                 <div className="absolute bottom-10 whitespace-nowrap text-center">
-                  <span className="text-[10px] font-bold uppercase tracking-widest text-brand-text/70 transition-colors">
+                  <span className="text-[10px] font-bold uppercase tracking-widest text-brand-text/90 transition-colors">
                     {project.title}
                   </span>
                 </div>
@@ -248,7 +257,7 @@ export default function Portfolio() {
                 </motion.button>
               </div>
             </div>
-          ))}
+          )})}
         </motion.div>
 
         <div className="absolute bottom-8 right-8 z-10 pointer-events-none">

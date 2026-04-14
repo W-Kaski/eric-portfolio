@@ -384,8 +384,9 @@ const scenes = [
                     ))}
                   </div>
                 </motion.div>
-                <div className="absolute top-0 right-0 p-4 border border-brand-border rounded-full opacity-0 group-hover:opacity-100 transition-opacity">
-                  <span className="text-[10px] font-bold tracking-widest text-brand-muted uppercase">Click.Explore</span>
+                <div className="absolute top-4 left-1/2 -translate-x-1/2 -translate-y-full bg-brand-text text-brand-bg px-3 py-1.5 rounded-sm shadow-md opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
+                  <span className="text-[9px] font-bold tracking-[0.2em] uppercase whitespace-nowrap">Click · Explore</span>
+                  <div className="absolute bottom-0 left-1/2 -translate-x-1/2 translate-y-1/2 w-2 h-2 bg-brand-text rotate-45" />
                 </div>
               </motion.div>
             </AnimatePresence>

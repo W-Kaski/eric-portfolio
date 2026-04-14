@@ -32,7 +32,9 @@ export default function Layout({ children }: LayoutProps) {
 
   const isPortfolio = location.pathname === '/portfolio';
   const isHome = location.pathname === '/';
+  const isDetailPage = /^\/(articles|portfolio)\/.+/.test(location.pathname);
   const isFullScreen = isPortfolio || isHome;
+  const hideFooter = isFullScreen || isDetailPage;
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -47,8 +49,8 @@ export default function Layout({ children }: LayoutProps) {
         {children}
       </motion.main>
       
-      {!isFullScreen && (
-        <footer className="py-12 px-6 border-t border-brand-border mt-20">
+      {!hideFooter && (
+        <footer className="py-12 px-6 border-t border-brand-border mt-10">
           <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-6">
             <div className="text-brand-muted text-sm">
               © {siteConfig.copyrightYear} {siteConfig.author}. {siteConfig.footerMessage}

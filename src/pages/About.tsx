@@ -52,7 +52,7 @@ export default function About() {
         
         <div className="flex-1 space-y-8 text-center lg:text-left z-10">
           <div className="space-y-2">
-            <span className="text-xs font-mono font-bold uppercase tracking-[0.4em] text-brand-muted/60 mb-2 block">Personnel Data File</span>
+            <span className="text-xs font-mono font-bold uppercase tracking-[0.4em] text-brand-muted/60 mb-2 block"></span>
             <h1 className="text-6xl md:text-9xl font-black tracking-tighter uppercase leading-[0.8] mb-6">
               {t('about.title')}
             </h1>
