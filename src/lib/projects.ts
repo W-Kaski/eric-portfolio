@@ -18,6 +18,8 @@ export interface ProjectData {
   github: string;
   demo: string;
   featured: boolean;
+  pdfUrl?: string;
+  customRoute?: string;
 }
 
 export async function getAllProjects(): Promise<ProjectData[]> {
@@ -53,6 +55,40 @@ export async function getAllProjects(): Promise<ProjectData[]> {
       github: data.github || '',
       demo: data.demo || '',
       featured: data.featured ?? false,
+      pdfUrl: data.pdfUrl || data.pdf || data.paper || '',
+    });
+  }
+
+  const paperModules = import.meta.glob('/src/content/articles/papers/*.md', { query: '?raw', import: 'default' });
+  for (const path in paperModules) {
+    const content = await paperModules[path]() as string;
+    const { data, content: body } = matter(content);
+    
+    const pathParts = path.split('/');
+    const id = pathParts[pathParts.length - 1].replace('.md', '');
+
+    let formattedDate = data.date || '';
+    if (formattedDate && typeof formattedDate !== 'string') {
+      const d = new Date(formattedDate);
+      formattedDate = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`;
+    } else if (typeof formattedDate === 'string' && formattedDate.length >= 7) {
+      formattedDate = formattedDate.substring(0, 7);
+    }
+
+    projects.push({
+      id,
+      title: data.title || id,
+      date: formattedDate,
+      category: data.category || 'Research',
+      image: data.image || '',
+      color: data.color || '#3B82F6',
+      description: body || '',
+      tech: data.tech || data.tags || [],
+      github: data.github || '',
+      demo: data.demo || '',
+      featured: data.featured ?? false,
+      pdfUrl: data.pdfUrl || data.pdf || data.paper || '',
+      customRoute: `/articles/${id}`
     });
   }
 

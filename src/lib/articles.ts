@@ -15,6 +15,7 @@ export interface Article {
   excerpt: string;
   content: string;
   folder: string;
+  pdfUrl?: string;
 }
 
 export async function getAllArticles(): Promise<Article[]> {
@@ -40,6 +41,7 @@ export async function getAllArticles(): Promise<Article[]> {
       excerpt: data.excerpt || '',
       content: body,
       folder: folder === 'articles' ? 'root' : folder,
+      pdfUrl: data.pdfUrl || data.pdf || data.paper || '',
     });
   }
 

@@ -8,7 +8,7 @@ import rehypeKatex from 'rehype-katex';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { vscDarkPlus, prism } from 'react-syntax-highlighter/dist/esm/styles/prism';
 import { cn } from '@/src/lib/utils';
-import { Calendar, ArrowLeft, Folder, List } from 'lucide-react';
+import { Calendar, ArrowLeft, Folder, List, FileText } from 'lucide-react';
 import { getAllArticles, Article } from '@/src/lib/articles';
 import { useApp } from '@/src/context/AppContext';
 
@@ -176,6 +176,18 @@ export default function ArticleDetail() {
             <div className="flex items-center gap-6 text-brand-muted/70 text-xs font-medium tracking-wide">
               <div className="flex items-center gap-2"><Calendar size={14} /> {article.date}</div>
             </div>
+            {article.pdfUrl && (
+              <div className="flex flex-wrap gap-3 mt-6">
+                <a
+                  href={article.pdfUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-2 px-5 py-2.5 rounded-full bg-brand-text text-brand-bg text-xs font-bold uppercase tracking-widest hover:opacity-90 transition-opacity"
+                >
+                  <FileText size={14} /> View Paper
+                </a>
+              </div>
+            )}
           </header>
 
           <div className="max-w-none">

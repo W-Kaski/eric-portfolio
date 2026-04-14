@@ -1,6 +1,6 @@
 {
   "avatarUrl": "/avatar/avatar.jpg",
-  "resumeUrl": "#",
+  "resumeUrl": "/resume/eric_wang_resume_ml.pdf",
   "skills": [
     { "name": "PyTorch / Transformers", "level": 95 },
     { "name": "Python", "level": 95 },

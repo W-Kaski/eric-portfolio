@@ -7,7 +7,7 @@ import rehypeKatex from 'rehype-katex';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { vscDarkPlus, prism } from 'react-syntax-highlighter/dist/esm/styles/prism';
 import { motion } from 'motion/react';
-import { ArrowLeft, Github, ExternalLink, Code2, List } from 'lucide-react';
+import { ArrowLeft, Github, ExternalLink, Code2, List, FileText } from 'lucide-react';
 import { getAllProjects, ProjectData } from '../lib/projects';
 import { useApp } from '../context/AppContext';
 import { cn } from '../lib/utils';
@@ -204,7 +204,7 @@ export default function ProjectDetail() {
         )}
 
         {/* Links */}
-        {(project.github || project.demo) && (
+        {(project.github || project.demo || project.pdfUrl) && (
           <div className="flex flex-wrap gap-3 mb-10">
             {project.github && (
               <a
@@ -224,6 +224,16 @@ export default function ProjectDetail() {
                 className="flex items-center gap-2 px-5 py-2.5 rounded-full bg-brand-card border border-brand-border text-brand-text text-xs font-bold uppercase tracking-widest hover:bg-brand-text/5 transition-colors"
               >
                 <ExternalLink size={14} /> Live Demo
+              </a>
+            )}
+            {project.pdfUrl && (
+              <a
+                href={project.pdfUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-2 px-5 py-2.5 rounded-full bg-brand-text text-brand-bg text-xs font-bold uppercase tracking-widest hover:opacity-90 transition-opacity"
+              >
+                <FileText size={14} /> View Paper
               </a>
             )}
           </div>

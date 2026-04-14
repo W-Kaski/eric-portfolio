@@ -242,7 +242,7 @@ export default function Portfolio() {
                 <motion.button
                   onMouseEnter={() => !isDragging && setHoveredId(project.id)}
                   onMouseLeave={() => setHoveredId(null)}
-                  onClick={() => !isDragging && navigate(`/portfolio/${project.id}`)}
+                  onClick={() => !isDragging && navigate(project.customRoute || `/portfolio/${project.id}`)}
                   className="group relative"
                 >
                   <motion.div

@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { motion, AnimatePresence, useMotionValue, useSpring, useTransform } from 'motion/react';
-import { ArrowRight, Brain, Sparkles, Microscope, BookOpen, ChevronDown, Cpu, Zap, ChevronRight, ChevronLeft, ArrowLeft } from 'lucide-react';
+import { ArrowRight, Brain, Sparkles, Microscope, BookOpen, ChevronDown, Cpu, Zap, ChevronRight, ChevronLeft, ArrowLeft, SquareChartGantt, Atom, Rocket } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useApp } from '../context/AppContext';
 import { useConfig } from '../context/ConfigContext';
@@ -267,7 +267,7 @@ const scenes = [
     pronunciation: "/ ˈɪnpʊt /",
     definition: "Intelligence starts with clean data. It is the ability to see and record the world exactly as it is through digital sensors.",
     details: ["Data Acquisition", "Signal Filtering", "Environment Mapping"],
-    icon: Cpu,
+    icon: SquareChartGantt,
     stars: 4
   },
   {
@@ -277,7 +277,7 @@ const scenes = [
     pronunciation: "/ ˈlɒdʒɪk /",
     definition: "Turning noise into order. We build models that find the rules behind the data, creating a clear map of how things work.",
     details: ["Pattern Sorting", "Neural Mapping", "Model Inference"],
-    icon: Brain,
+    icon: Atom,
     stars: 8
   },
   {
@@ -287,7 +287,7 @@ const scenes = [
     pronunciation: "/ ˈækʃ(ə)n /",
     definition: "The goal of intelligence. A system that doesn't just react, but learns and acts on its own to solve complex problems.",
     details: ["Self-Learning", "Task Execution", "Autonomous Response"],
-    icon: Zap,
+    icon: Rocket,
     stars: 12
   }
 ];
