@@ -1,3 +1,7 @@
+---
+title: "K-Means"
+date: "2025-05-06"
+---
 # K-Means
 
 **Parent**：[[Clustering Frameworks|聚类框架 (Clustering Frameworks)]]

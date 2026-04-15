@@ -1,3 +1,7 @@
+---
+title: "DDPG"
+date: "2025-04-23"
+---
 # DDPG (Deep Deterministic Policy Gradient)
 
 **Parent**：[[Policy-Based Methods|2.3.3. 基于策略的方法 (Policy-Based Methods)]]

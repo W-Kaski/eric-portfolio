@@ -1,3 +1,7 @@
+---
+title: "CycleGAN"
+date: "2025-04-22"
+---
 # CycleGAN
 
 **Parent**：[[GAN|生成对抗网络 (Generative Adversarial Network, GAN)]]

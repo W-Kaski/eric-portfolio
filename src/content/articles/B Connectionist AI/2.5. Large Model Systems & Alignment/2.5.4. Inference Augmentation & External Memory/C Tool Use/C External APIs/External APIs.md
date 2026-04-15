@@ -1,3 +1,7 @@
+---
+title: "External APIs"
+date: "2025-04-27"
+---
 # 外部 API 调用 (External APIs)
 
 **Parent**：[[Tool Use (2.5)|Tool Use]]

@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import * as d3 from 'd3-force';
-import { Article } from '@/src/lib/articles';
+import { ArticleMeta } from '@/src/lib/articles';
 import { useApp } from '@/src/context/AppContext';
 import { useNavigate } from 'react-router-dom';
 import { Maximize2, Minimize2 } from 'lucide-react';
@@ -19,7 +19,7 @@ interface GraphLink extends d3.SimulationLinkDatum<GraphNode> {
   target: string | GraphNode;
 }
 
-export function ArticleGraphView({ articles }: { articles: Article[] }) {
+export function ArticleGraphView({ articles }: { articles: ArticleMeta[] }) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const { theme } = useApp();

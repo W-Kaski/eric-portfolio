@@ -1,3 +1,7 @@
+---
+title: "Shared Embedding Space"
+date: "2025-05-13"
+---
 # 共享嵌入空间 (Shared Embedding Space)
 
 **Parent**：[[CLIP|CLIP]]

@@ -1,4 +1,8 @@
 ---
+title: "SAC例子"
+date: "2025-04-24"
+---
+---
 
 mindmap-plugin: basic
 

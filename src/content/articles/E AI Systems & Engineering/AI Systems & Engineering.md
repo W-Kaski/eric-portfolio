@@ -1,3 +1,7 @@
+---
+title: "AI Systems & Engineering"
+date: "2025-09-09"
+---
 # 5. AI 系统与工程 (AI Systems & Engineering)
 
 **Parent**：[[Artificial Intelligence, AI]]

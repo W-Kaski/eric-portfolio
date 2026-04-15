@@ -1,3 +1,7 @@
+---
+title: "Features (Embodied AI)"
+date: "2025-12-15"
+---
 # 具身 AI 的特点 (Features of Embodied AI)
 
 **Parent**：[[Embodied AI|7.3 具身 AI (Embodied AI)]]

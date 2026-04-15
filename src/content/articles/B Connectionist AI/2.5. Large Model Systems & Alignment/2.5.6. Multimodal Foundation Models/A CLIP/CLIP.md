@@ -1,3 +1,7 @@
+---
+title: "CLIP"
+date: "2025-04-19"
+---
 # CLIP
 
 **Parent**：[[Multimodal Foundation Models|2.5.6. 多模态基础模型 (Multimodal Foundation Models)]]

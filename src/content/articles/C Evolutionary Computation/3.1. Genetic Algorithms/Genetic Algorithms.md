@@ -1,3 +1,7 @@
+---
+title: "Genetic Algorithms"
+date: "2025-07-21"
+---
 # 3.1 遗传算法 (Genetic Algorithms)
 
 **Parent**：[[Evolutionary Computation|3. 进化计算 (Evolutionary Computation)]]

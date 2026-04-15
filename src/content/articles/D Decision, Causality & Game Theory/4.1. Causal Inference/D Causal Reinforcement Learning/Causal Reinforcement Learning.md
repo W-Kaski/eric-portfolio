@@ -1,3 +1,7 @@
+---
+title: "Causal Reinforcement Learning"
+date: "2025-08-19"
+---
 # 因果强化学习 (Causal Reinforcement Learning)
 
 **Parent**：[[Causal Inference|4.1 因果推断 (Causal Inference)]]

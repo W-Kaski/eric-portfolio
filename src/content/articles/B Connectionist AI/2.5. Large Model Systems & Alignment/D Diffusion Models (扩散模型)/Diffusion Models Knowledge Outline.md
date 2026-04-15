@@ -1,4 +1,8 @@
 ---
+title: "Diffusion Models Knowledge Outline"
+date: "2025-04-28"
+---
+---
 mindmap-plugin: basic
 ---
 

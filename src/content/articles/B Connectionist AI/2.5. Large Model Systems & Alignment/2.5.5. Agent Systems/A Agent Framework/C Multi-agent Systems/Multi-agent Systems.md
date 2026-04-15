@@ -1,3 +1,7 @@
+---
+title: "Multi-agent Systems"
+date: "2025-04-13"
+---
 # Multi-agent Systems
 
 **Parent**：[[Agent Framework|Agent Framework]]

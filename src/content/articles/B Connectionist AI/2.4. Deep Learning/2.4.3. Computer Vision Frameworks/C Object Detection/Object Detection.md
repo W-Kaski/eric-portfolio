@@ -1,3 +1,7 @@
+---
+title: "Object Detection"
+date: "2025-05-07"
+---
 # 目标检测 (Object Detection)
 
 **Parent**：[[Computer Vision Frameworks|2.4.3. 计算机视觉框架 (Computer Vision Frameworks)]]

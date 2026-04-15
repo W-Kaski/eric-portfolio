@@ -1,3 +1,7 @@
+---
+title: "Vision-Language Models"
+date: "2025-04-24"
+---
 # 视觉语言模型 (Vision-Language Models)
 
 **Parent**：[[Multimodal Foundation Models|2.5.6. 多模态基础模型 (Multimodal Foundation Models)]]

@@ -1,3 +1,7 @@
+---
+title: "Dynamic Programming"
+date: "2025-04-04"
+---
 # 动态规划 (Dynamic Programming)
 
 **Parent**：[[Theoretical Foundations|2.3.1. 理论基础 (Theoretical Foundations)]]

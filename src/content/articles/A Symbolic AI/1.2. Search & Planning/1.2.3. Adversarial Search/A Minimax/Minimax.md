@@ -1,3 +1,7 @@
+---
+title: "Minimax"
+date: "2025-04-15"
+---
 # Minimax (最小最大算法)
 
 **Parent**：[[Adversarial Search|1.2.3 对抗搜索 (Adversarial Search)]]

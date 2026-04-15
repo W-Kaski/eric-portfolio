@@ -1,3 +1,7 @@
+---
+title: "Rademacher Complexity"
+date: "2025-04-16"
+---
 # Rademacher Complexity
 
 **Parent**：[[Learning Theory Foundations|2.1.1. 学习理论基础 (Learning Theory Foundations)]]

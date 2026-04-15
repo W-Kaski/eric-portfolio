@@ -1,3 +1,7 @@
+---
+title: "Adversarial Search"
+date: "2025-03-31"
+---
 # 1.2.3 对抗搜索 (Adversarial Search)
 
 **Parent**：[[Search & Planning|1.2 搜索与规划 (Search & Planning)]]

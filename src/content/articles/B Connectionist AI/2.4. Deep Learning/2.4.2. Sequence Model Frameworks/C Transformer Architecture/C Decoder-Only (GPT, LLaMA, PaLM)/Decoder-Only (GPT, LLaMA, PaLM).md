@@ -1,3 +1,7 @@
+---
+title: "Decoder-Only (GPT, LLaMA, PaLM)"
+date: "2025-04-18"
+---
 # 仅解码器 (Decoder-Only, GPT/LLaMA/PaLM)
 
 **Parent**：[[Transformer Architecture|Transformer 架构 (Transformer Architecture)]]

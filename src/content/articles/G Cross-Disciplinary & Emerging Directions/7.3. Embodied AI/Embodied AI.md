@@ -1,3 +1,7 @@
+---
+title: "Embodied AI"
+date: "2025-11-02"
+---
 # 7.3 具身 AI (Embodied AI)
 
 **Parent**：[[Cross-Disciplinary & Emerging Directions|7. 跨领域与新兴研究方向 (Cross-Disciplinary & Emerging Research Directions)]]

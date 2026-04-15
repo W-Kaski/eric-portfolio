@@ -1,3 +1,7 @@
+---
+title: "Ethics & Governance"
+date: "2025-10-27"
+---
 # 6.6 伦理与治理 (Ethics & Governance)
 
 **Parent**：[[AI Safety & Society|6. AI 安全与社会影响 (AI Safety & Society)]]

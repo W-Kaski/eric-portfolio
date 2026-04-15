@@ -1,3 +1,7 @@
+---
+title: "Backpropagation & Autograd"
+date: "2025-04-10"
+---
 
 parent:[[Neural Network Foundations]]
 

@@ -1,3 +1,7 @@
+---
+title: "Dense Retrieval"
+date: "2025-04-04"
+---
 # Dense Retrieval
 
 **Parent**：[[RAG|检索增强生成 (RAG)]]

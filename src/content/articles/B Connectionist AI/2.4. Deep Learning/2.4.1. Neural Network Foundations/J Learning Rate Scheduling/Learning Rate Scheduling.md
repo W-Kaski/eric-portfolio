@@ -1,3 +1,7 @@
+---
+title: "Learning Rate Scheduling"
+date: "2025-04-24"
+---
 
 parent:[[Neural Network Foundations]]
 # Learning Rate Scheduling (学习率调度)

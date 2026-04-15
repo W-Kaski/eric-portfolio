@@ -1,3 +1,7 @@
+---
+title: "Naive Bayes"
+date: "2025-04-15"
+---
 # 朴素贝叶斯 (Naive Bayes)
 
 **Parent**：[[Classification Frameworks|分类框架 (Classification Frameworks)]]

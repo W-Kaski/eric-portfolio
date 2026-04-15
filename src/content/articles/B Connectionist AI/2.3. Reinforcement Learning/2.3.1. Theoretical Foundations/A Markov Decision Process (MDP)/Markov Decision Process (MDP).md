@@ -1,3 +1,7 @@
+---
+title: "Markov Decision Process (MDP)"
+date: "2025-05-11"
+---
 # 马尔可夫决策过程 (Markov Decision Process, MDP)
 
 **Parent**：[[Theoretical Foundations|2.3.1. 理论基础 (Theoretical Foundations)]]

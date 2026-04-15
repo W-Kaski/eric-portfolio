@@ -1,3 +1,7 @@
+---
+title: "Heuristic Search"
+date: "2025-03-16"
+---
 # 1.2.2 启发式搜索 (Heuristic Search)
 
 **Parent**：[[Search & Planning|1.2 搜索与规划 (Search & Planning)]]

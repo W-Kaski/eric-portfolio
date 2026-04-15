@@ -1,3 +1,7 @@
+---
+title: "Ontologies (OWL)"
+date: "2025-03-04"
+---
 # 本体论 (Ontologies, OWL)
 
 **Parent**：[[Formal Representation|1.1.3 形式化表示 (Formal Representation)]]

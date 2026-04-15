@@ -1,3 +1,7 @@
+---
+title: "TD3"
+date: "2025-05-06"
+---
 # TD3
 
 **Parent**：[[Actor-Critic Methods|2.3.4. Actor-Critic 方法 (Actor-Critic Methods)]]

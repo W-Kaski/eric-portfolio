@@ -1,3 +1,7 @@
+---
+title: "Dueling DQN"
+date: "2025-04-25"
+---
 # Dueling DQN
 
 **Parent**：[[Value-Based Methods|2.3.2. 基于值的方法 (Value-Based Methods)]]

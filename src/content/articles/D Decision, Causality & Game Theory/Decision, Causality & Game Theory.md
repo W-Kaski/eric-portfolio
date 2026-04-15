@@ -1,3 +1,7 @@
+---
+title: "Decision, Causality & Game Theory"
+date: "2025-08-19"
+---
 # 4. 决策、因果与博弈 (Decision, Causality & Game Theory)
 
 **Parent**：[[Artificial Intelligence, AI]]

@@ -1,3 +1,7 @@
+---
+title: "Actor-Critic Methods"
+date: "2025-04-13"
+---
 # 2.3.4. Actor-Critic 方法 (Actor-Critic Methods)
 
 **Parent**：[[Reinforcement Learning|2.3. 强化学习 (Reinforcement Learning, RL)]]

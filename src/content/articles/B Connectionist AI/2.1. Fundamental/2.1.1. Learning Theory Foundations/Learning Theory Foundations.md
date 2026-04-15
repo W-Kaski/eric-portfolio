@@ -1,3 +1,7 @@
+---
+title: "Learning Theory Foundations"
+date: "2025-05-18"
+---
 # 2.1.1. 学习理论基础 (Learning Theory Foundations)
 
 **Parent**：[[2.1. Fundamental|2.1. 学习基础 (Foundations)]]

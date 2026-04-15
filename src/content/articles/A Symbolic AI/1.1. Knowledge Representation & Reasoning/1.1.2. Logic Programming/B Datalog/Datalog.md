@@ -1,3 +1,7 @@
+---
+title: "Datalog"
+date: "2025-03-04"
+---
 # Datalog
 
 **Parent**：[[Logic Programming|1.1.2 逻辑编程 (Logic Programming)]]

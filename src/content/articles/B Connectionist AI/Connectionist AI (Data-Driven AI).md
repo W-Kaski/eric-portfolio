@@ -1,3 +1,7 @@
+---
+title: "Connectionist AI (Data-Driven AI)"
+date: "2025-04-28"
+---
 # 2. 联结主义 AI (Connectionist AI) / 数据驱动 AI (Data-Driven AI)
 
 **Parent**：[[Artificial Intelligence, AI]]

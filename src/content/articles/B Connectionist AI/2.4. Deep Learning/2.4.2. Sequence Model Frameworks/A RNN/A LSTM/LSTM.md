@@ -1,3 +1,7 @@
+---
+title: "LSTM"
+date: "2025-04-05"
+---
 # LSTM (Long Short-Term Memory)
 
 **Parent**：[[RNN|循环神经网络 (Recurrent Neural Network, RNN)]]

@@ -1,3 +1,7 @@
+---
+title: "Rule-Based Alignment"
+date: "2025-04-16"
+---
 # 规则驱动对齐 (Rule-Based Alignment)
 
 **Parent**：[[Constitutional AI|Constitutional AI]]

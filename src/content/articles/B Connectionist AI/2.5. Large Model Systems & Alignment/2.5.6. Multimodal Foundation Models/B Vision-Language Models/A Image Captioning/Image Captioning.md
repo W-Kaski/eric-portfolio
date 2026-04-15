@@ -1,3 +1,7 @@
+---
+title: "Image Captioning"
+date: "2025-04-05"
+---
 # 图像描述生成 (Image Captioning)
 
 **Parent**：[[Vision-Language Models|视觉语言模型 (Vision-Language Models)]]

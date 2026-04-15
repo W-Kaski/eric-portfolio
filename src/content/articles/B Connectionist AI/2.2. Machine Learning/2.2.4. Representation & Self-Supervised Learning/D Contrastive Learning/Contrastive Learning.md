@@ -1,3 +1,7 @@
+---
+title: "Contrastive Learning"
+date: "2025-04-07"
+---
 # 对比学习 (Contrastive Learning)
 
 **Parent**：[[Representation & Self-Supervised Learning|2.2.4. 表示学习与自监督学习 (Representation & Self-Supervised Learning)]]

@@ -1,3 +1,7 @@
+---
+title: "Environment Feedback Loops"
+date: "2025-05-02"
+---
 # 环境反馈循环 (Environment Feedback Loops)
 
 **Parent**：[[Autonomous Decision & Interaction|自主决策与环境交互 (Autonomous Decision & Interaction)]]

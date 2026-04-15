@@ -1,3 +1,7 @@
+---
+title: "Multimodal Generative Models"
+date: "2025-04-03"
+---
 # 多模态生成模型 (Multimodal Generative Models)
 
 **Parent**：[[Multimodal Foundation Models|2.5.6. 多模态基础模型 (Multimodal Foundation Models)]]

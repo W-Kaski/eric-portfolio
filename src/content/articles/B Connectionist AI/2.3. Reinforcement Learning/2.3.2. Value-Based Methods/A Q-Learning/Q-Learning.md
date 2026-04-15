@@ -1,3 +1,7 @@
+---
+title: "Q-Learning"
+date: "2025-05-12"
+---
 # Q-Learning
 
 **Parent**：[[Value-Based Methods|2.3.2. 基于值的方法 (Value-Based Methods)]]

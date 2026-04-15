@@ -1,3 +1,7 @@
+---
+title: "RAG"
+date: "2025-05-20"
+---
 # 检索增强生成 (Retrieval-Augmented Generation, RAG)
 
 **Parent**：[[Inference Augmentation & External Memory|2.5.4. 推理增强与外部记忆 (Inference Augmentation & External Memory)]]

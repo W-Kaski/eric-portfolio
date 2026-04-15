@@ -1,3 +1,7 @@
+---
+title: "Adam"
+date: "2025-04-20"
+---
 # Adam
 
 **Parent**：[[First-Order Methods|一阶优化 (First-Order Methods)]]

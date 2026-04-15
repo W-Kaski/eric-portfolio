@@ -1,3 +1,7 @@
+---
+title: "Policy-Based Methods"
+date: "2025-05-20"
+---
 # 2.3.3. 基于策略的方法 (Policy-Based Methods)
 
 **Parent**：[[Reinforcement Learning|2.3. 强化学习 (Reinforcement Learning, RL)]]

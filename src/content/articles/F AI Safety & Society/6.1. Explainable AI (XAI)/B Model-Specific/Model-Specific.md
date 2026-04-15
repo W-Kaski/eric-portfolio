@@ -1,3 +1,7 @@
+---
+title: "Model-Specific"
+date: "2025-10-30"
+---
 # 模型特定 (Model-Specific)
 
 **Parent**：[[Explainable AI (XAI)|6.1 可解释性 AI (Explainable AI, XAI)]]

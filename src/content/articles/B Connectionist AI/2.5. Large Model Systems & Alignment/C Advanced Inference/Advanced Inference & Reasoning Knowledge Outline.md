@@ -1,4 +1,8 @@
 ---
+title: "Advanced Inference & Reasoning Knowledge Outline"
+date: "2025-04-27"
+---
+---
 mindmap-plugin: basic
 ---
 

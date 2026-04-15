@@ -1,3 +1,7 @@
+---
+title: "Mean Shift"
+date: "2025-05-02"
+---
 # 均值漂移 (Mean Shift)
 
 **Parent**：[[Clustering Frameworks|聚类框架 (Clustering Frameworks)]]

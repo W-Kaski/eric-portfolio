@@ -1,3 +1,7 @@
+---
+title: "LoRA"
+date: "2025-04-13"
+---
 # LoRA
 
 **Parent**：[[Parameter-Efficient Fine-Tuning|2.5.3. 参数高效微调 (Parameter-Efficient Fine-Tuning)]]

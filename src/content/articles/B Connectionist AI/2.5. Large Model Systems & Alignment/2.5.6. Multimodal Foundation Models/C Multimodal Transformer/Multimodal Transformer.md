@@ -1,3 +1,7 @@
+---
+title: "Multimodal Transformer"
+date: "2025-05-18"
+---
 # 多模态 Transformer (Multimodal Transformer)
 
 **Parent**：[[Multimodal Foundation Models|2.5.6. 多模态基础模型 (Multimodal Foundation Models)]]

@@ -1,3 +1,7 @@
+---
+title: "Convergence Analysis"
+date: "2025-05-10"
+---
 # 收敛性分析 (Convergence Analysis)
 
 **Parent**：[[Theoretical Foundations|2.3.1. 理论基础 (Theoretical Foundations)]]

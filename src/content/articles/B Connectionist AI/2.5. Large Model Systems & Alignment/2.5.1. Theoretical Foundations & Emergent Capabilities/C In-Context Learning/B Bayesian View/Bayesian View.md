@@ -1,3 +1,7 @@
+---
+title: "Bayesian View"
+date: "2025-05-10"
+---
 # 类 Bayesian 推断解释 (Bayesian View)
 
 **Parent**：[[In-Context Learning|In-Context Learning]]

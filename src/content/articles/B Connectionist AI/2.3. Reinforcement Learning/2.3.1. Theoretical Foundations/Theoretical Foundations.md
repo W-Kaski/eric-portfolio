@@ -1,3 +1,7 @@
+---
+title: "Theoretical Foundations"
+date: "2025-04-13"
+---
 # 2.3.1. 理论基础 (Theoretical Foundations)
 
 **Parent**：[[Reinforcement Learning|2.3. 强化学习 (Reinforcement Learning, RL)]]

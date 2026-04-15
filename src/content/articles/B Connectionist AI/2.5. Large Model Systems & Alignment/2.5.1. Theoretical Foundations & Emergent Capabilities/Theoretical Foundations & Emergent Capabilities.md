@@ -1,3 +1,7 @@
+---
+title: "Theoretical Foundations & Emergent Capabilities"
+date: "2025-04-09"
+---
 # 2.5.1. 理论基础与能力机制 (Theoretical Foundations & Emergent Capabilities)
 
 **Parent**：[[Large Model Systems & Alignment|2.5. 大模型系统与对齐 (Large Model Systems & Alignment)]]

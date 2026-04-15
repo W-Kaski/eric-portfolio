@@ -1,3 +1,7 @@
+---
+title: "Classic Planning Model (STRIPS & ADL)"
+date: "2025-04-11"
+---
 # 经典规划模型 (Classic Planning Model: STRIPS / ADL)
 
 **Parent**：[[Automated Planning|1.2.4 自动规划 (Automated Planning)]]

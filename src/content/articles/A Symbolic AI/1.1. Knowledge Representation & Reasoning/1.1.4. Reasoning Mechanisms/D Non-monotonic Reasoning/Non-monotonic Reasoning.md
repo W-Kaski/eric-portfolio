@@ -1,3 +1,7 @@
+---
+title: "Non-monotonic Reasoning"
+date: "2025-03-03"
+---
 # 非单调推理 (Non-monotonic Reasoning)
 
 **Parent**：[[Reasoning Mechanisms|1.1.4 推理机制 (Reasoning Mechanisms)]]

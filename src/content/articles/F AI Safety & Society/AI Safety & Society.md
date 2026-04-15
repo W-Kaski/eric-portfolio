@@ -1,3 +1,7 @@
+---
+title: "AI Safety & Society"
+date: "2025-10-12"
+---
 # 6. AI 安全与社会影响 (AI Safety & Society)
 
 **Parent**：[[Artificial Intelligence, AI]]

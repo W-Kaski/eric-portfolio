@@ -1,3 +1,7 @@
+---
+title: "MLP"
+date: "2025-05-09"
+---
 # 多层感知机 (MLP)
 
 **Parent**：[[Neural Network Foundations|2.4.1. 神经网络基础 (Neural Network Foundations)]]

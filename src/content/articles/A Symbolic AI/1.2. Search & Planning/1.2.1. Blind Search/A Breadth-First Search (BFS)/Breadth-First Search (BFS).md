@@ -1,3 +1,7 @@
+---
+title: "Breadth-First Search (BFS)"
+date: "2025-04-07"
+---
 # 宽度优先搜索 (Breadth-First Search, BFS)
 
 **Parent**：[[Blind Search|1.2.1 无信息搜索 (Blind Search)]]

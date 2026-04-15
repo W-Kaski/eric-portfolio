@@ -1,3 +1,7 @@
+---
+title: "Modern DL Directions"
+date: "2025-05-19"
+---
 
 parent:[[Deep Learning]]
 

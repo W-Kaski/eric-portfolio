@@ -1,3 +1,7 @@
+---
+title: "CNN"
+date: "2025-05-17"
+---
 # 卷积网络 (Convolutional Neural Network, CNN)
 
 **Parent**：[[Computer Vision Frameworks|2.4.3. 计算机视觉框架 (Computer Vision Frameworks)]]

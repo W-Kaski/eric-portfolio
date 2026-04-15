@@ -1,3 +1,7 @@
+---
+title: "Constitutional AI"
+date: "2025-05-10"
+---
 # Constitutional AI
 
 **Parent**：[[Training & Alignment Paradigms|2.5.2. 训练与对齐范式 (Training & Alignment Paradigms)]]

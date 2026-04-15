@@ -1,3 +1,7 @@
+---
+title: "Vision Transformer"
+date: "2025-05-07"
+---
 # 视觉 Transformer (Vision Transformer)
 
 **Parent**：[[Computer Vision Frameworks|2.4.3. 计算机视觉框架 (Computer Vision Frameworks)]]

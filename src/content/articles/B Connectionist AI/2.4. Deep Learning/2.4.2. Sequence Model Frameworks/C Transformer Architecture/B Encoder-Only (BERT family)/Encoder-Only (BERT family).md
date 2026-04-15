@@ -1,3 +1,7 @@
+---
+title: "Encoder-Only (BERT family)"
+date: "2025-05-06"
+---
 # 仅编码器 (Encoder-Only, BERT family)
 
 **Parent**：[[Transformer Architecture|Transformer 架构 (Transformer Architecture)]]

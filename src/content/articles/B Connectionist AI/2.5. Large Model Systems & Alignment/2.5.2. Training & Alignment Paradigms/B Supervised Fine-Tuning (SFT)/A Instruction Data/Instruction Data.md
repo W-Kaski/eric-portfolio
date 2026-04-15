@@ -1,3 +1,7 @@
+---
+title: "Instruction Data"
+date: "2025-04-16"
+---
 # 指令数据构建 (Instruction Data)
 
 **Parent**：[[Supervised Fine-Tuning (SFT)|监督微调 (Supervised Fine-Tuning, SFT)]]

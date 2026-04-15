@@ -1,3 +1,7 @@
+---
+title: "Pruning"
+date: "2025-09-20"
+---
 # 剪枝 (Pruning)
 
 **Parent**：[[Model Compression|5.2 模型压缩 (Model Compression)]]

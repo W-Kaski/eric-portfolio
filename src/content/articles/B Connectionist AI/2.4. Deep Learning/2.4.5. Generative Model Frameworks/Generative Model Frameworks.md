@@ -1,3 +1,7 @@
+---
+title: "Generative Model Frameworks"
+date: "2025-04-08"
+---
 # 2.4.5. 生成模型框架 (Generative Model Frameworks)
 
 **Parent**：[[Deep Learning|2.4. 深度学习 (Deep Learning, DL)]]

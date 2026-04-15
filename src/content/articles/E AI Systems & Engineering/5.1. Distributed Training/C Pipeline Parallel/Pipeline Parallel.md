@@ -1,3 +1,7 @@
+---
+title: "Pipeline Parallel"
+date: "2025-09-02"
+---
 # Pipeline Parallel
 
 **Parent**：[[Distributed Training|5.1 分布式训练 (Distributed Training)]]

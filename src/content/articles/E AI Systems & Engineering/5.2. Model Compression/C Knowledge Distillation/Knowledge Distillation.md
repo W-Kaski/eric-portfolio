@@ -1,3 +1,7 @@
+---
+title: "Knowledge Distillation"
+date: "2025-09-21"
+---
 # 知识蒸馏 (Knowledge Distillation)
 
 **Parent**：[[Model Compression|5.2 模型压缩 (Model Compression)]]

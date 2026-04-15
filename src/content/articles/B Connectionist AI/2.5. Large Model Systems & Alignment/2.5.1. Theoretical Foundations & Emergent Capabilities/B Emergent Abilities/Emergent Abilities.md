@@ -1,3 +1,7 @@
+---
+title: "Emergent Abilities"
+date: "2025-04-10"
+---
 # 涌现能力 (Emergent Abilities)
 
 **Parent**：[[Theoretical Foundations & Emergent Capabilities|2.5.1. 理论基础与能力机制 (Theoretical Foundations & Emergent Capabilities)]]

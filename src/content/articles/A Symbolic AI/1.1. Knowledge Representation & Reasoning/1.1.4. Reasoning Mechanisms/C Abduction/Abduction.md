@@ -1,3 +1,7 @@
+---
+title: "Abduction"
+date: "2025-03-28"
+---
 # 溯因推理 (Abduction)
 
 **Parent**：[[Reasoning Mechanisms|1.1.4 推理机制 (Reasoning Mechanisms)]]

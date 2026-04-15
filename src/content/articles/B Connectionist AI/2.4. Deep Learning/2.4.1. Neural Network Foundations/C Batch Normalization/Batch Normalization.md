@@ -1,3 +1,7 @@
+---
+title: "Batch Normalization"
+date: "2025-04-22"
+---
 # 批归一化 (Batch Normalization)
 
 **Parent**：[[Neural Network Foundations|2.4.1. 神经网络基础 (Neural Network Foundations)]]

@@ -1,3 +1,7 @@
+---
+title: "Features (Neuro-Symbolic AI)"
+date: "2025-11-04"
+---
 # 神经符号 AI 的特点 (Features of Neuro-Symbolic AI)
 
 **Parent**：[[Neuro-Symbolic AI|7.2 神经符号 AI (Neuro-Symbolic AI)]]

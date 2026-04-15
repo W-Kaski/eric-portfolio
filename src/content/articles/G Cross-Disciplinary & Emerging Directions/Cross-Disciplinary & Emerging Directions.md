@@ -1,3 +1,7 @@
+---
+title: "Cross-Disciplinary & Emerging Directions"
+date: "2025-11-09"
+---
 # 7. 跨领域与新兴研究方向 (Cross-Disciplinary & Emerging Research Directions)
 
 **Parent**：[[Artificial Intelligence, AI]]

@@ -1,3 +1,7 @@
+---
+title: "Reasoning Mechanisms"
+date: "2025-03-16"
+---
 # 1.1.4 推理机制 (Reasoning Mechanisms)
 
 **Parent**：[[Knowledge Representation & Reasoning|1.1 知识表示与推理 (Knowledge Representation & Reasoning, KR&R)]]

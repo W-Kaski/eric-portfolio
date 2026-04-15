@@ -1,4 +1,8 @@
 ---
+title: "LLM Architecture & Training Knowledge Outline (大模型架构与训练)"
+date: "2025-04-26"
+---
+---
 mindmap-plugin: basic
 ---
 

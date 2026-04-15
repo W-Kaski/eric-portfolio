@@ -1,3 +1,7 @@
+---
+title: "Polynomial Regression"
+date: "2025-04-30"
+---
 # 多项式回归 (Polynomial Regression)
 
 **Parent**：[[Regression Frameworks|回归框架 (Regression Frameworks)]]

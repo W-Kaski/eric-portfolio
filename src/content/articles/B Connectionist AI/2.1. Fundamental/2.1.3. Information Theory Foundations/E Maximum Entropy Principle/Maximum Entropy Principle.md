@@ -1,3 +1,7 @@
+---
+title: "Maximum Entropy Principle"
+date: "2025-05-18"
+---
 # 最大熵原理 (Maximum Entropy Principle)
 
 **Parent**：[[Information Theory Foundations|2.1.3. 信息论基础 (Information Theory Foundations)]]

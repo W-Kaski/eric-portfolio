@@ -1,3 +1,7 @@
+---
+title: "Dimensionality Reduction Frameworks"
+date: "2025-05-13"
+---
 # 降维框架 (Dimensionality Reduction Frameworks)
 
 **Parent**：[[Unsupervised Learning (Outline)|2.2.2. 无监督学习 (Unsupervised Learning)]]

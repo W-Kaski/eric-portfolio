@@ -1,3 +1,7 @@
+---
+title: "元强化学习 (Meta-RL)"
+date: "2025-05-14"
+---
 parent:[[Modern RL Directions]]
 
 # 元强化学习 (Meta-RL) 核心笔记

@@ -1,3 +1,7 @@
+---
+title: "Model Compression"
+date: "2025-09-10"
+---
 # 5.2 模型压缩 (Model Compression)
 
 **Parent**：[[AI Systems & Engineering|5. AI 系统与工程 (AI Systems & Engineering)]]

@@ -1,3 +1,7 @@
+---
+title: "Inference Augmentation & External Memory"
+date: "2025-04-21"
+---
 # 2.5.4. 推理增强与外部记忆 (Inference Augmentation & External Memory)
 
 **Parent**：[[Large Model Systems & Alignment|2.5. 大模型系统与对齐 (Large Model Systems & Alignment)]]

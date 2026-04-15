@@ -1,3 +1,7 @@
+---
+title: "SGD"
+date: "2025-05-06"
+---
 # 随机梯度下降 (SGD)
 
 **Parent**：[[First-Order Methods|一阶优化 (First-Order Methods)]]

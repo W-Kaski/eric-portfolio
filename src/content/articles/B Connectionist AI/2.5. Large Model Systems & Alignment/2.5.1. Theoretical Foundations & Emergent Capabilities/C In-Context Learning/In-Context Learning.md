@@ -1,3 +1,7 @@
+---
+title: "In-Context Learning"
+date: "2025-05-03"
+---
 # In-Context Learning
 
 **Parent**：[[Theoretical Foundations & Emergent Capabilities|2.5.1. 理论基础与能力机制 (Theoretical Foundations & Emergent Capabilities)]]

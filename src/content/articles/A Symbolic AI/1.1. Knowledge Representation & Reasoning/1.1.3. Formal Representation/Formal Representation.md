@@ -1,3 +1,7 @@
+---
+title: "Formal Representation"
+date: "2025-04-10"
+---
 # 1.1.3 形式化表示 (Formal Representation)
 
 **Parent**：[[Knowledge Representation & Reasoning|1.1 知识表示与推理 (Knowledge Representation & Reasoning, KR&R)]]

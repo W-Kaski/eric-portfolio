@@ -1,3 +1,7 @@
+---
+title: "Rainbow DQN"
+date: "2025-05-18"
+---
 
 
 **Parent**：[[Value-Based Methods|2.3.2. 基于值的方法 (Value-Based Methods)]]

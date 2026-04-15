@@ -1,3 +1,7 @@
+---
+title: "Probably Approximately Correct Learning"
+date: "2025-04-02"
+---
 # PAC Learning
 
 **Parent**：[[Learning Theory Foundations|2.1.1. 学习理论基础 (Learning Theory Foundations)]]

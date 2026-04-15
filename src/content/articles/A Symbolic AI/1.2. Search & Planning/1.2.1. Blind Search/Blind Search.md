@@ -1,3 +1,7 @@
+---
+title: "Blind Search"
+date: "2025-03-23"
+---
 # 1.2.1 无信息搜索 (Blind Search)
 
 **Parent**：[[Search & Planning|1.2 搜索与规划 (Search & Planning)]]

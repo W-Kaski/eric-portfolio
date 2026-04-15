@@ -1,3 +1,7 @@
+---
+title: "Ensemble Methods"
+date: "2025-04-07"
+---
 # 集成方法 (Ensemble Methods)
 
 **Parent**：[[B Connectionist AI/2.2. Machine Learning/2.2.1. Supervised Learning/Supervised Learning|2.2.1. 监督学习 (Supervised Learning)]]

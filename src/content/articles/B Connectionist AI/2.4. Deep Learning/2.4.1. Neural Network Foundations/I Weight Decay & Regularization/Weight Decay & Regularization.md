@@ -1,3 +1,7 @@
+---
+title: "Weight Decay & Regularization"
+date: "2025-04-18"
+---
 
 parent:[[Neural Network Foundations]]
 # Weight Decay & Regularization

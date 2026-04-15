@@ -1,3 +1,7 @@
+---
+title: "Lifelong RL"
+date: "2025-04-09"
+---
 parent:[[Modern RL Directions]]
 
 

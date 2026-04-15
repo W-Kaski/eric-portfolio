@@ -1,3 +1,7 @@
+---
+title: "Logic Programming"
+date: "2025-03-31"
+---
 # 1.1.2 逻辑编程 (Logic Programming)
 
 **Parent**：[[Knowledge Representation & Reasoning|1.1 知识表示与推理 (Knowledge Representation & Reasoning, KR&R)]]

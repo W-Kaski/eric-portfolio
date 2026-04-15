@@ -1,3 +1,7 @@
+---
+title: "目标条件强化学习 (GCRL)"
+date: "2025-05-13"
+---
 
 parent:[[Modern RL Directions]]
 # 目标条件强化学习 (GCRL) 

@@ -1,3 +1,7 @@
+---
+title: "Attention Mechanism"
+date: "2025-04-05"
+---
 # 注意力机制 (Attention Mechanism)
 
 **Parent**：[[Sequence Model Frameworks|2.4.2. 序列模型框架 (Sequence Model Frameworks)]]

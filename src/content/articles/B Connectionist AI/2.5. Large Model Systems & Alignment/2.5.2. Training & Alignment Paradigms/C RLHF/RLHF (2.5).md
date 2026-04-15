@@ -1,3 +1,7 @@
+---
+title: "RLHF (2.5)"
+date: "2025-05-20"
+---
 # 人类反馈强化学习 (RLHF)
 
 **Parent**：[[Training & Alignment Paradigms|2.5.2. 训练与对齐范式 (Training & Alignment Paradigms)]]

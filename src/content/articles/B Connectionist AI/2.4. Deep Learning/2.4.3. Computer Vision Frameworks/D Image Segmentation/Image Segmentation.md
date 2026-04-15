@@ -1,3 +1,7 @@
+---
+title: "Image Segmentation"
+date: "2025-04-03"
+---
 # 图像分割 (Image Segmentation)
 
 **Parent**：[[Computer Vision Frameworks|2.4.3. 计算机视觉框架 (Computer Vision Frameworks)]]

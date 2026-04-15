@@ -1,3 +1,7 @@
+---
+title: "GRU"
+date: "2025-04-19"
+---
 # GRU (Gated Recurrent Unit)
 
 **Parent**：[[RNN|循环神经网络 (Recurrent Neural Network, RNN)]]

@@ -1,3 +1,7 @@
+---
+title: "Encoder-Decoder"
+date: "2025-05-19"
+---
 # 编码器-解码器 (Encoder-Decoder)
 
 **Parent**：[[Transformer Architecture|Transformer 架构 (Transformer Architecture)]]

@@ -1,3 +1,7 @@
+---
+title: "EM Algorithm"
+date: "2025-05-02"
+---
 # EM 算法 (EM Algorithm)
 
 **Parent**：[[Inference Methods|推断方法 (Inference Methods)]]

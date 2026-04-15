@@ -1,3 +1,7 @@
+---
+title: "Swarm Intelligence"
+date: "2025-07-17"
+---
 # 3.2 群体智能 (Swarm Intelligence)
 
 **Parent**：[[Evolutionary Computation|3. 进化计算 (Evolutionary Computation)]]

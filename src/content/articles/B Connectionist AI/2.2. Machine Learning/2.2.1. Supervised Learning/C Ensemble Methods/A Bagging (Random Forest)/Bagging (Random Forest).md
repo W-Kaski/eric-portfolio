@@ -1,3 +1,7 @@
+---
+title: "Bagging (Random Forest)"
+date: "2025-04-11"
+---
 # Bagging (随机森林, Random Forest)
 
 **Parent**：[[Ensemble Methods|集成方法 (Ensemble Methods)]]

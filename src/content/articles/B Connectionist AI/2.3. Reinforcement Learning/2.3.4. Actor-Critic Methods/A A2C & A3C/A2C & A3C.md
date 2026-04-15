@@ -1,3 +1,7 @@
+---
+title: "A2C & A3C"
+date: "2025-04-29"
+---
 # Actor-Critic 框架 (A2C, A3C)
 
 **Parent**：[[Actor-Critic Methods|2.3.4. Actor-Critic 方法 (Actor-Critic Methods)]]

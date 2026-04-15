@@ -1,3 +1,7 @@
+---
+title: "Compiler Optimization (TensorRT & XLA)"
+date: "2025-09-04"
+---
 # 编译优化 (TensorRT / XLA)
 
 **Parent**：[[Inference Optimization|5.3 推理优化 (Inference Optimization)]]

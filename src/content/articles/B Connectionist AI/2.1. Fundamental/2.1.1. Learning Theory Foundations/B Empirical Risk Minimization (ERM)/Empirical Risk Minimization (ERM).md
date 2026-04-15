@@ -1,3 +1,7 @@
+---
+title: "Empirical Risk Minimization (ERM)"
+date: "2025-04-06"
+---
 # 经验风险最小化 (Empirical Risk Minimization, ERM)
 
 **Parent**：[[Learning Theory Foundations|2.1.1. 学习理论基础 (Learning Theory Foundations)]]

@@ -1,3 +1,7 @@
+---
+title: "SAC"
+date: "2025-04-27"
+---
 # SAC
 
 **Parent**：[[Actor-Critic Methods|2.3.4. Actor-Critic 方法 (Actor-Critic Methods)]]

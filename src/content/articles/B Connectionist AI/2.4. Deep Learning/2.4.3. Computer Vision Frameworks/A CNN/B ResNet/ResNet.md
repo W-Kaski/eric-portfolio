@@ -1,3 +1,7 @@
+---
+title: "ResNet"
+date: "2025-05-16"
+---
 # ResNet (Residual Network)
 
 **Parent**：[[CNN|卷积网络 (Convolutional Neural Network, CNN)]]

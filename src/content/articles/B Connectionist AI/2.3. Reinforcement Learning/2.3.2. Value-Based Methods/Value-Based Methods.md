@@ -1,3 +1,7 @@
+---
+title: "Value-Based Methods"
+date: "2025-04-21"
+---
 # 2.3.2. 基于值的方法 (Value-Based Methods)
 
 **Parent**：[[Reinforcement Learning|2.3. 强化学习 (Reinforcement Learning, RL)]]

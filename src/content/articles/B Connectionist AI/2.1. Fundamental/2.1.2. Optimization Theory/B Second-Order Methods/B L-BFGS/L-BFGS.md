@@ -1,3 +1,7 @@
+---
+title: "L-BFGS"
+date: "2025-04-06"
+---
 # L-BFGS
 
 **Parent**：[[Second-Order Methods|二阶优化 (Second-Order Methods)]]

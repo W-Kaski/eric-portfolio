@@ -1,3 +1,7 @@
+---
+title: "Probabilistic Graphical Models"
+date: "2025-04-28"
+---
 # 2.2.3. 概率图模型 (Probabilistic Graphical Models)
 
 **Parent**：[[Machine Learning|2.2. 机器学习 (Machine Learning, ML)]]

@@ -1,3 +1,7 @@
+---
+title: "Dropout"
+date: "2025-05-13"
+---
 # Dropout
 
 **Parent**：[[Neural Network Foundations|2.4.1. 神经网络基础 (Neural Network Foundations)]]

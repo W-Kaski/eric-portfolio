@@ -1,3 +1,7 @@
+---
+title: "Representation & Self-Supervised Learning"
+date: "2025-04-09"
+---
 # 2.2.4. 表示学习与自监督学习 (Representation & Self-Supervised Learning)
 
 **Parent**：[[Machine Learning|2.2. 机器学习 (Machine Learning, ML)]]

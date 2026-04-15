@@ -1,3 +1,7 @@
+---
+title: "Inference Optimization"
+date: "2025-09-19"
+---
 # 5.3 推理优化 (Inference Optimization)
 
 **Parent**：[[AI Systems & Engineering|5. AI 系统与工程 (AI Systems & Engineering)]]

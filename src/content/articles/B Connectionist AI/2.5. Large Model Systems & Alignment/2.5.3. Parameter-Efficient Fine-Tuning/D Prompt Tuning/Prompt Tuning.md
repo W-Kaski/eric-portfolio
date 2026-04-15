@@ -1,3 +1,7 @@
+---
+title: "Prompt Tuning"
+date: "2025-05-07"
+---
 # Prompt Tuning
 
 **Parent**：[[Parameter-Efficient Fine-Tuning|2.5.3. 参数高效微调 (Parameter-Efficient Fine-Tuning)]]

@@ -1,3 +1,7 @@
+---
+title: "世界模型 (World Models)"
+date: "2025-04-27"
+---
 # 世界模型 (World Models)
 
 **Parent**：[[Modern RL Directions|2.3.5. 现代强化学习方向 (Modern RL Directions)]]

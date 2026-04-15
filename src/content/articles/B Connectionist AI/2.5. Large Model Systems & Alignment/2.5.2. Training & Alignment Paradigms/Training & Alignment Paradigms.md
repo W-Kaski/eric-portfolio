@@ -1,3 +1,7 @@
+---
+title: "Training & Alignment Paradigms"
+date: "2025-04-19"
+---
 # 2.5.2. 训练与对齐范式 (Training & Alignment Paradigms)
 
 **Parent**：[[Large Model Systems & Alignment|2.5. 大模型系统与对齐 (Large Model Systems & Alignment)]]

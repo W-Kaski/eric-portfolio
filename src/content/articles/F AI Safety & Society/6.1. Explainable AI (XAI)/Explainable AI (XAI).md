@@ -1,3 +1,7 @@
+---
+title: "Explainable AI (XAI)"
+date: "2025-10-03"
+---
 # 6.1 可解释性 AI (Explainable AI, XAI)
 
 **Parent**：[[AI Safety & Society|6. AI 安全与社会影响 (AI Safety & Society)]]

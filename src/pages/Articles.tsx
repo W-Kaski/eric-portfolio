@@ -9,7 +9,7 @@ import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { vscDarkPlus, prism } from 'react-syntax-highlighter/dist/esm/styles/prism';
 import { cn } from '@/src/lib/utils';
 import { Calendar, Clock, ArrowLeft, Filter, SortAsc, Folder, ChevronDown, List, Network, FolderTree, LayoutGrid } from 'lucide-react';
-import { getAllArticles, Article } from '@/src/lib/articles';
+import { getArticlesMeta, getArticleById, ArticleMeta, Article } from '@/src/lib/articles';
 import { useApp } from '@/src/context/AppContext';
 import { ArticleTreeView } from '@/src/components/ArticleTreeView';
 import { ArticleGraphView } from '@/src/components/ArticleGraphView';
@@ -28,8 +28,9 @@ export default function Articles() {
   const navigate = useNavigate();
   const targetId = searchParams.get('id');
 
-  const [articles, setArticles] = useState<Article[]>([]);
+  const [articles, setArticles] = useState<ArticleMeta[]>([]);
   const [selectedArticle, setSelectedArticle] = useState<Article | null>(null);
+  const [loadingContent, setLoadingContent] = useState(false);
   const [activeCategory, setActiveCategory] = useState<string>(t('common.all'));
   const [activeFolder, setActiveFolder] = useState<string>(t('common.all'));
   const [sortBy, setSortBy] = useState<SortBy>('date');
@@ -46,15 +47,20 @@ export default function Articles() {
   const ITEMS_PER_PAGE = 9;
 
   useEffect(() => {
-    getAllArticles().then(data => {
+    // Load only metadata in parallel — no markdown bodies stored yet.
+    getArticlesMeta().then(data => {
       setArticles(data);
       setLoading(false);
 
-      // Handle deep linking from URL
+      // Handle deep linking from URL — trigger full content load for linked article
       if (targetId) {
-        const article = data.find(a => a.id === targetId);
-        if (article) {
-          setSelectedArticle(article);
+        const meta = data.find(a => a.id === targetId);
+        if (meta) {
+          setLoadingContent(true);
+          getArticleById(meta.id).then(article => {
+            if (article) setSelectedArticle(article);
+            setLoadingContent(false);
+          });
         }
       }
     });
@@ -131,6 +137,14 @@ export default function Articles() {
       });
     }
   };
+
+  if (loadingContent) {
+    return (
+      <div className="flex justify-center py-32">
+        <div className="w-8 h-8 border-2 border-brand-text/20 border-t-brand-text rounded-full animate-spin" />
+      </div>
+    );
+  }
 
   if (selectedArticle) {
     return (

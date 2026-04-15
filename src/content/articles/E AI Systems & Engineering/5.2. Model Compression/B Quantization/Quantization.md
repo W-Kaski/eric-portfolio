@@ -1,3 +1,7 @@
+---
+title: "Quantization"
+date: "2025-09-22"
+---
 # 量化 (Quantization)
 
 **Parent**：[[Model Compression|5.2 模型压缩 (Model Compression)]]

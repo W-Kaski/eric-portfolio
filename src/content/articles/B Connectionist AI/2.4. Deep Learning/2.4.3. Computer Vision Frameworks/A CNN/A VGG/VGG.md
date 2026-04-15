@@ -1,3 +1,7 @@
+---
+title: "VGG"
+date: "2025-04-17"
+---
 # VGG
 
 **Parent**：[[CNN|卷积网络 (Convolutional Neural Network, CNN)]]

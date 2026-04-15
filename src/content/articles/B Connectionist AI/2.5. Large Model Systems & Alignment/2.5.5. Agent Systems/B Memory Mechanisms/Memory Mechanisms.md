@@ -1,3 +1,7 @@
+---
+title: "Memory Mechanisms"
+date: "2025-05-07"
+---
 # 记忆机制 (Memory Mechanisms)
 
 **Parent**：[[Agent Systems|2.5.5. Agent 系统 (Agent Systems)]]

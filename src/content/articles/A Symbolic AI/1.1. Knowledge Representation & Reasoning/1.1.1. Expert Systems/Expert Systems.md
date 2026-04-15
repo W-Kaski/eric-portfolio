@@ -1,3 +1,7 @@
+---
+title: "Expert Systems"
+date: "2025-03-24"
+---
 # 1.1.1 专家系统 (Expert Systems)
 
 **Parent**：[[Knowledge Representation & Reasoning|1.1 知识表示与推理 (Knowledge Representation & Reasoning, KR&R)]]

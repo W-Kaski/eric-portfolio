@@ -1,3 +1,7 @@
+---
+title: "Computer Vision Frameworks"
+date: "2025-04-10"
+---
 # 2.4.3. 计算机视觉框架 (Computer Vision Frameworks)
 
 **Parent**：[[Deep Learning|2.4. 深度学习 (Deep Learning, DL)]]

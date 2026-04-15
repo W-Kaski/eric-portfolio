@@ -1,3 +1,7 @@
+---
+title: "SimCLR"
+date: "2025-05-18"
+---
 # SimCLR
 
 **Parent**：[[Contrastive Learning|对比学习 (Contrastive Learning)]]

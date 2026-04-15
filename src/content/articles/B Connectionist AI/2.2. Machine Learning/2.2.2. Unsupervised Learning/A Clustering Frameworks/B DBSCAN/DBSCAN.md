@@ -1,3 +1,7 @@
+---
+title: "DBSCAN"
+date: "2025-04-14"
+---
 # DBSCAN
 
 **Parent**：[[Clustering Frameworks|聚类框架 (Clustering Frameworks)]]

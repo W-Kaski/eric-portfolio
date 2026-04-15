@@ -1,3 +1,7 @@
+---
+title: "A Star Search"
+date: "2025-03-19"
+---
 # A* 算法 (A* Search)
 
 **Parent**：[[Heuristic Search|1.2.2 启发式搜索 (Heuristic Search)]]

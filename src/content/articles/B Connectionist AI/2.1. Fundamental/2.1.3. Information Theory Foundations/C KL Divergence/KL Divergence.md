@@ -1,3 +1,7 @@
+---
+title: "KL Divergence"
+date: "2025-05-01"
+---
 # KL 散度 (KL Divergence)
 
 **Parent**：[[Information Theory Foundations|2.1.3. 信息论基础 (Information Theory Foundations)]]

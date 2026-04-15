@@ -1,3 +1,7 @@
+---
+title: "Multi-Agent RL"
+date: "2025-05-16"
+---
 # 多智能体强化学习 (Multi-Agent RL)
 
 **Parent**：[[Modern RL Directions|2.3.5. 现代强化学习方向 (Modern RL Directions)]]

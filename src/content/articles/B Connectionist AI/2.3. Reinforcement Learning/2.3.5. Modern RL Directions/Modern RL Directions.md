@@ -1,3 +1,7 @@
+---
+title: "Modern RL Directions"
+date: "2025-04-21"
+---
 # 2.3.5. 现代强化学习方向 (Modern RL Directions)
 
 **Parent**：[[Reinforcement Learning|2.3. 强化学习 (Reinforcement Learning, RL)]]

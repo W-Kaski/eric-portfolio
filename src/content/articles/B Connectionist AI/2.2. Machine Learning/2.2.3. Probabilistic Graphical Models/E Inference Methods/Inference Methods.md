@@ -1,3 +1,7 @@
+---
+title: "Inference Methods"
+date: "2025-04-22"
+---
 # 推断方法 (Inference Methods)
 
 **Parent**：[[Probabilistic Graphical Models|2.2.3. 概率图模型 (Probabilistic Graphical Models)]]

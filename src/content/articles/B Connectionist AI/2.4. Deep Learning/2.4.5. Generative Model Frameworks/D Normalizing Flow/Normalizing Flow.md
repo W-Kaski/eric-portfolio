@@ -1,3 +1,7 @@
+---
+title: "Normalizing Flow"
+date: "2025-05-18"
+---
 # 正则化流 (Normalizing Flow)
 
 **Parent**：[[Generative Model Frameworks|2.4.5. 生成模型框架 (Generative Model Frameworks)]]

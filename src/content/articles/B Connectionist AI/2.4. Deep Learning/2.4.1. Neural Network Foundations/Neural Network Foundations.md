@@ -1,3 +1,7 @@
+---
+title: "Neural Network Foundations"
+date: "2025-04-27"
+---
 # 2.4.1. 神经网络基础 (Neural Network Foundations)
 
 **Parent**：[[Deep Learning|2.4. 深度学习 (Deep Learning, DL)]]

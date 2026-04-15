@@ -1,3 +1,7 @@
+---
+title: "Knowledge Representation & Reasoning"
+date: "2025-03-02"
+---
 # 1.1 知识表示与推理 (Knowledge Representation & Reasoning, KR&R)
 
 **Parent**：[[Symbolic AI (Knowledge-Driven AI)|1. 符号主义 AI (Symbolic AI) / 知识驱动 AI (Knowledge-Driven AI)]]

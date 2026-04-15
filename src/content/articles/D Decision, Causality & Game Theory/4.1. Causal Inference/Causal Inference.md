@@ -1,3 +1,7 @@
+---
+title: "Causal Inference"
+date: "2025-08-07"
+---
 # 4.1 因果推断 (Causal Inference)
 
 **Parent**：[[Decision, Causality & Game Theory|4. 决策、因果与博弈 (Decision, Causality & Game Theory)]]

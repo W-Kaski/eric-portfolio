@@ -1,3 +1,7 @@
+---
+title: "Optimization Theory"
+date: "2025-05-08"
+---
 # 2.1.2. 优化理论 (Optimization Theory)
 
 **Parent**：[[2.1. Fundamental|2.1. 学习基础 (Foundations)]]

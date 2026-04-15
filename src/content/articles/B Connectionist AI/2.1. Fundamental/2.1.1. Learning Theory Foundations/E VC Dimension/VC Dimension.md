@@ -1,3 +1,7 @@
+---
+title: "VC Dimension"
+date: "2025-04-07"
+---
 # VC 维 (VC Dimension)
 
 **Parent**：[[Learning Theory Foundations|2.1.1. 学习理论基础 (Learning Theory Foundations)]]

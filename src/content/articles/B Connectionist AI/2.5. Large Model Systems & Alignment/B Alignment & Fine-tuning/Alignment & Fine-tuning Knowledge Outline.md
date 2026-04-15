@@ -1,4 +1,8 @@
 ---
+title: "Alignment & Fine-tuning Knowledge Outline"
+date: "2025-05-14"
+---
+---
 mindmap-plugin: basic
 ---
 

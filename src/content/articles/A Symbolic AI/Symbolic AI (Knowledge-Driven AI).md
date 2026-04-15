@@ -1,3 +1,7 @@
+---
+title: "Symbolic AI (Knowledge-Driven AI)"
+date: "2025-03-22"
+---
 # 1. 符号主义 AI (Symbolic AI) / 知识驱动 AI (Knowledge-Driven AI)
 
 **Parent**：[[Artificial Intelligence, AI]]

@@ -1,3 +1,7 @@
+---
+title: "Low-rank Adaptation Theory"
+date: "2025-04-09"
+---
 # Low-rank adaptation 理论解释 (Low-rank Adaptation Theory)
 
 **Parent**：[[Parameter-Efficient Fine-Tuning|2.5.3. 参数高效微调 (Parameter-Efficient Fine-Tuning)]]

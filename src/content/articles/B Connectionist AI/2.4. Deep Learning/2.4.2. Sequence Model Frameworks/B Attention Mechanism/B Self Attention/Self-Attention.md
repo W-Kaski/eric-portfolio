@@ -1,3 +1,7 @@
+---
+title: "Self-Attention"
+date: "2025-05-03"
+---
 
 parent:[[Attention Mechanism]]
 

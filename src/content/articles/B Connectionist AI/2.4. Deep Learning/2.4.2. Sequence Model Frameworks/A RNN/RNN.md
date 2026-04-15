@@ -1,3 +1,7 @@
+---
+title: "RNN"
+date: "2025-05-20"
+---
 # 循环神经网络 (Recurrent Neural Network, RNN)
 
 **Parent**：[[Sequence Model Frameworks|2.4.2. 序列模型框架 (Sequence Model Frameworks)]]

@@ -1,3 +1,7 @@
+---
+title: "Automated Planning"
+date: "2025-03-07"
+---
 # 1.2.4 自动规划 (Automated Planning)
 
 **Parent**：[[Search & Planning|1.2 搜索与规划 (Search & Planning)]]

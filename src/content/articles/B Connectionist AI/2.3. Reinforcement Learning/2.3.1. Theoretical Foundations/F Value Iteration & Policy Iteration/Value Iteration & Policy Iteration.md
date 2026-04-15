@@ -1,3 +1,7 @@
+---
+title: "Value Iteration & Policy Iteration"
+date: "2025-04-27"
+---
 # 值迭代与策略迭代 (Value Iteration & Policy Iteration)
 
 **Parent**：[[Theoretical Foundations|2.3.1. 理论基础 (Theoretical Foundations)]]

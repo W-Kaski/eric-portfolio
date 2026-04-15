@@ -1,3 +1,7 @@
+---
+title: "Adversarial Attack & Defense"
+date: "2025-10-16"
+---
 # 6.4 对抗攻击与防御 (Adversarial Attack & Defense)
 
 **Parent**：[[AI Safety & Society|6. AI 安全与社会影响 (AI Safety & Society)]]

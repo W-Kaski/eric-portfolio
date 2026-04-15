@@ -1,3 +1,7 @@
+---
+title: "Function Calling"
+date: "2025-04-23"
+---
 # 函数调用 (Function Calling)
 
 **Parent**：[[Tool Use (2.5)|Tool Use]]

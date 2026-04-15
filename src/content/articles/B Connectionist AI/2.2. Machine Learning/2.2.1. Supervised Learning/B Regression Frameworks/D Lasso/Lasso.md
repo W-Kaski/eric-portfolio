@@ -1,3 +1,7 @@
+---
+title: "Lasso"
+date: "2025-05-15"
+---
 # Lasso
 
 **Parent**：[[Regression Frameworks|回归框架 (Regression Frameworks)]]

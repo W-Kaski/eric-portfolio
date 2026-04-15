@@ -1,3 +1,7 @@
+---
+title: "Inverse RL"
+date: "2025-05-08"
+---
 # 逆强化学习 (Inverse RL)
 
 **Parent**：[[Modern RL Directions|2.3.5. 现代强化学习方向 (Modern RL Directions)]]

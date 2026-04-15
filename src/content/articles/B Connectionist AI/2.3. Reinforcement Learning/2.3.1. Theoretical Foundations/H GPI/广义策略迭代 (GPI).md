@@ -1,4 +1,8 @@
 ---
+title: "广义策略迭代 (GPI)"
+date: "2025-05-17"
+---
+---
 
 mindmap-plugin: basic
 

@@ -1,3 +1,7 @@
+---
+title: "Machine Learning"
+date: "2025-05-12"
+---
 # 2.2. 机器学习 (Machine Learning, ML)
 
 **Parent**：[[Connectionist AI (Data-Driven AI)|2. 联结主义 AI (Connectionist AI) / 数据驱动 AI (Data-Driven AI)]]

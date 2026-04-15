@@ -1,3 +1,7 @@
+---
+title: "Transfer & Continual Learning"
+date: "2025-12-15"
+---
 # 7.4 迁移学习 / 终身学习 (Transfer & Continual Learning)
 
 **Parent**：[[Cross-Disciplinary & Emerging Directions|7. 跨领域与新兴研究方向 (Cross-Disciplinary & Emerging Research Directions)]]

@@ -1,3 +1,7 @@
+---
+title: "Double DQN"
+date: "2025-05-10"
+---
 # Double DQN
 
 **Parent**：[[Value-Based Methods|2.3.2. 基于值的方法 (Value-Based Methods)]]

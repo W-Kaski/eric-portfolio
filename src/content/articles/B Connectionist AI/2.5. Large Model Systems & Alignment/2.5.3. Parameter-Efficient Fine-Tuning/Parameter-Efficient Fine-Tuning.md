@@ -1,3 +1,7 @@
+---
+title: "Parameter-Efficient Fine-Tuning"
+date: "2025-05-19"
+---
 # 2.5.3. 参数高效微调 (Parameter-Efficient Fine-Tuning)
 
 **Parent**：[[Large Model Systems & Alignment|2.5. 大模型系统与对齐 (Large Model Systems & Alignment)]]

@@ -1,3 +1,7 @@
+---
+title: "Support Vector Machine (SVM)"
+date: "2025-05-20"
+---
 # 支持向量机 (Support Vector Machine, SVM)
 
 **Parent**：[[Classification Frameworks|分类框架 (Classification Frameworks)]]

@@ -1,3 +1,7 @@
+---
+title: "Mutual Information"
+date: "2025-05-16"
+---
 # 互信息 (Mutual Information)
 
 **Parent**：[[Information Theory Foundations|2.1.3. 信息论基础 (Information Theory Foundations)]]

@@ -1,3 +1,7 @@
+---
+title: "Supervised Learning"
+date: "2025-04-18"
+---
 # 2.2.1. 监督学习 (Supervised Learning)
 
 **Parent**：[[Machine Learning|2.2. 机器学习 (Machine Learning, ML)]]

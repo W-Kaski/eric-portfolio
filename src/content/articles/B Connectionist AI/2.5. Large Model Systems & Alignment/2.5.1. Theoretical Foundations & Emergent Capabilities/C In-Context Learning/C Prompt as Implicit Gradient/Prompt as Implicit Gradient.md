@@ -1,3 +1,7 @@
+---
+title: "Prompt as Implicit Gradient"
+date: "2025-04-22"
+---
 # Prompt 作为隐式梯度更新 (Prompt as Implicit Gradient)
 
 **Parent**：[[In-Context Learning|In-Context Learning]]

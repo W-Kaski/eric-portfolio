@@ -1,3 +1,7 @@
+---
+title: "PPO"
+date: "2025-05-12"
+---
 # PPO (Proximal Policy Optimization)
 
 **Parent**：[[Policy-Based Methods|2.3.3. 基于策略的方法 (Policy-Based Methods)]]

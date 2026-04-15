@@ -1,3 +1,7 @@
+---
+title: "Embodied AI & Foundation Models for RL"
+date: "2025-05-03"
+---
 parent:[[Modern RL Directions]]
 
 # 具身智能与大模型强化学习

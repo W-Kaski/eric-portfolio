@@ -1,3 +1,7 @@
+---
+title: "Reinforcement Learning"
+date: "2025-05-17"
+---
 # 2.3. 强化学习 (Reinforcement Learning, RL)
 
 **Parent**：[[Connectionist AI (Data-Driven AI)|2. 联结主义 AI (Connectionist AI) / 数据驱动 AI (Data-Driven AI)]]

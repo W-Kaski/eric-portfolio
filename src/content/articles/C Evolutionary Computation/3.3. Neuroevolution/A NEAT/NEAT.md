@@ -1,3 +1,7 @@
+---
+title: "NEAT"
+date: "2025-07-05"
+---
 # NEAT
 
 **Parent**：[[Neuroevolution|3.3 神经进化 (Neuroevolution)]]

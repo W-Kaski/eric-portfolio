@@ -1,3 +1,7 @@
+---
+title: "Mechanisms"
+date: "2025-05-11"
+---
 # 上下文学习机制 (Mechanisms)
 
 **Parent**：[[In-Context Learning|In-Context Learning]]

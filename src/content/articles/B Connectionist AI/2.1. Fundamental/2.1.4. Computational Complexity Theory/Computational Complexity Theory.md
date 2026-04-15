@@ -1,3 +1,7 @@
+---
+title: "Computational Complexity Theory"
+date: "2025-05-02"
+---
 # 2.1.4. 计算复杂性理论 (Computational Complexity Theory)
 
 **Parent**：[[2.1. Fundamental|2.1. 学习基础 (Foundations)]]

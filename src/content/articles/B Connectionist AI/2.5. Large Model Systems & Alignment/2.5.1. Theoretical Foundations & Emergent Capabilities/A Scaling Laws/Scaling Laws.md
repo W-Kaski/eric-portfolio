@@ -1,3 +1,7 @@
+---
+title: "Scaling Laws"
+date: "2025-04-14"
+---
 # Scaling Laws
 
 **Parent**：[[Theoretical Foundations & Emergent Capabilities|2.5.1. 理论基础与能力机制 (Theoretical Foundations & Emergent Capabilities)]]

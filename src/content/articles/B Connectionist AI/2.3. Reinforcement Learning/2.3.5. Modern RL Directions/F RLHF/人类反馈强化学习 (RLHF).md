@@ -1,3 +1,7 @@
+---
+title: "人类反馈强化学习 (RLHF)"
+date: "2025-04-09"
+---
 
 
 **Parent**：[[Modern RL Directions|2.3.5. 现代强化学习方向 (Modern RL Directions)]]

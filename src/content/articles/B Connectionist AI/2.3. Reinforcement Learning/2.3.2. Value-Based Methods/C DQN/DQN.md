@@ -1,3 +1,7 @@
+---
+title: "DQN"
+date: "2025-04-22"
+---
 # DQN (Deep Q-Network)
 
 **Parent**：[[Value-Based Methods|2.3.2. 基于值的方法 (Value-Based Methods)]]

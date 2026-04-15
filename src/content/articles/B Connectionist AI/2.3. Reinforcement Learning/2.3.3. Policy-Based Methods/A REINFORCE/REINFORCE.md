@@ -1,3 +1,7 @@
+---
+title: "REINFORCE"
+date: "2025-05-01"
+---
 # REINFORCE
 
 **Parent**：[[Policy-Based Methods|2.3.3. 基于策略的方法 (Policy-Based Methods)]]

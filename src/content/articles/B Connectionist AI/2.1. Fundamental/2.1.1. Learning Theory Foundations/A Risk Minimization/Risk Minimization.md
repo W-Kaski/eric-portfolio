@@ -1,3 +1,7 @@
+---
+title: "Risk Minimization"
+date: "2025-04-29"
+---
 # 风险最小化 (Risk Minimization)
 
 **Parent**：[[Learning Theory Foundations|2.1.1. 学习理论基础 (Learning Theory Foundations)]]

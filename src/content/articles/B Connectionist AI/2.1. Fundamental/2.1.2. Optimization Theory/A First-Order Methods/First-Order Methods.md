@@ -1,3 +1,7 @@
+---
+title: "First-Order Methods"
+date: "2025-04-02"
+---
 # 一阶优化 (First-Order Methods)
 
 **Parent**：[[Optimization Theory|2.1.2. 优化理论 (Optimization Theory)]]

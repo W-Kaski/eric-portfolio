@@ -1,3 +1,7 @@
+---
+title: "Ant Colony Optimization"
+date: "2025-07-15"
+---
 # 蚁群算法 (Ant Colony Optimization)
 
 **Parent**：[[Swarm Intelligence|3.2 群体智能 (Swarm Intelligence)]]

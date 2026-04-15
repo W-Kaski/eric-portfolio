@@ -1,3 +1,7 @@
+---
+title: "Stable Diffusion"
+date: "2025-04-09"
+---
 # Stable Diffusion
 
 **Parent**：[[Diffusion Models|扩散模型 (Diffusion Models)]]

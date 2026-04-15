@@ -1,3 +1,7 @@
+---
+title: "Transformer Architecture"
+date: "2025-05-01"
+---
 # Transformer 架构 (Transformer Architecture)
 
 **Parent**：[[Sequence Model Frameworks|2.4.2. 序列模型框架 (Sequence Model Frameworks)]]

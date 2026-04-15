@@ -1,3 +1,7 @@
+---
+title: "Game Theory"
+date: "2025-08-30"
+---
 # 4.2 博弈论 (Game Theory)
 
 **Parent**：[[Decision, Causality & Game Theory|4. 决策、因果与博弈 (Decision, Causality & Game Theory)]]

@@ -1,3 +1,7 @@
+---
+title: "DenseNet"
+date: "2025-04-25"
+---
 # DenseNet
 
 **Parent**：[[CNN|卷积网络 (Convolutional Neural Network, CNN)]]

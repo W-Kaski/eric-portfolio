@@ -1,3 +1,7 @@
+---
+title: "Neuro-Symbolic AI"
+date: "2025-11-05"
+---
 # 7.2 神经符号 AI (Neuro-Symbolic AI)
 
 **Parent**：[[Cross-Disciplinary & Emerging Directions|7. 跨领域与新兴研究方向 (Cross-Disciplinary & Emerging Research Directions)]]

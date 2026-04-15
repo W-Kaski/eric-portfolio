@@ -1,3 +1,7 @@
+---
+title: "Second-Order Methods"
+date: "2025-05-06"
+---
 # 二阶优化 (Second-Order Methods)
 
 **Parent**：[[Optimization Theory|2.1.2. 优化理论 (Optimization Theory)]]

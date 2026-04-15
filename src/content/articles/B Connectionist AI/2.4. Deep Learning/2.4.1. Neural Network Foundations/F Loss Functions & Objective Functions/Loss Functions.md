@@ -1,3 +1,7 @@
+---
+title: "Loss Functions"
+date: "2025-05-17"
+---
 
 parent:[[Neural Network Foundations]]
 

@@ -1,3 +1,7 @@
+---
+title: "Pretraining Objectives"
+date: "2025-05-17"
+---
 # 多模态预训练目标 (Pretraining Objectives)
 
 **Parent**：[[Multimodal Transformer|多模态 Transformer (Multimodal Transformer)]]

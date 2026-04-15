@@ -1,3 +1,7 @@
+---
+title: "Deep Learning"
+date: "2025-05-02"
+---
 # 2.4. 深度学习 (Deep Learning, DL)
 
 **Parent**：[[Connectionist AI (Data-Driven AI)|2. 联结主义 AI (Connectionist AI) / 数据驱动 AI (Data-Driven AI)]]

@@ -1,3 +1,7 @@
+---
+title: "Information Theory Foundations"
+date: "2025-04-28"
+---
 # 2.1.3. 信息论基础 (Information Theory Foundations)
 
 **Parent**：[[2.1. Fundamental|2.1. 学习基础 (Foundations)]]

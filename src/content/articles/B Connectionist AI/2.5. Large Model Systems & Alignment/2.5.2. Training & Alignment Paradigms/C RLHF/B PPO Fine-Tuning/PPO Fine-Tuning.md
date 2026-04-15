@@ -1,3 +1,7 @@
+---
+title: "PPO Fine-Tuning"
+date: "2025-04-07"
+---
 # PPO 微调 (PPO Fine-Tuning)
 
 **Parent**：[[RLHF (2.5)|人类反馈强化学习 (RLHF)]]

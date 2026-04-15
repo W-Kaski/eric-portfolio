@@ -1,3 +1,7 @@
+---
+title: "Model-Agnostic"
+date: "2025-10-03"
+---
 # 模型不可知 (Model-Agnostic)
 
 **Parent**：[[Explainable AI (XAI)|6.1 可解释性 AI (Explainable AI, XAI)]]

@@ -1,3 +1,7 @@
+---
+title: "Bellman Equation"
+date: "2025-04-14"
+---
 # 贝尔曼方程 (Bellman Equation)
 
 **Parent**：[[Theoretical Foundations|2.3.1. 理论基础 (Theoretical Foundations)]]

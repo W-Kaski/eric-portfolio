@@ -1,3 +1,7 @@
+---
+title: "Tool Use (Emergent)"
+date: "2025-05-02"
+---
 # 工具调用能力 (Tool Use)
 
 **Parent**：[[Emergent Abilities|涌现能力 (Emergent Abilities)]]

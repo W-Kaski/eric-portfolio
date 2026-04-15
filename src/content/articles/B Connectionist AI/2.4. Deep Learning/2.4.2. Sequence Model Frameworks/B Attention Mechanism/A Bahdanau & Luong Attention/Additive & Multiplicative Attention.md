@@ -1,3 +1,7 @@
+---
+title: "Additive & Multiplicative Attention"
+date: "2025-04-04"
+---
 # Bahdanau/Luong Attention
 
 **Parent**：[[Attention Mechanism|注意力机制 (Attention Mechanism)]]

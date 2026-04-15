@@ -1,7 +1,7 @@
 import React, { useState, useMemo, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { Folder, FolderOpen, FileText, ChevronRight, ChevronsDownUp, ChevronsUpDown } from 'lucide-react';
-import { Article } from '@/src/lib/articles';
+import { ArticleMeta } from '@/src/lib/articles';
 import { cn } from '@/src/lib/utils';
 import { useNavigate } from 'react-router-dom';
 
@@ -10,10 +10,10 @@ interface TreeNode {
   path: string;
   isDirectory: boolean;
   children: Record<string, TreeNode>;
-  articles: Article[];
+  articles: ArticleMeta[];
 }
 
-export function ArticleTreeView({ articles }: { articles: Article[] }) {
+export function ArticleTreeView({ articles }: { articles: ArticleMeta[] }) {
   const navigate = useNavigate();
   const [expandTrigger, setExpandTrigger] = useState(0);
   const [collapseTrigger, setCollapseTrigger] = useState(0);

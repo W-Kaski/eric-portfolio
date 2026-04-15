@@ -1,3 +1,7 @@
+---
+title: "Bias-Variance Tradeoff"
+date: "2025-05-12"
+---
 # 偏差-方差分解 (Bias-Variance Tradeoff)
 
 **Parent**：[[Learning Theory Foundations|2.1.1. 学习理论基础 (Learning Theory Foundations)]]

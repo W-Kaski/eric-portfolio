@@ -1,3 +1,7 @@
+---
+title: "Mechanism Design"
+date: "2025-08-28"
+---
 # 机制设计 (Mechanism Design)
 
 **Parent**：[[Game Theory|4.2 博弈论 (Game Theory)]]

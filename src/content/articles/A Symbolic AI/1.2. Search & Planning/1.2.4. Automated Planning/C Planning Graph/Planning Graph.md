@@ -1,3 +1,7 @@
+---
+title: "Planning Graph"
+date: "2025-03-05"
+---
 # 规划图 (Planning Graph)
 
 **Parent**：[[Automated Planning|1.2.4 自动规划 (Automated Planning)]]

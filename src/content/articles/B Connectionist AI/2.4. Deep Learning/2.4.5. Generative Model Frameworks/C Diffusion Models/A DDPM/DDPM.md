@@ -1,3 +1,7 @@
+---
+title: "DDPM"
+date: "2025-05-16"
+---
 # DDPM
 
 **Parent**：[[Diffusion Models|扩散模型 (Diffusion Models)]]

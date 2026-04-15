@@ -1,3 +1,7 @@
+---
+title: "Inception"
+date: "2025-04-19"
+---
 # Inception
 
 **Parent**：[[CNN|卷积网络 (Convolutional Neural Network, CNN)]]

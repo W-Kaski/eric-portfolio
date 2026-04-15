@@ -1,3 +1,7 @@
+---
+title: "Activation Functions"
+date: "2025-04-21"
+---
 # 激活函数 (Activation Functions)
 
 **Parent**：[[Neural Network Foundations|2.4.1. 神经网络基础 (Neural Network Foundations)]]

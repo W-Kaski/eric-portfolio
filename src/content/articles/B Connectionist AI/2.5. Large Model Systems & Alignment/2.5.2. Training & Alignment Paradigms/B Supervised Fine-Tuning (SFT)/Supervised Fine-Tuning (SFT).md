@@ -1,3 +1,7 @@
+---
+title: "Supervised Fine-Tuning (SFT)"
+date: "2025-05-02"
+---
 # 监督微调 (Supervised Fine-Tuning, SFT)
 
 **Parent**：[[Training & Alignment Paradigms|2.5.2. 训练与对齐范式 (Training & Alignment Paradigms)]]

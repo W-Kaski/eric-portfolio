@@ -1,3 +1,7 @@
+---
+title: "Initialization Methods"
+date: "2025-05-04"
+---
 # 参数初始化 (Initialization Methods)
 
 **Parent**：[[Neural Network Foundations|2.4.1. 神经网络基础 (Neural Network Foundations)]]

@@ -1,3 +1,7 @@
+---
+title: "Sequence Model Frameworks"
+date: "2025-04-28"
+---
 # 2.4.2. 序列模型框架 (Sequence Model Frameworks)
 
 **Parent**：[[Deep Learning|2.4. 深度学习 (Deep Learning, DL)]]

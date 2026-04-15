@@ -1,3 +1,7 @@
+---
+title: "LIME"
+date: "2025-10-04"
+---
 # LIME
 
 **Parent**：[[Model-Agnostic|模型不可知 (Model-Agnostic)]]

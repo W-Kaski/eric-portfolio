@@ -1,3 +1,7 @@
+---
+title: "Chain-of-Thought (Prompt)"
+date: "2025-04-06"
+---
 # Chain-of-Thought
 
 **Parent**：[[Prompt Engineering|提示工程 (Prompt Engineering)]]

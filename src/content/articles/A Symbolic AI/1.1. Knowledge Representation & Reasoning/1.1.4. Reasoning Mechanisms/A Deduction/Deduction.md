@@ -1,3 +1,7 @@
+---
+title: "Deduction"
+date: "2025-03-08"
+---
 # 演绎推理 (Deduction)
 
 **Parent**：[[Reasoning Mechanisms|1.1.4 推理机制 (Reasoning Mechanisms)]]

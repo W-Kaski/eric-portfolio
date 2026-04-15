@@ -1,3 +1,7 @@
+---
+title: "PCA"
+date: "2025-04-08"
+---
 # 主成分分析 (Principal Component Analysis, PCA)
 
 **Parent**：[[Dimensionality Reduction Frameworks|降维框架 (Dimensionality Reduction Frameworks)]]

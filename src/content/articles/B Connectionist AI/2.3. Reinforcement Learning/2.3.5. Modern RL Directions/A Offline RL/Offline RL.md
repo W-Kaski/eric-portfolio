@@ -1,3 +1,7 @@
+---
+title: "Offline RL"
+date: "2025-04-30"
+---
 
 
 **Parent**：[[Modern RL Directions|2.3.5. 现代强化学习方向 (Modern RL Directions)]]

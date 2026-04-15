@@ -1,3 +1,7 @@
+---
+title: "Counterfactual Reasoning"
+date: "2025-08-12"
+---
 # 反事实推断 (Counterfactual Reasoning)
 
 **Parent**：[[Causal Inference|4.1 因果推断 (Causal Inference)]]

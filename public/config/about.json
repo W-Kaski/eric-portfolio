@@ -7,14 +7,25 @@
     { "name": "LLM Fine-Tuning / RAG", "level": 90 },
     { "name": "TypeScript / JavaScript", "level": 85 },
     { "name": "Docker / Linux / Nginx", "level": 80 },
-    { "name": "Java / Distributed Systems", "level": 80 },
+    { "name": "Java / Spring Boot", "level": 80 },
     { "name": "SQL / PGVector / Redis", "level": 75 }
   ],
   "timeline": [
     {
-      "year": "2023 - 2027 (Expected)",
+      "year": "2023 — 2028 (Expected)",
       "role": "B.Sc. Computer Science (Specialist)",
       "company": "University of Toronto"
+    },
+    {
+      "year": "2026",
+      "role": "EK AI Agent",
+      "company": "Full-stack AI Agent platform · Spring AI + Java · RAG pipeline, ReAct loop, SSE streaming, PGVector"
+    },
+    {
+      "year": "2025",
+      "role": "Cloud Gallery",
+      "company": "Cloud image platform · Spring Boot + Vue 3 · WebSocket collab editing, COS pipeline, color similarity search"
     }
+  
   ]
 }

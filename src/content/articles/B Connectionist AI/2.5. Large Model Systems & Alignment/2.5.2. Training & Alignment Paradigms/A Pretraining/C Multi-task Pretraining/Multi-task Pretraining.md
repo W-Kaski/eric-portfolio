@@ -1,3 +1,7 @@
+---
+title: "Multi-task Pretraining"
+date: "2025-04-01"
+---
 # 多任务预训练 (Multi-task Pretraining)
 
 **Parent**：[[Pretraining|预训练 (Pretraining)]]

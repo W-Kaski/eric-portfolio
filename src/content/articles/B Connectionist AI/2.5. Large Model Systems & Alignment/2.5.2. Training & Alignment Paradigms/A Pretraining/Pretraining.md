@@ -1,3 +1,7 @@
+---
+title: "Pretraining"
+date: "2025-04-09"
+---
 # 预训练 (Pretraining)
 
 **Parent**：[[Training & Alignment Paradigms|2.5.2. 训练与对齐范式 (Training & Alignment Paradigms)]]

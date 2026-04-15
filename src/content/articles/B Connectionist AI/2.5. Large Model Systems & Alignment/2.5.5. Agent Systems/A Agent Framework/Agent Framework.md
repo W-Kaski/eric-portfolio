@@ -1,3 +1,7 @@
+---
+title: "Agent Framework"
+date: "2025-05-12"
+---
 # Agent Framework
 
 **Parent**：[[Agent Systems|2.5.5. Agent 系统 (Agent Systems)]]

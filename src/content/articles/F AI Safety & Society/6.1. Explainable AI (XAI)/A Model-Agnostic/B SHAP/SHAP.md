@@ -1,3 +1,7 @@
+---
+title: "SHAP"
+date: "2025-10-17"
+---
 # SHAP
 
 **Parent**：[[Model-Agnostic|模型不可知 (Model-Agnostic)]]

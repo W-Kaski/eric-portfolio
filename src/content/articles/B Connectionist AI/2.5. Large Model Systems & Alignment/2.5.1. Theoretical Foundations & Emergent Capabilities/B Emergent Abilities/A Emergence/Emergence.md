@@ -1,3 +1,7 @@
+---
+title: "Emergence"
+date: "2025-04-30"
+---
 # 涌现能力 (Emergence)
 
 **Parent**：[[Emergent Abilities|涌现能力 (Emergent Abilities)]]

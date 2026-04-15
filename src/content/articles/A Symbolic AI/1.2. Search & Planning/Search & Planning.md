@@ -1,3 +1,7 @@
+---
+title: "Search & Planning"
+date: "2025-03-05"
+---
 # 1.2 搜索与规划 (Search & Planning)
 
 **Parent**：[[Symbolic AI (Knowledge-Driven AI)|1. 符号主义 AI (Symbolic AI) / 知识驱动 AI (Knowledge-Driven AI)]]

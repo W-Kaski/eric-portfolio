@@ -1,3 +1,7 @@
+---
+title: "Structural Risk Minimization (SRM)"
+date: "2025-05-11"
+---
 # 结构风险最小化 (Structural Risk Minimization, SRM)
 
 **Parent**：[[Learning Theory Foundations|2.1.1. 学习理论基础 (Learning Theory Foundations)]]

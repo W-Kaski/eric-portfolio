@@ -1,3 +1,7 @@
+---
+title: "Optimization Algorithms"
+date: "2025-04-18"
+---
 
 parent:[[Neural Network Foundations]]
 # Optimization Algorithms (优化算法)

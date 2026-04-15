@@ -1,3 +1,7 @@
+---
+title: "Prompt Engineering"
+date: "2025-05-12"
+---
 # 提示工程 (Prompt Engineering)
 
 **Parent**：[[Inference Augmentation & External Memory|2.5.4. 推理增强与外部记忆 (Inference Augmentation & External Memory)]]

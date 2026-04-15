@@ -1,3 +1,7 @@
+---
+title: "Evolutionary Computation"
+date: "2025-07-21"
+---
 # 3. 进化计算 (Evolutionary Computation)
 
 **Parent**：[[Artificial Intelligence, AI]]

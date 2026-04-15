@@ -9,7 +9,7 @@ import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { vscDarkPlus, prism } from 'react-syntax-highlighter/dist/esm/styles/prism';
 import { cn } from '@/src/lib/utils';
 import { Calendar, ArrowLeft, Folder, List, FileText } from 'lucide-react';
-import { getAllArticles, Article } from '@/src/lib/articles';
+import { getArticleById, Article } from '@/src/lib/articles';
 import { useApp } from '@/src/context/AppContext';
 
 interface Header {
@@ -28,8 +28,8 @@ export default function ArticleDetail() {
   const [activeHeader, setActiveHeader] = useState<string>('');
 
   useEffect(() => {
-    getAllArticles().then(data => {
-      const found = data.find(a => a.id === id);
+    if (!id) return;
+    getArticleById(id).then(found => {
       if (found) {
         setArticle(found);
       } else {

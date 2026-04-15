@@ -1,3 +1,7 @@
+---
+title: "GAN"
+date: "2025-05-10"
+---
 # 生成对抗网络 (Generative Adversarial Network, GAN)
 
 **Parent**：[[Generative Model Frameworks|2.4.5. 生成模型框架 (Generative Model Frameworks)]]
