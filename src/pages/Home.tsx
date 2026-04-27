@@ -308,9 +308,9 @@ const scenes = [
     <div className="h-screen overflow-y-auto snap-y snap-mandatory scrollbar-hide">
       <section 
         onMouseMove={handleMouseMove}
-        className="h-screen w-full snap-start relative flex items-center justify-center overflow-hidden bg-brand-bg transition-colors duration-1000"
+        className="min-h-screen w-full snap-start relative flex items-center justify-center overflow-hidden bg-brand-bg transition-colors duration-1000 py-20 md:py-0"
       >
-        <div className="max-w-7xl mx-auto w-full flex flex-col md:flex-row items-center px-6 md:px-12 z-10">
+        <div className="max-w-7xl mx-auto w-full flex flex-col md:flex-row items-center px-6 md:px-12 z-10 pt-20 md:pt-24">
           <div className="w-full md:w-1/2 space-y-12 py-12 md:py-0">
             <AnimatePresence mode="wait">
               <motion.div
@@ -327,7 +327,7 @@ const scenes = [
                     <span>{current.tag}</span>
                   </div>
                   <div className="space-y-1">
-                    <h1 className="text-7xl md:text-8xl font-bold tracking-tighter text-brand-text leading-[0.95] uppercase">
+                    <h1 className="text-5xl sm:text-6xl md:text-8xl font-bold tracking-tighter text-brand-text leading-[0.95] uppercase">
                       {current.title}
                     </h1>
                     <p className="text-sm font-mono text-brand-muted pl-1">
@@ -336,7 +336,7 @@ const scenes = [
                   </div>
                 </div>
 
-                <div className="flex flex-wrap gap-x-2 gap-y-1 text-xl md:text-2xl text-brand-text font-medium leading-[1.4] max-w-md min-h-[6em]">
+                <div className="flex flex-wrap gap-x-2 gap-y-1 text-lg sm:text-xl md:text-2xl text-brand-text font-medium leading-[1.4] max-w-md min-h-[5em] sm:min-h-[6em]">
                   {tokens.map((token, idx) => (
                     <motion.span
                       key={`${currentScene}-${idx}`}
@@ -393,8 +393,8 @@ const scenes = [
           </div>
         </div>
 
-        <div className="absolute top-1/2 left-0 -translate-y-1/2 -rotate-90 origin-left pl-12 pointer-events-none">
-          <span className="text-[140px] font-bold text-brand-text/[0.012] tracking-tighter uppercase whitespace-nowrap">{current.id}.MODEO1</span>
+        <div className="hidden sm:block absolute top-1/2 left-0 -translate-y-1/2 -rotate-90 origin-left pl-12 pointer-events-none">
+          <span className="text-[100px] md:text-[140px] font-bold text-brand-text/[0.012] tracking-tighter uppercase whitespace-nowrap">{current.id}.MODEO1</span>
         </div>
 
         <motion.div animate={{ y: [0, 8, 0] }} transition={{ duration: 2, repeat: Infinity }} className="absolute bottom-8 left-1/2 -translate-x-1/2 text-brand-muted opacity-40 flex flex-col items-center gap-2">
@@ -403,7 +403,7 @@ const scenes = [
         </motion.div>
       </section>
 
-      <section className="h-screen w-full snap-start bg-brand-card relative flex items-center px-12 md:px-24">
+      <section className="h-screen w-full snap-start bg-brand-card relative flex items-center px-12 md:px-24 pt-20 md:pt-24">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center w-full max-w-7xl mx-auto">
           <div className="space-y-8">
             <div className="space-y-2">
@@ -435,7 +435,7 @@ const scenes = [
 
       {/* Other sections remain unchanged for brevity but properly included in the final file */}
       {/* SECTION 3: ML Lab (Unified Grid Layout) */}
-      <section className="h-screen w-full snap-start bg-brand-bg relative flex items-center px-12 md:px-24">
+      <section className="h-screen w-full snap-start bg-brand-bg relative flex items-center px-12 md:px-24 pt-20 md:pt-24">
         {/* Subtle Background Pattern */}
         <div className="absolute inset-0 opacity-[0.03] pointer-events-none bg-[radial-gradient(circle,currentColor_1px,transparent_1px)] bg-[size:36px_36px] text-brand-text" />
 
