@@ -4,7 +4,7 @@ category: Fullstack
 color: "#10B981"
 date: 2025-03-01
 github: "https://github.com/W-Kaski/ek-cloud-gallery-backend"
-demo: ""
+demo: "https://gallery.ek-flowity.site/"
 ---
 A Full-Stack Cloud Image Management Platform
 

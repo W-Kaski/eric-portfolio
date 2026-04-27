@@ -46,7 +46,7 @@
     "about.story.p2": "I spend a lot of time reading papers and then asking what it would actually take to implement the idea properly. That's led me to build end-to-end: from schema design and API layering through to the frontend that makes the system usable. My long-term direction is ML Engineering or Applied AI — building systems where the model is one component of something larger, not the entire product.",
     "about.experience": "Experience",
     "about.skills": "Skills",
-    "about.resume": "Download Resume",
+    "about.resume": "View Resume",
     "about.available": "Open to internship and new grad ML/backend roles.",
     "home.hero.tagline": "Building for real",
     "home.hero.desc": "ML systems, backend infrastructure, and interactive tooling. Interested in the gap between a research idea and something that actually ships.",
