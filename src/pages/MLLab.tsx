@@ -455,12 +455,12 @@ export default function MLLab() {
                     th: ({ children }) => <th className="px-4 py-3 text-left text-xs font-bold uppercase tracking-widest text-brand-muted">{children}</th>,
                     td: ({ children }) => <td className="px-4 py-3 text-brand-text/80 border-t border-brand-border/20">{children}</td>,
                     img: ({ src, alt }) => <img src={src} alt={alt} className="rounded-lg max-w-full my-6 border border-brand-border/30" />,
-                    code({ node, inline, className, children, ...props }: any) {
+                    code({ node, className, children, ...props }: any) {
                       const match = /language-(\w+)/.exec(className || '');
                       const lang = match ? match[1] : '';
                       const codeContent = String(children).replace(/\n$/, '');
-                      const isMultiLine = codeContent.includes('\n');
-                      if (!inline && (match || isMultiLine)) {
+                      const isBlock = match || codeContent.includes('\n');
+                      if (isBlock) {
                         return (
                           <div className="my-8 rounded-xl overflow-hidden border border-brand-border/60 shadow-lg">
                             <div className="flex items-center justify-between px-5 py-2.5 bg-[#1e1e1e] border-b border-white/10">
@@ -553,7 +553,7 @@ export default function MLLab() {
       <AnimatePresence mode="popLayout">
         {filteredModules.length === 0 ? (
           <div className="py-40 border border-brand-border text-center">
-            <div className="text-brand-muted text-[10px] font-bold tracking-[0.5em] uppercase">{t('articles.empty')}</div>
+            <div className="text-brand-muted text-[10px] font-bold tracking-[0.5em] uppercase">        {t('articles.empty')}</div>
           </div>
         ) : (
           <motion.div layout className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 border-l border-t border-brand-border">
@@ -635,7 +635,7 @@ export default function MLLab() {
       {totalPages > 1 && !selectedModule && (
         <div className="flex items-center justify-between mt-0 border-t border-brand-border/40 pt-4">
           <div className="text-[10px] text-brand-muted/60 font-bold uppercase tracking-widest">
-            Page {currentPage} / {totalPages}
+            {t('lab.pagination.page')} {currentPage} / {totalPages}
           </div>
           <div className="flex items-center gap-2">
             <button
@@ -643,7 +643,7 @@ export default function MLLab() {
               disabled={currentPage === 1}
               className="px-3 py-1.5 border border-brand-border rounded text-[10px] font-bold uppercase transition-colors hover:bg-brand-text/5 disabled:opacity-30 disabled:hover:bg-transparent"
             >
-              Prev
+              {t('lab.pagination.prev')}
             </button>
             <div className="flex gap-1">
               {Array.from({ length: totalPages }).map((_, i) => (
@@ -664,7 +664,7 @@ export default function MLLab() {
               disabled={currentPage === totalPages}
               className="px-3 py-1.5 border border-brand-border rounded text-[10px] font-bold uppercase transition-colors hover:bg-brand-text/5 disabled:opacity-30 disabled:hover:bg-transparent"
             >
-              Next
+              {t('lab.pagination.next')}
             </button>
           </div>
         </div>

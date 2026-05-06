@@ -1,10 +1,10 @@
 ---
-title: Cloud Gallery
+title: Image Workspace
 category: Fullstack
 color: "#10B981"
 date: 2025-03-01
-github: "https://github.com/W-Kaski/ek-cloud-gallery-backend"
-demo: "https://gallery.ek-flowity.site/"
+github: "https://github.com/W-Kaski/image-workspace"
+demo: "https://image.ek-flowity.site/"
 ---
 A Full-Stack Cloud Image Management Platform
 
@@ -22,7 +22,7 @@ A Full-Stack Cloud Image Management Platform
 
 ## Overview
 
-EK Cloud Gallery is a full-stack cloud image management platform I built to explore what it actually takes to architect a system that goes far beyond a simple image hosting service.
+Image Workspace is a full-stack cloud image management platform I built to explore what it actually takes to architect a system that goes far beyond a simple image hosting service.
 
 At its core, the platform manages image assets organized into **Spaces** — isolated storage units with configurable quotas, fine-grained role-based access control, and real-time collaborative editing. Both a public gallery (with a content review workflow) and private/team spaces are supported.
 
@@ -209,7 +209,7 @@ This project answers a harder set of questions that emerge when teams actually u
 ### Backend Package Structure
 
 ```
-com.eric.ekcloudgallerybackend/
+com.eric.imageworkspace/
 |
 +-- controller/          <- HTTP boundary: request parsing, auth annotations
 |   +-- UserController
@@ -1012,7 +1012,7 @@ FROM picture WHERE spaceId = ?
 ### Backend
 
 ```bash
-cd ek-cloud-gallery-backend
+cd image-workspace
 
 # Configure your environment (do not commit secrets)
 # Edit src/main/resources/application-prod.yml with:
@@ -1049,12 +1049,12 @@ npm run openapi
 ```
 cloud-gallery/
 |
-+-- ek-cloud-gallery-backend/           Spring Boot 2.7.6 backend (Java 11)
++-- image-workspace/           Spring Boot 2.7.6 backend (Java 11)
 |   +-- pom.xml
 |   +-- sql/
 |   |   +-- create_table.sql            Full schema DDL with ALTER TABLE history
 |   +-- src/main/
-|       +-- java/com/eric/ekcloudgallerybackend/
+|       +-- java/com.eric.imageworkspace/
 |       |   +-- annotation/             @AuthCheck
 |       |   +-- aop/                    AuthInterceptor (system role gate)
 |       |   +-- common/                 BaseResponse, PageRequest, DeleteRequest

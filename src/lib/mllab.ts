@@ -16,47 +16,38 @@ export interface LabData {
   tags: string[];
   featured: boolean;
   snippet?: string;
-  content: string; // The raw markdown body
+  content: string;
 }
 
+const _fileModules = import.meta.glob('/src/content/mllab/**/*.md', {
+  query: '?raw',
+  import: 'default',
+});
+
 export async function getAllLabs(): Promise<LabData[]> {
-  const modules = import.meta.glob('/src/content/mllab/**/*.md', { query: '?raw', import: 'default' });
-  
-  const labs: LabData[] = [];
-
-  for (const path in modules) {
-    const rawContent = await modules[path]() as string;
-    const { data, content: body } = matter(rawContent);
-    
-    // Extract file name as ID and folder from path
-    const pathParts = path.split('/');
-    const id = pathParts[pathParts.length - 1].replace('.md', '');
-    
-    let folder = 'General';
-    if (pathParts.length >= 5) { // /src/content/mllab/FOLDER/FILE.md
-       folder = pathParts[pathParts.length - 2];
-       if (folder === 'mllab') folder = 'General';
-    }
-
-    let formattedDate = '';
-    if (data.date) {
-      const d = new Date(data.date);
-      formattedDate = d.toISOString().split('T')[0];
-    }
-
-    labs.push({
-      id,
-      title: data.title || id,
-      date: formattedDate,
-      category: data.category || 'ML Lab',
-      folder: folder,
-      description: data.description || '',
-      tags: data.tags || [],
-      featured: data.featured ?? false,
-      snippet: data.snippet || '',
-      content: body || '',
-    });
-  }
+  const labs = await Promise.all(
+    Object.entries(_fileModules).map(async ([path, loader]) => {
+      const raw = await (loader as () => Promise<string>)();
+      const { data, content: body } = matter(raw);
+      const parts = path.split('/');
+      const id = parts[parts.length - 1].replace('.md', '');
+      let folder = parts.length >= 5 ? parts[parts.length - 2] : 'General';
+      if (folder === 'mllab') folder = 'General';
+      const date = data.date ? new Date(data.date).toISOString().split('T')[0] : '';
+      return {
+        id,
+        title: data.title || id,
+        date,
+        category: data.category || 'ML Lab',
+        folder,
+        description: data.description || '',
+        tags: data.tags || [],
+        featured: data.featured ?? false,
+        snippet: data.snippet || '',
+        content: body || '',
+      };
+    }),
+  );
 
   return labs.sort((a, b) => b.date.localeCompare(a.date));
 }

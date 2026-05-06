@@ -1138,7 +1138,7 @@ Build admin last — it depends on all other modules:
 ### Backend
 
 ```bash
-cd utm-what2do-backend
+cd what2do-backend
 
 # Create .env file with your config:
 cat > .env << 'EOF'
@@ -1149,7 +1149,7 @@ PG_PASSWORD=123456
 R2_ACCOUNT_ID=
 R2_ACCESS_KEY_ID=
 R2_SECRET_ACCESS_KEY=
-R2_BUCKET_NAME=utm-what2do-files
+R2_BUCKET_NAME=what2do-files
 R2_PUBLIC_URL=
 RESEND_API_KEY=re_dummy_key_for_development
 EOF
@@ -1171,7 +1171,7 @@ mvn spring-boot:run
 ### Frontend
 
 ```bash
-cd utm-what2do-frontend-react
+cd what2do-frontend-react
 
 # Create local env
 echo "VITE_API_BASE_URL=http://localhost:8232/api/v1" > .env.local
@@ -1186,9 +1186,9 @@ npm run dev
 ## Project Structure
 
 ```
-utm-what2do/
+what2do/
 |
-+-- utm-what2do-backend/              Spring Boot 3.2.5 (Java 17)
++-- what2do-backend/              Spring Boot 3.2.5 (Java 17)
 |   +-- pom.xml
 |   +-- src/main/
 |       +-- java/com/utm/what2do/
@@ -1218,7 +1218,7 @@ utm-what2do/
 |           +-- init-postgres.sql     Schema DDL
 |           +-- mapper/               MyBatis XML mappers (complex queries)
 |
-+-- utm-what2do-frontend-react/       React 19 + TypeScript + Vite (active)
++-- what2do-frontend-react/       React 19 + TypeScript + Vite (active)
 |   +-- package.json
 |   +-- vite.config.ts
 |   +-- src/

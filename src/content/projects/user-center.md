@@ -1,9 +1,9 @@
 ---
-title: UserCenter
+title: user-center
 category: Fullstack
 color: "#1890FF"
 date: 2024-04-14
-github: "https://github.com/W-Kaski/UserCenter"
+github: "https://github.com/W-Kaski/user-center"
 ---
 
 
@@ -19,9 +19,9 @@ github: "https://github.com/W-Kaski/UserCenter"
 
 ## Overview
 
-UserCenter is a foundational full-stack authentication and user management platform designed to serve as the unified account base for internal enterprise systems or new B-end applications.
+user-center is a foundational full-stack authentication and user management platform designed to serve as the unified account base for internal enterprise systems or new B-end applications.
 
-In microservice or multi-system environments, building authentication, user CRUD, registration, and session management from scratch for every new project is repetitive and error-prone. UserCenter extracts this common denominator into a standalone service.
+In microservice or multi-system environments, building authentication, user CRUD, registration, and session management from scratch for every new project is repetitive and error-prone. user-center extracts this common denominator into a standalone service.
 
 At its core, the system provides a robust RESTful API backend communicating with an out-of-the-box Ant Design Pro management dashboard. 
 
@@ -44,7 +44,7 @@ At its core, the system provides a robust RESTful API backend communicating with
 
 ## 1. Core Problem and Design Goals
 
-If you build 5 web applications, you end up writing 5 login pages, 5 user tables, and 5 password hashing utilities. UserCenter solves this operational overhead.
+If you build 5 web applications, you end up writing 5 login pages, 5 user tables, and 5 password hashing utilities. user-center solves this operational overhead.
 
 **Core design goals:**
 

@@ -1,9 +1,9 @@
 ---
-title: EK AI Agent
+title: Circuit Agent
 category: AI
 color: "#8B5CF6"
 date: 2025-09-01
-github: "https://github.com/W-Kaski/EK-AI-Agent"
+github: "https://github.com/W-Kaski/circuit-agent"
 demo: ""
 ---
 Building a Full-Stack AI Agent Platform with Spring AI
@@ -22,7 +22,7 @@ Building a Full-Stack AI Agent Platform with Spring AI
 
 ## Overview
 
-EK-AI-Agent is a full-stack AI Agent platform I built to deeply explore how modern AI Agent patterns work under the hood — specifically **Retrieval-Augmented Generation (RAG)** and **Agentic ReAct loops** — using the Java/Spring ecosystem.
+Circuit Agent is a full-stack AI Agent platform I built to deeply explore how modern AI Agent patterns work under the hood — specifically **Retrieval-Augmented Generation (RAG)** and **Agentic ReAct loops** — using the Java/Spring ecosystem.
 
 The project ships two distinct AI applications:
 
@@ -191,7 +191,7 @@ This project answers all four questions in a unified codebase, using the Java ec
 ### Module Breakdown
 
 ```
-src/main/java/com/eric/ekaiagent/
+src/main/java/com.eric.circuitagent/
 |
 +-- agent/            <- Core Agent execution engine
 |   +-- BaseAgent          State machine + step-loop controller
@@ -658,7 +658,7 @@ If you want to implement a similar system from scratch, here is the build order 
 **Step 1 — Minimal skeleton (verify LLM connectivity)**
 
 ```
-EkAiAgentApplication.java
+CircuitAgentApplication.java
 AiController.java          GET /ai/chat -> return LLM response string
 application.yml            dashscope.api-key, server.port=8123
 ```
@@ -771,11 +771,11 @@ cd ek-image-search-mcp-server
 ## Project Structure
 
 ```
-EK-AI-Agent/
+Circuit Agent/
 +-- pom.xml                          Spring Boot 3 backend
 +-- src/
 |   +-- main/
-|       +-- java/com/eric/ekaiagent/
+|       +-- java/com.eric.circuitagent/
 |       |   +-- agent/               ReAct Agent engine
 |       |   +-- app/                 Application scenarios
 |       |   +-- controller/          HTTP endpoints

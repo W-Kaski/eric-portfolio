@@ -79,7 +79,10 @@
     "music.localMusic": "Local Music",
     "music.hint": "Put MP3 in /public/music",
     "music.emptyHint": "Put .mp3 files in /public/music to play",
-    "music.refresh": "Refresh List"
+    "music.refresh": "Refresh List",
+    "lab.pagination.page": "Page",
+    "lab.pagination.prev": "Prev",
+    "lab.pagination.next": "Next"
   },
   "zh": {
     "nav.home": "首页",
@@ -161,6 +164,9 @@
     "music.localMusic": "本地音乐",
     "music.hint": "请在 /public/music 放入 MP3",
     "music.emptyHint": "在 /public/music 目录下放入 .mp3 文件即可播放",
-    "music.refresh": "刷新列表"
+    "music.refresh": "刷新列表",
+    "lab.pagination.page": "页",
+    "lab.pagination.prev": "上一页",
+    "lab.pagination.next": "下一页"
   }
 }

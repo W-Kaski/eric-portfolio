@@ -1,7 +1,7 @@
 {
-  "name": "react-example",
+  "name": "eric-portfolio",
   "private": true,
-  "version": "0.0.0",
+  "version": "1.0.0",
   "type": "module",
   "scripts": {
     "dev": "tsx server.ts",
@@ -11,23 +11,18 @@
     "lint": "tsc --noEmit"
   },
   "dependencies": {
-    "@dagrejs/dagre": "^3.0.0",
-    "@google/genai": "^1.29.0",
     "@react-three/drei": "^10.7.7",
     "@react-three/fiber": "^9.5.0",
     "@tailwindcss/typography": "^0.5.19",
     "@tailwindcss/vite": "^4.1.14",
     "@types/d3-force": "^3.0.10",
-    "@types/dagre": "^0.7.54",
     "@types/react-syntax-highlighter": "^15.5.13",
     "@types/three": "^0.183.1",
     "@vitejs/plugin-react": "^5.0.4",
-    "@xyflow/react": "^12.10.2",
     "better-sqlite3": "^12.4.1",
     "buffer": "^6.0.3",
     "clsx": "^2.1.1",
     "d3-force": "^3.0.0",
-    "dotenv": "^17.2.3",
     "express": "^4.21.2",
     "gray-matter": "^4.0.3",
     "katex": "^0.16.40",
@@ -43,8 +38,7 @@
     "remark-gfm": "^4.0.1",
     "remark-math": "^6.0.0",
     "tailwind-merge": "^3.5.0",
-    "three": "^0.183.2",
-    "vite": "^6.2.0"
+    "three": "^0.183.2"
   },
   "devDependencies": {
     "@types/express": "^4.17.21",

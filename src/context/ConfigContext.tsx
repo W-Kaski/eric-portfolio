@@ -58,18 +58,21 @@ export const ConfigProvider: React.FC<{ children: React.ReactNode }> = ({ childr
         const [siteRes, aboutRes, transRes] = await Promise.all([
           fetch(`/config/site.json${cacheBuster}`),
           fetch(`/config/about.json${cacheBuster}`),
-
           fetch(`/config/translations.json${cacheBuster}`),
         ]);
 
-        const _siteConfig = await siteRes.json();
-        const _aboutConfig = await aboutRes.json();
+        if (!siteRes.ok) throw new Error(`Failed to load site.json: ${siteRes.status}`);
+        if (!aboutRes.ok) throw new Error(`Failed to load about.json: ${aboutRes.status}`);
+        if (!transRes.ok) throw new Error(`Failed to load translations.json: ${transRes.status}`);
 
-        const _translations = await transRes.json();
+        const [_siteConfig, _aboutConfig, _translations] = await Promise.all([
+          siteRes.json(),
+          aboutRes.json(),
+          transRes.json(),
+        ]);
 
         setSiteConfig(_siteConfig);
         setAboutConfig(_aboutConfig);
-
         setTranslations(_translations);
       } catch (error) {
         console.error("Failed to load configs", error);

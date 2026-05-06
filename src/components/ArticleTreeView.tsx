@@ -130,7 +130,7 @@ function TreeFolder({ node, level, onNavigate, expandTrigger, collapseTrigger }:
   );
 }
 
-function TreeFile({ article, level, onNavigate }: { article: Article, level: number, onNavigate: () => void }) {
+function TreeFile({ article, level, onNavigate }: { article: ArticleMeta, level: number, onNavigate: () => void }) {
   return (
     <div 
       className="flex items-center gap-2 py-1.5 px-2 rounded hover:bg-brand-text/10 cursor-pointer text-sm transition-colors text-brand-muted hover:text-brand-text group"

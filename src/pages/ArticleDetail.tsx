@@ -267,12 +267,12 @@ export default function ArticleDetail() {
                   th: ({ children }) => <th className="px-4 py-3 text-left text-xs font-bold uppercase tracking-widest text-brand-muted">{children}</th>,
                   td: ({ children }) => <td className="px-4 py-3 text-brand-text/80 border-t border-brand-border/20">{children}</td>,
                   img: ({ src, alt }) => <img src={src} alt={alt} className="rounded-lg max-w-full my-6 border border-brand-border/30" />,
-                  code({ node, inline, className, children, ...props }: any) {
+                  code({ node, className, children, ...props }: any) {
                     const match = /language-(\w+)/.exec(className || '');
                     const lang = match ? match[1] : '';
                     const codeContent = String(children).replace(/\n$/, '');
-                    const isMultiLine = codeContent.includes('\n');
-                    if (!inline && (match || isMultiLine)) {
+                    const isBlock = match || codeContent.includes('\n');
+                    if (isBlock) {
                       return (
                         <div className="my-8 rounded-xl overflow-hidden border border-brand-border/60 shadow-lg">
                           <div className="flex items-center justify-between px-5 py-2.5 bg-[#1e1e1e] border-b border-white/10">
