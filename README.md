@@ -1,20 +1,62 @@
-<div align="center">
-<img width="1200" height="475" alt="GHBanner" src="https://github.com/user-attachments/assets/0aa67016-6eaf-458a-adb2-6e31a0763ed6" />
-</div>
+# myprofile
 
-# Run and deploy your AI Studio app
+> A personal portfolio and knowledge hub — built with React + TypeScript, featuring projects, articles, an ML lab, and an AI-powered knowledge base.
 
-This contains everything you need to run your app locally.
+[![Framework](https://img.shields.io/badge/framework-React%20%2B%20TypeScript-61dafb?style=flat-square&logo=react)](https://react.dev)
+[![Build](https://img.shields.io/badge/build-Vite-646cff?style=flat-square&logo=vite)](https://vitejs.dev)
+[![AI](https://img.shields.io/badge/AI-Gemini%20API-4285F4?style=flat-square&logo=google)](https://ai.google.dev)
+[![Site](https://img.shields.io/badge/site-ek--flowity.site-blueviolet?style=flat-square)](https://ek-flowity.site)
 
-View your app in AI Studio: https://ai.studio/apps/d3790e99-1e45-4b24-b1de-767ce33a36a8
+[中文](./README.zh.md) · [Pages](#pages) · [Quickstart](#quickstart)
 
-## Run Locally
+---
 
-**Prerequisites:**  Node.js
+## Overview
+
+`myprofile` is Eric Wang's personal portfolio website — a multi-page React application that brings together project showcases, technical articles, an interactive ML lab, and an AI-powered knowledge base. It serves as both a professional profile and a living documentation of ongoing work.
+
+---
+
+## Pages
+
+| Page | Description |
+|------|-------------|
+| `Home` | Landing page with hero section, skills, and featured highlights |
+| `Portfolio` | Project showcase with detailed case study views |
+| `Articles` | Technical writing and notes |
+| `About` | Background, education, and contact |
+| `KnowledgeBase` | AI-assisted knowledge management and search |
+| `MLLab` | Interactive machine learning experiments and visualizations |
+
+---
+
+## Quickstart
+
+**Prerequisites:** Node.js
+
+```bash
+# Install dependencies
+npm install
 
 
-1. Install dependencies:
-   `npm install`
-2. Set the `GEMINI_API_KEY` in [.env.local](.env.local) to your Gemini API key
-3. Run the app:
-   `npm run dev`
+# Start development server
+npm run dev
+```
+
+---
+
+## Tech Stack
+
+| Layer | Technology |
+|-------|-----------|
+| Framework | React 18 + TypeScript |
+| Build | Vite |
+| AI | Gemini API |
+| Styling | CSS / component-level styles |
+| Deployment | Docker + Nginx |
+
+---
+
+## Author
+
+**Eric Wang** — [ek-flowity.site](https://ek-flowity.site) · [LinkedIn](https://linkedin.com/in/-ericwang-) · [Email](mailto:ericwang7717@gmail.com)
