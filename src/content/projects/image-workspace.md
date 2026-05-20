@@ -4,8 +4,9 @@ category: Fullstack
 color: "#10B981"
 date: 2025-03-01
 github: "https://github.com/W-Kaski/image-workspace"
-demo: "https://image.ek-flowity.site/"
+demo: "https://www.img.anio.me/"
 ---
+
 A Full-Stack Cloud Image Management Platform
 
 ![Spring Boot](https://img.shields.io/badge/Spring_Boot-2.7.6-6DB33F?style=flat-square&logo=spring-boot&logoColor=white)
@@ -14,7 +15,7 @@ A Full-Stack Cloud Image Management Platform
 ![Vite](https://img.shields.io/badge/Vite-6.x-646CFF?style=flat-square&logo=vite&logoColor=white)
 ![MySQL](https://img.shields.io/badge/MySQL-8.x-4479A1?style=flat-square&logo=mysql&logoColor=white)
 ![Redis](https://img.shields.io/badge/Redis-session_store-DC382D?style=flat-square&logo=redis&logoColor=white)
-![Tencent COS](https://img.shields.io/badge/Tencent_COS-object_storage-006EFF?style=flat-square)
+![Cloudflare R2](https://img.shields.io/badge/Cloudflare_R2-object_storage-F38020?style=flat-square&logo=cloudflare&logoColor=white)
 ![WebSocket](https://img.shields.io/badge/WebSocket-collaborative_editing-brightgreen?style=flat-square)
 ![Sa-Token](https://img.shields.io/badge/Sa--Token-RBAC_auth-orange?style=flat-square)
 
@@ -29,7 +30,7 @@ At its core, the platform manages image assets organized into **Spaces** — iso
 The platform ships several capabilities that required non-trivial engineering decisions:
 
 - **Multi-tier permission system** — system-level roles (user/admin) and space-level roles (viewer/editor/admin) running in parallel via a dual-token Sa-Token setup
-- **Tencent COS image pipeline** — upload once, automatically generate a WebP-compressed version, a thumbnail, and extract the dominant color — all via COS CI rules
+- **Cloudflare R2 upload pipeline** — upload once via the S3-compatible API; dimensions and format are extracted server-side with Java `ImageIO`; color metadata derived from local analysis
 - **Real-time collaborative editing** — WebSocket-based multi-user image editing with a Disruptor-backed message queue and a lock-editor model
 - **Color similarity search** — search for images within a space by dominant color using custom RGB similarity scoring
 - **Batch image import** — auto-scrape and import images from Bing Images using Jsoup
@@ -55,7 +56,7 @@ The platform ships several capabilities that required non-trivial engineering de
 
 ## 1. Core Problem and Design Goals
 
-A simple image host answers one question: *"Where do I store this file?"*
+A simple image host answers one question: _"Where do I store this file?"_
 
 This project answers a harder set of questions that emerge when teams actually use such a system:
 
@@ -68,16 +69,16 @@ This project answers a harder set of questions that emerge when teams actually u
 
 **Core design goals:**
 
-| Goal | Implementation |
-|------|---------------|
-| Storage isolation | `Space` entity as the unit of isolation; `picture.spaceId IS NULL` = public gallery |
-| Quota enforcement | `space.totalSize` + `space.totalCount` counters updated atomically with image uploads/deletes |
-| Fine-grained permissions | Dual Sa-Token StpLogic: system role (user/admin) + space role (viewer/editor/admin) |
-| Content moderation | Review workflow on public gallery images; admins auto-approve their own uploads |
-| Real-time collaboration | WebSocket with Disruptor queue + lock-editor protocol |
-| Image intelligence | COS CI pipeline: WebP compression, thumbnail generation, dominant color extraction |
-| Semantic search | HSL-normalized color similarity search ranked by RGB distance |
-| Analytics | 5-dimension space analytics via SQL aggregation + ECharts visualization |
+| Goal                     | Implementation                                                                                 |
+| ------------------------ | ---------------------------------------------------------------------------------------------- |
+| Storage isolation        | `Space` entity as the unit of isolation; `picture.spaceId IS NULL` = public gallery            |
+| Quota enforcement        | `space.totalSize` + `space.totalCount` counters updated atomically with image uploads/deletes  |
+| Fine-grained permissions | Dual Sa-Token StpLogic: system role (user/admin) + space role (viewer/editor/admin)            |
+| Content moderation       | Review workflow on public gallery images; admins auto-approve their own uploads                |
+| Real-time collaboration  | WebSocket with Disruptor queue + lock-editor protocol                                          |
+| Image intelligence       | Cloudflare R2 upload via AWS S3 SDK; image dimensions and format extracted with Java `ImageIO` |
+| Semantic search          | HSL-normalized color similarity search ranked by RGB distance                                  |
+| Analytics                | 5-dimension space analytics via SQL aggregation + ECharts visualization                        |
 
 ---
 
@@ -85,42 +86,43 @@ This project answers a harder set of questions that emerge when teams actually u
 
 ### Frontend
 
-| Technology | Role | Why this, not X? |
-|-----------|------|-----------------|
-| **Vue 3** (Composition API + `<script setup>`) | SPA framework | `<script setup>` keeps business logic colocated with the template; TypeScript integration is first-class; reactive `ref` maps cleanly to API state |
-| **Vite 6** | Build tool | Near-instant HMR; native ESM avoids Webpack bundle overhead; fastest possible dev iteration |
-| **Ant Design Vue 4** | UI component library | Enterprise-grade components (Table, Form, Modal, Descriptions, Progress) — the management console UI needs these out of the box, not hand-rolled |
-| **Pinia 2** | State management | Official Vue 3 recommendation; TypeScript-friendly; stores the global login user (`useLoginUserStore`) with a one-time fetch-on-first-navigation pattern |
-| **Axios 1** | HTTP client | Interceptor at response level catches `code === 40100` (not logged in) globally and redirects to `/user/login` — no per-component error handling needed |
-| **ECharts + vue-echarts** | Data visualization | Powers the Space Analytics page: pie charts for categories, bar charts for size distribution, tag word cloud (`echarts-wordcloud`), line chart for upload trends |
-| **vue-cropper** | Image cropping | Client-side image crop before upload — reduces wasted bandwidth on unwanted image regions |
-| **vue3-colorpicker** | Color picker input | Drives the "Search by Color" feature; emits hex color strings on change |
-| **@umijs/openapi** | API client code generation | Generates TypeScript function stubs and type definitions directly from the backend's Knife4j OpenAPI JSON — eliminates manual API synchronization errors |
+| Technology                                     | Role                       | Why this, not X?                                                                                                                                                 |
+| ---------------------------------------------- | -------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Vue 3** (Composition API + `<script setup>`) | SPA framework              | `<script setup>` keeps business logic colocated with the template; TypeScript integration is first-class; reactive `ref` maps cleanly to API state               |
+| **Vite 6**                                     | Build tool                 | Near-instant HMR; native ESM avoids Webpack bundle overhead; fastest possible dev iteration                                                                      |
+| **Ant Design Vue 4**                           | UI component library       | Enterprise-grade components (Table, Form, Modal, Descriptions, Progress) — the management console UI needs these out of the box, not hand-rolled                 |
+| **Pinia 2**                                    | State management           | Official Vue 3 recommendation; TypeScript-friendly; stores the global login user (`useLoginUserStore`) with a one-time fetch-on-first-navigation pattern         |
+| **Axios 1**                                    | HTTP client                | Interceptor at response level catches `code === 40100` (not logged in) globally and redirects to `/user/login` — no per-component error handling needed          |
+| **ECharts + vue-echarts**                      | Data visualization         | Powers the Space Analytics page: pie charts for categories, bar charts for size distribution, tag word cloud (`echarts-wordcloud`), line chart for upload trends |
+| **vue-cropper**                                | Image cropping             | Client-side image crop before upload — reduces wasted bandwidth on unwanted image regions                                                                        |
+| **vue3-colorpicker**                           | Color picker input         | Drives the "Search by Color" feature; emits hex color strings on change                                                                                          |
+| **@umijs/openapi**                             | API client code generation | Generates TypeScript function stubs and type definitions directly from the backend's Knife4j OpenAPI JSON — eliminates manual API synchronization errors         |
 
 ### Backend
 
-| Technology | Role | Why this, not X? |
-|-----------|------|-----------------|
-| **Spring Boot 2.7.6** (Java 11) | Application framework | Mature, stable ecosystem; 2.7.x is the last major 2.x LTS release — chosen for compatibility with the full dependency set without requiring Java 17+ |
-| **MyBatis-Plus 3.5.9** | ORM / data access | Provides `ServiceImpl` CRUD abstraction, pagination plugin, and `@TableLogic` soft delete — dramatically reduces SQL boilerplate while keeping SQL fully readable when needed |
-| **Sa-Token 1.39.0** | Authentication and authorization | Lightweight session-based auth with Redis storage (distributable), a pluggable `StpInterface` for custom permission logic, and multi-type token support — significantly simpler than Spring Security for RBAC |
-| **Tencent COS SDK** | Object storage | Chosen for COS CI (Cloud Infinity): a single upload triggers a processing pipeline that generates a WebP version, a thumbnail, and returns the dominant color average — features not available in basic S3-compatible APIs |
-| **Redis** | Session store | Sa-Token stores sessions in Redis, making the application horizontally scalable; also pre-wired for caching via Caffeine L1 + Redis L2 |
-| **Caffeine 3** | Local L1 cache | Declared in `pom.xml`; provides a local in-process cache layer in front of Redis for hot-path reads |
-| **Spring WebSocket** | Real-time messaging | Enables the collaborative image editing feature; bidirectional communication between multiple clients on the same image |
-| **LMAX Disruptor 3.4.2** | High-performance message queue | Decouples WebSocket IO thread (receives messages) from business processing thread (validates, routes, broadcasts); prevents slow business logic from blocking the WebSocket handler |
-| **Jsoup 1.15.3** | HTML parser | Scrapes Bing Images search result pages to batch-import images from the web |
-| **Knife4j 4.4.0** | API documentation | Enhanced Swagger UI; generates the OpenAPI JSON consumed by `@umijs/openapi` on the frontend |
-| **Hutool 5.8.26** | Java utility library | Covers JSON, HTTP, Bean copy, reflection, file utilities in one dependency — reduces boilerplate throughout |
-| **Lombok 1.18.30** | Code generation | Eliminates getter/setter/constructor for domain entities and DTOs |
+| Technology                      | Role                             | Why this, not X?                                                                                                                                                                                                                                                                                                                                          |
+| ------------------------------- | -------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Spring Boot 2.7.6** (Java 11) | Application framework            | Mature, stable ecosystem; 2.7.x is the last major 2.x LTS release — chosen for compatibility with the full dependency set without requiring Java 17+                                                                                                                                                                                                      |
+| **MyBatis-Plus 3.5.9**          | ORM / data access                | Provides `ServiceImpl` CRUD abstraction, pagination plugin, and `@TableLogic` soft delete — dramatically reduces SQL boilerplate while keeping SQL fully readable when needed                                                                                                                                                                             |
+| **Sa-Token 1.39.0**             | Authentication and authorization | Lightweight session-based auth with Redis storage (distributable), a pluggable `StpInterface` for custom permission logic, and multi-type token support — significantly simpler than Spring Security for RBAC                                                                                                                                             |
+| **AWS S3 SDK (Cloudflare R2)**  | Object storage                   | Cloudflare R2 is S3-compatible with zero egress fees and a generous free tier. Using the standard AWS S3 SDK with R2's endpoint (`https://{accountId}.r2.cloudflarestorage.com`) via `AmazonS3ClientBuilder` — path-style access enabled for R2 compatibility. Image metadata (dimensions, format) is extracted locally with Java `ImageIO` before upload |
+| **Redis**                       | Session store                    | Sa-Token stores sessions in Redis, making the application horizontally scalable; also pre-wired for caching via Caffeine L1 + Redis L2                                                                                                                                                                                                                    |
+| **Caffeine 3**                  | Local L1 cache                   | Declared in `pom.xml`; provides a local in-process cache layer in front of Redis for hot-path reads                                                                                                                                                                                                                                                       |
+| **Spring WebSocket**            | Real-time messaging              | Enables the collaborative image editing feature; bidirectional communication between multiple clients on the same image                                                                                                                                                                                                                                   |
+| **LMAX Disruptor 3.4.2**        | High-performance message queue   | Decouples WebSocket IO thread (receives messages) from business processing thread (validates, routes, broadcasts); prevents slow business logic from blocking the WebSocket handler                                                                                                                                                                       |
+| **Jsoup 1.15.3**                | HTML parser                      | Scrapes Bing Images search result pages to batch-import images from the web                                                                                                                                                                                                                                                                               |
+| **Knife4j 4.4.0**               | API documentation                | Enhanced Swagger UI; generates the OpenAPI JSON consumed by `@umijs/openapi` on the frontend                                                                                                                                                                                                                                                              |
+| **Hutool 5.8.26**               | Java utility library             | Covers JSON, HTTP, Bean copy, reflection, file utilities in one dependency — reduces boilerplate throughout                                                                                                                                                                                                                                               |
+| **Lombok 1.18.30**              | Code generation                  | Eliminates getter/setter/constructor for domain entities and DTOs                                                                                                                                                                                                                                                                                         |
 
 ### Database
 
-| Technology | Role | Why this, not X? |
-|-----------|------|-----------------|
+| Technology  | Role                        | Why this, not X?                                                                                                                                                                                           |
+| ----------- | --------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | **MySQL 8** | Primary relational database | Strong ACID transactions are critical for atomic quota updates (image insert + space counter must commit or roll back together); `DATE_FORMAT` and `YEARWEEK` functions used directly in analytics queries |
 
 **Schema design highlights:**
+
 - `picture.spaceId IS NULL` signals public gallery membership (no explicit "public gallery" table)
 - `picture.tags` stored as a JSON string (`VARCHAR(512)`) — avoids join tables but prevents efficient SQL-level tag aggregation
 - `space.totalSize` and `space.totalCount` are pre-computed counters updated transactionally — O(1) quota reads instead of `COUNT(*)`/`SUM()` on the picture table
@@ -128,14 +130,14 @@ This project answers a harder set of questions that emerge when teams actually u
 
 ### Infrastructure
 
-| Layer | Technology |
-|-------|-----------|
-| Object Storage | Tencent Cloud COS (with CI image processing pipeline) |
-| Session Store | Redis (Sa-Token integration via `sa-token-redis-jackson`) |
-| API Documentation | Knife4j (OpenAPI 2, `/swagger-ui.html`) |
-| Build | Maven (backend) + Vite (frontend) |
-| Frontend Dev Server | `npm run dev` (port 3000) |
-| Backend Port | 8123 (context path: `/api`) |
+| Layer               | Technology                                                  |
+| ------------------- | ----------------------------------------------------------- |
+| Object Storage      | Cloudflare R2 (S3-compatible via AWS SDK, zero egress fees) |
+| Session Store       | Redis (Sa-Token integration via `sa-token-redis-jackson`)   |
+| API Documentation   | Knife4j (OpenAPI 2, `/swagger-ui.html`)                     |
+| Build               | Maven (backend) + Vite (frontend)                           |
+| Frontend Dev Server | `npm run dev` (port 3000)                                   |
+| Backend Port        | 8123 (context path: `/api`)                                 |
 
 ---
 
@@ -194,11 +196,11 @@ This project answers a harder set of questions that emerge when teams actually u
 +------------------------------------------------------------------------+
           |                          |
           v                          v
-       MySQL                      Tencent COS
-  (4 tables: user,            (images, WebP versions,
-   picture, space,             thumbnails, stored at
-   space_user)                 public/{userId}/ or
-                               space/{spaceId}/)
+       MySQL                      Cloudflare R2
+  (4 tables: user,            (images stored at
+   picture, space,             public/{userId}/ or
+   space_user)                 space/{spaceId}/,
+                               S3-compatible API)
           |
           v
         Redis
@@ -297,22 +299,16 @@ PictureUploadTemplate.uploadPicture(inputSource, "space/{spaceId}")
     +-- processFile()        -> write input to local temp file
     |
     v
-CosManager.putPictureObject(uploadPath, tempFile)
+S3Manager.putObject(uploadPath, file)  [Cloudflare R2 via AWS S3 SDK]
     |
-    | PicOperations (COS CI):
-    |   Rule 1: imageMogr2/format/webp  -> generates {name}.webp (compressed)
-    |   Rule 2: imageMogr2/thumbnail/256x256>  -> generates {name}_thumbnail.{ext}
-    |
-    <- PutObjectResult:
-         ImageInfo  { width, height, format, Ave (dominant color hex) }
-         CIObject[] { compressedCiObject, thumbnailCiObject }
+    <- PutObjectResult (acknowledgment)
     |
     v
 PictureUploadTemplate.buildResult()
-    -> url           = COS host + compressedCiObject.key  (WebP version)
-    -> thumbnailUrl  = COS host + thumbnailCiObject.key
-    -> picColor      = ColorTransformUtils.getStandardColor(Ave)
-       (maps raw Ave color to nearest standard color for grouping)
+    -> url           = R2 publicUrl + "/" + uploadPath
+    -> thumbnailUrl  = same as url (R2 dynamic resize via URL params)
+    -> picColor      = "" (color analysis not available in R2 pipeline)
+    -> picWidth/picHeight = extracted locally via Java `ImageIO.read(file)`
     |
     v
 PictureServiceImpl (continues)
@@ -489,11 +485,13 @@ PictureUploadTemplate (abstract)
 ```
 
 **Why Template Method here?**
+
 - The upload pipeline steps are identical for both sources; only data acquisition differs
 - Adding a new source (e.g., Base64, cloud-to-cloud copy) requires only a new subclass — zero changes to the shared pipeline
 - `FileManager` was the original flat implementation; it is now `@Deprecated` but still exists as dead code — a visible signal of the refactoring history
 
 **Design assessment:**
+
 - ✅ Correctly applied; extension is straightforward
 - ✅ `finally` block guarantees temp file cleanup even on exception
 - ⚠️ `FileManager.java` is annotated `@Deprecated` but not deleted — creates confusion for anyone reading the codebase for the first time
@@ -550,10 +548,11 @@ public BaseResponse<PictureVO> uploadPicture(...)
 ```
 
 **Design assessment:**
+
 - ✅ Clean separation of concerns: system role vs. space role never interfere
 - ✅ The request-context parsing approach means controllers need zero boilerplate permission code
 - ✅ `SpaceUserAuthManager` makes the role→permission mapping easy to audit and extend
-- ⚠️ **Known bug** (cited in the code itself, line 107 of `StpInterfaceImpl`): *"This will cause admins to have no permissions in private spaces — can query the DB again to handle"* — a TODO that was never fixed
+- ⚠️ **Known bug** (cited in the code itself, line 107 of `StpInterfaceImpl`): _"This will cause admins to have no permissions in private spaces — can query the DB again to handle"_ — a TODO that was never fixed
 - ⚠️ URI path parsing via string splitting (`StrUtil.subBefore`) is fragile — any URL restructuring breaks permission resolution silently
 - ⚠️ Each permission check can trigger 2–3 DB queries; no caching on the permission resolution path
 
@@ -573,11 +572,11 @@ Map<Long, Set<WebSocketSession>> pictureSessions    // pictureId -> all connecte
 
 **Message protocol:**
 
-| Client → Server | Server → All Clients | Purpose |
-|----------------|---------------------|---------|
-| `{ type: "ENTER_EDIT" }` | `{ type: "ENTER_EDIT", user: ... }` | Claim exclusive edit lock |
-| `{ type: "EDIT_ACTION", editAction: "ROTATE_LEFT" }` | broadcast to others | Mirror action on observer screens |
-| `{ type: "EXIT_EDIT" }` | `{ type: "EXIT_EDIT", user: ... }` | Release edit lock |
+| Client → Server                                      | Server → All Clients                | Purpose                           |
+| ---------------------------------------------------- | ----------------------------------- | --------------------------------- |
+| `{ type: "ENTER_EDIT" }`                             | `{ type: "ENTER_EDIT", user: ... }` | Claim exclusive edit lock         |
+| `{ type: "EDIT_ACTION", editAction: "ROTATE_LEFT" }` | broadcast to others                 | Mirror action on observer screens |
+| `{ type: "EXIT_EDIT" }`                              | `{ type: "EXIT_EDIT", user: ... }`  | Release edit lock                 |
 
 **Disruptor pipeline:**
 
@@ -601,6 +600,7 @@ PictureEditEventWorkHandler.onEvent()  [dedicated worker thread]
 Disruptor uses a lock-free ring buffer with mechanical-sympathy optimizations (cache line padding, memory barriers). For a WebSocket application where an I/O thread receives messages at high frequency, even brief lock contention on a BlockingQueue degrades tail latency. Disruptor eliminates this at the cost of slightly more configuration complexity.
 
 **Design assessment:**
+
 - ✅ Disruptor decoupling means a slow business handler never blocks incoming WebSocket messages
 - ✅ Lock-editor model (`pictureEditingUsers`) is simple and correct for the use case (image editing operations are coarse-grained, not character-level)
 - ✅ `afterConnectionClosed()` auto-releases the edit lock on disconnect — no orphaned locks
@@ -659,6 +659,7 @@ transactionTemplate.execute(status -> {
 ```
 
 **Design assessment:**
+
 - ✅ Pre-computed `totalSize`/`totalCount` counters give O(1) quota reads
 - ✅ Transactional coupling of image insert + quota update prevents counter drift
 - ✅ `SpaceLevelEnum` centralizes quota configuration cleanly
@@ -671,17 +672,18 @@ transactionTemplate.execute(status -> {
 
 **Responsibility**: Produce five types of space analytics for visualization on the dashboard.
 
-| Analytics Type | SQL Strategy | Java Post-Processing |
-|---------------|-------------|---------------------|
-| **Usage** (specific space) | Read `space.totalSize`, `space.totalCount` directly | Calculate usage ratios |
-| **Usage** (public/all) | `SELECT picSize FROM picture WHERE ...` | `sum()`, `count()` in stream |
-| **Category** | `GROUP BY category, COUNT(*), SUM(picSize)` | Map to response VO |
-| **Tags** | `SELECT tags FROM picture` (full load) | `flatMap` JSON arrays, `groupingBy`, sort by count |
-| **Size distribution** | `SELECT picSize FROM picture` (full load) | Java-side bucketing into <100KB / 100-500KB / 500KB-1MB / >1MB |
-| **Upload trends** | `DATE_FORMAT(createTime, '%Y-%m-%d') GROUP BY period` | Map to response VO |
-| **Space ranking** | `ORDER BY totalSize DESC LIMIT N` | Direct list return |
+| Analytics Type             | SQL Strategy                                          | Java Post-Processing                                           |
+| -------------------------- | ----------------------------------------------------- | -------------------------------------------------------------- |
+| **Usage** (specific space) | Read `space.totalSize`, `space.totalCount` directly   | Calculate usage ratios                                         |
+| **Usage** (public/all)     | `SELECT picSize FROM picture WHERE ...`               | `sum()`, `count()` in stream                                   |
+| **Category**               | `GROUP BY category, COUNT(*), SUM(picSize)`           | Map to response VO                                             |
+| **Tags**                   | `SELECT tags FROM picture` (full load)                | `flatMap` JSON arrays, `groupingBy`, sort by count             |
+| **Size distribution**      | `SELECT picSize FROM picture` (full load)             | Java-side bucketing into <100KB / 100-500KB / 500KB-1MB / >1MB |
+| **Upload trends**          | `DATE_FORMAT(createTime, '%Y-%m-%d') GROUP BY period` | Map to response VO                                             |
+| **Space ranking**          | `ORDER BY totalSize DESC LIMIT N`                     | Direct list return                                             |
 
 **Design assessment:**
+
 - ✅ Usage analytics for specific spaces reads the pre-computed counter (O(1)) — very fast
 - ✅ Upload trend query pushes all grouping to the DB engine — efficient
 - ⚠️ Tag analytics loads all `tags` values into Java heap and processes in-stream — unscalable beyond ~10K images; correct fix is MySQL 8's `JSON_TABLE` or a dedicated tag table
@@ -710,6 +712,7 @@ transactionTemplate.execute(status -> {
 **The choice**: Store tags as a JSON array string in `picture.tags`. Writing: `JSONUtil.toJsonStr(["landscape", "nature"])`. Reading: reverse. Querying by tag: `WHERE tags LIKE "%\"landscape\"%"`.
 
 **Trade-off**:
+
 - Fast to implement; no schema changes needed to add new tags
 - Cannot do efficient `GROUP BY tag` in SQL — the analytics service loads all rows into memory and processes in Java
 - The `LIKE` query for tag filtering does not use an index effectively on large datasets
@@ -725,6 +728,7 @@ transactionTemplate.execute(status -> {
 **The choice**: Sa-Token with a custom `StpInterface`. The `getPermissionList()` callback receives every permission check and can execute arbitrary logic — loading the space role from the DB based on the current request's `spaceId` or `pictureId`.
 
 **Trade-off**:
+
 - Sa-Token is far less standard than Spring Security; any engineer joining the project needs to learn its conventions
 - The current implementation triggers 2–3 DB queries per permission check — adding Redis-level caching of `(userId, spaceId) -> spaceRole` would significantly reduce load
 - The known `StpInterfaceImpl` bug (admin permissions in private spaces, line 107) remains open
@@ -748,21 +752,24 @@ OT (used by Google Docs) requires a server-side transformation engine to resolve
 
 ---
 
-### Decision 5 — COS CI Pipeline for Image Processing
+### Decision 5 — Cloudflare R2 for Object Storage
 
-**The problem**: Images need to be compressed (bandwidth), thumbnailed (list views), and color-analyzed (color search feature) — on every upload.
+**The problem**: Images need a reliable, cost-effective object store with S3-compatible access for future portability.
 
-**The choice**: Delegate all three to the Tencent COS CI (Cloud Infinity) processing pipeline via `PicOperations` rules attached to the `PutObjectRequest`:
+**The choice**: Cloudflare R2 via the standard AWS S3 SDK (`AmazonS3ClientBuilder`) pointing to R2's endpoint. R2 charges no egress fees — a significant cost saving for a read-heavy image platform. The AWS S3 SDK handles path-style access cleanly with `withPathStyleAccessEnabled(true)`.
+
+Image dimensions, format, and scale are extracted locally with Java `ImageIO.read(file)` before upload, keeping the application logic self-contained and cloud-provider-agnostic.
 
 ```java
-// Rule 1: transcode to WebP
-// Rule 2: generate 256x256 thumbnail
-// Rule 3: return ImageInfo.Ave (dominant color average in hex)
+// S3-compatible upload to Cloudflare R2
+BufferedImage bufferedImage = ImageIO.read(file);
+int picWidth = bufferedImage.getWidth();
+int picHeight = bufferedImage.getHeight();
+s3Manager.putObject(uploadPath, file);
+result.setUrl(s3ClientConfig.getPublicUrl() + "/" + uploadPath);
 ```
 
-All three happen server-side at COS — no image processing library dependency in the backend, no additional compute cost on the application server.
-
-**Trade-off**: Deeply coupled to Tencent COS. Migrating to AWS S3 would require replacing the CI pipeline with a Lambda or an in-process image library (e.g., Thumbnailator, ImageIO). The WebP and thumbnail are stored as separate objects in the bucket — remember to clean them up when the original is deleted (the `clearPictureFile()` method handles this asynchronously).
+**Trade-off**: Without a server-side CI pipeline, WebP re-encoding and automated thumbnail generation are not currently performed on upload. The thumbnail URL points to the original image (which R2 can resize on-the-fly via URL transform parameters when enabled). Dominant-color extraction is not available until an in-process library (e.g., ColorThief, ImageJ) is integrated.
 
 ---
 
@@ -880,6 +887,7 @@ space_user (id, spaceId, userId, spaceRole)
 ```
 
 **Critical decisions at this stage:**
+
 - `picture.spaceId IS NULL` = public gallery (no separate table needed)
 - `space.totalSize/totalCount` = pre-computed counters (not derived on read)
 - `isDelete` on every entity from the start (retrofit is painful)
@@ -897,6 +905,7 @@ PutObjectRequest -> COSClient.putObject() -> URL back
 ```
 
 Then layer in the CI pipeline (`PicOperations`):
+
 1. WebP compression
 2. Thumbnail generation
 3. Verify `ImageInfo.getAve()` returns the dominant color
@@ -932,6 +941,7 @@ This is the hardest module to get right. Build in this order:
 **The biggest gotcha**: `StpInterfaceImpl.getPermissionList()` is called on every request that has a `@SaCheckPermission` annotation. If it makes 3 DB queries per call and you have 10 concurrent users each making 5 requests per second, you have 150 DB queries per second just for permission resolution. Add `StpKit.SPACE.getSession().set(key, value)` caching from the start.
 
 **Fix the known bug before launch**: When an admin user accesses a private space they don't own, the current code returns empty permissions. The fix is to add an `isAdmin` check in the `PRIVATE` space branch:
+
 ```java
 if (space.getUserId().equals(userId) || userService.isAdmin(loginUser)) {
     return ADMIN_PERMISSIONS;
@@ -979,31 +989,31 @@ FROM picture WHERE spaceId = ?
 
 ### Critical Decisions to Make Upfront
 
-| Decision | Recommendation |
-|----------|---------------|
-| Counter vs. aggregate for quotas | Pre-computed counters — always update transactionally |
-| Tags storage | JSON string is fine to start; plan a migration if analytics are a day-1 requirement |
-| WebSocket session store | Redis Pub/Sub from day one, not in-memory Map |
-| Color search data bound | Add SQL-level filter by color family before in-memory sort |
-| Permission check caching | Cache `(userId, spaceId) -> spaceRole` in Sa-Token session |
-| Long ID serialization | Global Jackson config: `Long.class -> ToStringSerializer`; not per-endpoint |
-| COS object key naming | `{datePrefix}_{uuid}.{suffix}` — never use the original filename in the COS key |
+| Decision                         | Recommendation                                                                      |
+| -------------------------------- | ----------------------------------------------------------------------------------- |
+| Counter vs. aggregate for quotas | Pre-computed counters — always update transactionally                               |
+| Tags storage                     | JSON string is fine to start; plan a migration if analytics are a day-1 requirement |
+| WebSocket session store          | Redis Pub/Sub from day one, not in-memory Map                                       |
+| Color search data bound          | Add SQL-level filter by color family before in-memory sort                          |
+| Permission check caching         | Cache `(userId, spaceId) -> spaceRole` in Sa-Token session                          |
+| Long ID serialization            | Global Jackson config: `Long.class -> ToStringSerializer`; not per-endpoint         |
+| COS object key naming            | `{datePrefix}_{uuid}.{suffix}` — never use the original filename in the COS key     |
 
 ---
 
 ### Common Pitfalls
 
-| Pitfall | What happens | Fix |
-|---------|-------------|-----|
-| Quota update not in same transaction as image insert | Counter drifts under any error; space fills up without images | Always use `TransactionTemplate` wrapping both operations |
-| WS session state in JVM heap | Two backend nodes → different users can claim the same edit lock simultaneously | Redis Pub/Sub + distributed lock for `pictureEditingUsers` |
-| `new ObjectMapper()` in broadcast | Object allocation on every broadcast call → GC pressure under load | Inject `@Resource ObjectMapper objectMapper` |
-| Tag analytics full-load | OOM for large spaces | Push to DB: use `JSON_TABLE` (MySQL 8) or a tag join table |
-| Admin in private space bug | System admins cannot manage spaces they don't own | Add `userService.isAdmin(loginUser)` check in private space branch |
-| Bing scraper class selector changes | `uploadPictureByBatch` returns 0 uploaded silently | Switch to an official image search API |
-| Color search full-load | Slow / OOM for large spaces | Filter by color bucket at DB level, sort in-memory on bounded set |
-| Token precision in WS messages | Snowflake IDs silently corrupted in browser | Serialize `Long` as `String` globally in `JsonConfig` |
-| `String.intern()` creation lock | Single-node only; concurrent requests on different nodes create duplicate spaces | Replace with Redisson distributed lock on `"user:" + userId + ":space:create"` |
+| Pitfall                                              | What happens                                                                     | Fix                                                                            |
+| ---------------------------------------------------- | -------------------------------------------------------------------------------- | ------------------------------------------------------------------------------ |
+| Quota update not in same transaction as image insert | Counter drifts under any error; space fills up without images                    | Always use `TransactionTemplate` wrapping both operations                      |
+| WS session state in JVM heap                         | Two backend nodes → different users can claim the same edit lock simultaneously  | Redis Pub/Sub + distributed lock for `pictureEditingUsers`                     |
+| `new ObjectMapper()` in broadcast                    | Object allocation on every broadcast call → GC pressure under load               | Inject `@Resource ObjectMapper objectMapper`                                   |
+| Tag analytics full-load                              | OOM for large spaces                                                             | Push to DB: use `JSON_TABLE` (MySQL 8) or a tag join table                     |
+| Admin in private space bug                           | System admins cannot manage spaces they don't own                                | Add `userService.isAdmin(loginUser)` check in private space branch             |
+| Bing scraper class selector changes                  | `uploadPictureByBatch` returns 0 uploaded silently                               | Switch to an official image search API                                         |
+| Color search full-load                               | Slow / OOM for large spaces                                                      | Filter by color bucket at DB level, sort in-memory on bounded set              |
+| Token precision in WS messages                       | Snowflake IDs silently corrupted in browser                                      | Serialize `Long` as `String` globally in `JsonConfig`                          |
+| `String.intern()` creation lock                      | Single-node only; concurrent requests on different nodes create duplicate spaces | Replace with Redisson distributed lock on `"user:" + userId + ":space:create"` |
 
 ---
 
@@ -1129,7 +1139,7 @@ cloud-gallery/
 
 - [LMAX Disruptor — Martin Thompson](https://lmax-exchange.github.io/disruptor/) — the high-performance inter-thread messaging library used in the WebSocket pipeline
 - [Sa-Token Documentation](https://sa-token.cc/) — the auth framework powering the dual-token permission system
-- [Tencent COS CI Documentation](https://cloud.tencent.com/document/product/460) — image processing pipeline (WebP compression, thumbnail, color analysis)
+- [Cloudflare R2 Documentation](https://developers.cloudflare.com/r2/) — S3-compatible object storage with zero egress fees
 - [MyBatis-Plus Documentation](https://baomidou.com/) — the ORM layer
 - [Knife4j Documentation](https://doc.xiaominfo.com/) — API documentation and OpenAPI JSON endpoint
 

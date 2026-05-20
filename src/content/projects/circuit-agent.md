@@ -4,15 +4,16 @@ category: AI
 color: "#8B5CF6"
 date: 2025-09-01
 github: "https://github.com/W-Kaski/circuit-agent"
-demo: ""
+demo: "https://www.circuit.anio.me/"
 ---
+
 Building a Full-Stack AI Agent Platform with Spring AI
 
 ![Spring Boot](https://img.shields.io/badge/Spring_Boot-3.4.7-6DB33F?style=flat-square&logo=spring-boot&logoColor=white)
 ![Spring AI](https://img.shields.io/badge/Spring_AI-1.0.0-6DB33F?style=flat-square&logo=spring&logoColor=white)
 ![Java](https://img.shields.io/badge/Java-21_LTS-ED8B00?style=flat-square&logo=openjdk&logoColor=white)
-![Vue 3](https://img.shields.io/badge/Vue-3.x-4FC08D?style=flat-square&logo=vue.js&logoColor=white)
-![Vite](https://img.shields.io/badge/Vite-4.x-646CFF?style=flat-square&logo=vite&logoColor=white)
+![React](https://img.shields.io/badge/React-19-61DAFB?style=flat-square&logo=react&logoColor=white)
+![Vite](https://img.shields.io/badge/Vite-latest-646CFF?style=flat-square&logo=vite&logoColor=white)
 ![PostgreSQL](https://img.shields.io/badge/PostgreSQL_PgVector-blue?style=flat-square&logo=postgresql&logoColor=white)
 ![Docker](https://img.shields.io/badge/Docker-ready-2496ED?style=flat-square&logo=docker&logoColor=white)
 ![Alibaba DashScope](https://img.shields.io/badge/Alibaba_DashScope-qwen--plus-FF6A00?style=flat-square)
@@ -27,7 +28,7 @@ Circuit Agent is a full-stack AI Agent platform I built to deeply explore how mo
 The project ships two distinct AI applications:
 
 - **AI Algorithm Master** — A domain-specific conversational assistant with a private knowledge base (RAG), capable of answering algorithm and data structure questions with retrieved context from curated Markdown documents.
-- **AI Super Agent (EkManus)** — An autonomous agent that reasons, selects tools, acts on the real world (web search, file operations, web scraping, terminal commands, PDF generation), and loops until the task is complete.
+- **AI Super Agent (CircuitManus)** — An autonomous agent that reasons, selects tools, acts on the real world (web search, file operations, web scraping, terminal commands, PDF generation), and loops until the task is complete.
 
 The entire platform — from backend to frontend — is built and wired end-to-end, with Server-Sent Events (SSE) streaming responses to the browser in real time.
 
@@ -62,14 +63,15 @@ This project answers all four questions in a unified codebase, using the Java ec
 
 **Core design goals:**
 
-| Goal | Implementation |
-|------|---------------|
-| Private knowledge base | RAG pipeline over Markdown docs using PgVector |
-| Multi-turn memory | `MessageWindowChatMemory` (in-process) or `FileBasedChatMemory` (disk) |
-| Autonomous tool use | ReAct loop: `BaseAgent -> ReActAgent -> ToolCallAgent` |
-| Real-time streaming | SSE (`SseEmitter` / Reactor `Flux`) + browser `EventSource` |
-| Extensible tool system | `@Tool`-annotated beans registered via `ToolRegistration` config |
-| External tool protocols | MCP (Model Context Protocol) client + custom MCP server |
+| Goal                    | Implementation                                                                                 |
+| ----------------------- | ---------------------------------------------------------------------------------------------- |
+| Private knowledge base  | RAG pipeline over Markdown docs using PgVector                                                 |
+| Multi-turn memory       | `MessageWindowChatMemory` (in-process) or `FileBasedChatMemory` (disk)                         |
+| Autonomous tool use     | ReAct loop: `BaseAgent -> ReActAgent -> ToolCallAgent`                                         |
+| Real-time streaming     | SSE (`SseEmitter` / Reactor `Flux`) + browser `EventSource` with explicit `[DONE]` termination |
+| Extensible tool system  | `@Tool`-annotated beans registered via `ToolRegistration` config                               |
+| External tool protocols | MCP (Model Context Protocol) client + custom MCP server                                        |
+| Cross-turn agent state  | `sessionId`-keyed `CircuitManus` instance cache in `AiController`                              |
 
 ---
 
@@ -77,52 +79,52 @@ This project answers all four questions in a unified codebase, using the Java ec
 
 ### Frontend
 
-| Technology | Role | Why this, not X? |
-|-----------|------|-----------------|
-| **Vue 3** (Composition API) | SPA framework | Composition API's reactive refs map cleanly to SSE streaming data — each token chunk updates a reactive `ref`, no extra state management overhead needed |
-| **Vite 4** | Build tool | Near-instant HMR during development; native ESM avoids Webpack bundle overhead |
-| **Vue Router 4** | Client-side routing | Official Vue 3 router; lazy-loaded routes keep the initial bundle small |
-| **@vueuse/head** | `<head>` metadata management | Declarative, reactive page titles and meta tags per route — essential for SEO on a portfolio-facing app |
-| **Axios** | HTTP client | Interceptor support for request/response transforms; SSE connections use the browser-native `EventSource` API directly |
-| **Nginx** (production) | Static file serving + reverse proxy | Handles SPA routing fallback (`try_files`) and correctly proxies SSE streams with `proxy_buffering off` |
-| **Docker** (multi-stage build) | Containerization | Build stage on `node:20-alpine`, runtime on `nginx:alpine` — minimized image footprint |
+| Technology                 | Role                  | Why this, not X?                                                                                                                                                                 |
+| -------------------------- | --------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **React 19** (Hooks + JSX) | SPA framework         | Concurrent rendering and the latest hook primitives map cleanly to SSE streaming state — `useState` accumulates incoming tokens with zero extra state-management overhead        |
+| **Vite**                   | Build tool            | Near-instant HMR during development; native ESM avoids Webpack bundle overhead                                                                                                   |
+| **TailwindCSS**            | Utility-first styling | Minimal runtime overhead; enables rapid UI iteration without context-switching out of JSX                                                                                        |
+| **lucide-react**           | Icon library          | Lightweight, tree-shakeable SVG icons used throughout the chat and sidebar UI                                                                                                    |
+| **react-markdown**         | Markdown rendering    | Renders LLM-formatted responses (code blocks, lists, bold text) directly inside chat bubbles                                                                                     |
+| **Axios**                  | HTTP client           | Interceptor support for request/response transforms; SSE connections use the browser-native `EventSource` API directly                                                           |
+| **Demo Mode**              | Offline fallback      | On load, pings the backend health endpoint. If unreachable, silently enters Demo Mode with simulated streaming and mock algorithm documents — no backend required for evaluation |
 
 ### Backend
 
-| Technology | Role | Why this, not X? |
-|-----------|------|-----------------|
-| **Spring Boot 3.4.7** | Application framework | Mature DI container, auto-configuration, and production-hardened HTTP layer |
-| **Spring AI 1.0.0** | LLM abstraction layer | Unified `ChatClient`, `VectorStore`, and `Advisor` abstraction across different LLM providers — swap the model without rewriting business logic |
-| **Spring AI Alibaba / DashScope** | LLM provider adapter | Enables `qwen-plus` and DashScope embedding models; chosen for reliable domestic access and cost efficiency |
-| **Ollama** (configured) | Local model runtime | Allows running open-source models offline — configured but inactive in default profile |
-| **LangChain4j (DashScope community)** | Supplementary LLM integration | Covers DashScope features not yet supported by the Spring AI adapter |
-| **Spring AI PgVector Store** | Persistent vector store | PostgreSQL + `pgvector` extension with HNSW indexing and cosine distance — production-grade |
-| **Spring AI SimpleVectorStore** | In-memory vector store (dev) | Zero-dependency option for rapid prototyping; the RAG pipeline is identical — storage backend is swappable |
-| **Kryo 5** | Binary serialization | Used by `FileBasedChatMemory` to serialize polymorphic Spring AI `Message` objects to disk; JSON serializers struggle with interface-typed Message hierarchies |
-| **Hutool** | Java utility library | Covers HTTP, JSON, file operations in one dependency — reduces boilerplate for tool implementations |
-| **Jsoup** | HTML parser | Powers `WebScrapingTool`; clean API for extracting text from arbitrary URLs |
-| **iTextPDF 9** | PDF generation | Backs `PDFGenerationTool` — allows the Agent to produce downloadable reports |
-| **Knife4j** | API docs (Swagger enhanced) | Richer UI than the default Springdoc interface; useful for testing streaming endpoints |
-| **Lombok** | Code generation | Eliminates getter/setter/constructor boilerplate on Agent classes |
-| **Java 21 LTS** | Runtime | Latest LTS with Virtual Thread support — future-proofing for high-concurrency SSE scenarios |
+| Technology                            | Role                          | Why this, not X?                                                                                                                                               |
+| ------------------------------------- | ----------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Spring Boot 3.4.7**                 | Application framework         | Mature DI container, auto-configuration, and production-hardened HTTP layer                                                                                    |
+| **Spring AI 1.0.0**                   | LLM abstraction layer         | Unified `ChatClient`, `VectorStore`, and `Advisor` abstraction across different LLM providers — swap the model without rewriting business logic                |
+| **Spring AI Alibaba / DashScope**     | LLM provider adapter          | Enables `qwen-plus` and DashScope embedding models; chosen for reliable domestic access and cost efficiency                                                    |
+| **Ollama** (configured)               | Local model runtime           | Allows running open-source models offline — configured but inactive in default profile                                                                         |
+| **LangChain4j (DashScope community)** | Supplementary LLM integration | Covers DashScope features not yet supported by the Spring AI adapter                                                                                           |
+| **Spring AI PgVector Store**          | Persistent vector store       | PostgreSQL + `pgvector` extension with HNSW indexing and cosine distance — production-grade                                                                    |
+| **Spring AI SimpleVectorStore**       | In-memory vector store (dev)  | Zero-dependency option for rapid prototyping; the RAG pipeline is identical — storage backend is swappable                                                     |
+| **Kryo 5**                            | Binary serialization          | Used by `FileBasedChatMemory` to serialize polymorphic Spring AI `Message` objects to disk; JSON serializers struggle with interface-typed Message hierarchies |
+| **Hutool**                            | Java utility library          | Covers HTTP, JSON, file operations in one dependency — reduces boilerplate for tool implementations                                                            |
+| **Jsoup**                             | HTML parser                   | Powers `WebScrapingTool`; clean API for extracting text from arbitrary URLs                                                                                    |
+| **iTextPDF 9**                        | PDF generation                | Backs `PDFGenerationTool` — allows the Agent to produce downloadable reports                                                                                   |
+| **Knife4j**                           | API docs (Swagger enhanced)   | Richer UI than the default Springdoc interface; useful for testing streaming endpoints                                                                         |
+| **Lombok**                            | Code generation               | Eliminates getter/setter/constructor boilerplate on Agent classes                                                                                              |
+| **Java 21 LTS**                       | Runtime                       | Latest LTS with Virtual Thread support — future-proofing for high-concurrency SSE scenarios                                                                    |
 
 ### Storage
 
-| Store | Role | Status |
-|-------|------|--------|
-| `InMemoryChatMemoryRepository` | Conversation memory (Algorithm App) | Active (default profile) |
-| `FileBasedChatMemory` (Kryo) | Persistent conversation memory | Implemented, profile-switchable |
-| `SimpleVectorStore` | RAG vector index | Active (dev/demo profile) |
-| `PostgreSQL + PgVector` | Production RAG vector index | Implemented, activate by enabling `PgVectorVectorStoreConfig` |
+| Store                          | Role                                | Status                                             |
+| ------------------------------ | ----------------------------------- | -------------------------------------------------- |
+| `InMemoryChatMemoryRepository` | Conversation memory (Algorithm App) | Active (default profile)                           |
+| `FileBasedChatMemory` (Kryo)   | Persistent conversation memory      | Implemented, profile-switchable                    |
+| `PostgreSQL + PgVector`        | RAG vector index                    | Active (default — vectors persist across restarts) |
+| `SimpleVectorStore`            | In-memory RAG (dev fallback)        | Available for zero-dependency local development    |
 
 ### Infrastructure
 
-| Layer | Technology |
-|-------|-----------|
-| Containerization | Docker (multi-stage, frontend) |
-| Build | Maven Wrapper (backend) + Vite (frontend) |
-| MCP Integration | Spring AI MCP Client (SSE + stdio modes) |
-| API Documentation | Knife4j (OpenAPI 3, `/swagger-ui.html`) |
+| Layer             | Technology                                |
+| ----------------- | ----------------------------------------- |
+| Containerization  | Docker (multi-stage, frontend)            |
+| Build             | Maven Wrapper (backend) + Vite (frontend) |
+| MCP Integration   | Spring AI MCP Client (SSE + stdio modes)  |
+| API Documentation | Knife4j (OpenAPI 3, `/swagger-ui.html`)   |
 
 ---
 
@@ -132,12 +134,12 @@ This project answers all four questions in a unified codebase, using the Java ec
 
 ```
 +-----------------------------------------------------------------------+
-|                        Browser (Vue 3 SPA)                            |
+|                        Browser (React 19 SPA)                         |
 |                                                                       |
 |  +------------+  +----------------------+  +----------------------+   |
 |  |   Home     |  |  Algorithm Master    |  |    Super Agent       |   |
-|  | (animated  |  |  (RAG Chat / SSE)    |  |  (Agent Chat / SSE)  |   |
-|  |  landing)  |  +----------------------+  +----------------------+   |
+|  | (landing + |  |  (RAG Chat / SSE)    |  |  (Agent Chat / SSE)  |   |
+|  | Demo Mode) |  +----------------------+  +----------------------+   |
 |  +------------+                                                       |
 |                    EventSource (SSE) / REST                           |
 +-----------------------------------------------------------------------+
@@ -145,16 +147,16 @@ This project answers all four questions in a unified codebase, using the Java ec
                          HTTP / SSE
                               |
 +-----------------------------------------------------------------------+
-|          Spring Boot Backend  (port 8123, context: /api)              |
+|          Spring Boot Backend  (port 48124, context: /api)             |
 |                                                                       |
 |  +-------------------------------------------------------------+      |
 |  |  AiController  (/ai/*)                                      |      |
 |  |  |-- /algorithm_app/chat/sse    ->  AlgorithmApp            |      |
-|  |  +-- /manus/chat               ->  EkManus (Agent)          |      |
+|  |  +-- /manus/chat               ->  CircuitManus (Agent)     |      |
 |  +-------------------------------------------------------------+      |
 |                       direct method call                              |
 |  +--------------------------+  +----------------------------------+   |
-|  |  AlgorithmApp            |  |  EkManus (Agent)                |   |
+|  |  AlgorithmApp            |  |  CircuitManus (Agent)           |   |
 |  |  |- ChatClient           |  |  |- ToolCallAgent (ReAct)       |   |
 |  |  |- ChatMemory           |  |  |- 7 Tools                     |   |
 |  |  |- VectorStore (RAG)    |  |  +- messageList (manual ctx)    |   |
@@ -168,13 +170,13 @@ This project answers all four questions in a unified codebase, using the Java ec
 |  |  |- Jsoup                   (web scraping)                  |      |
 |  |  +- MCP Servers (stdio / SSE):                              |      |
 |  |       |- @amap/amap-maps-mcp-server (map tools)            |      |
-|  |       +- ek-image-search-mcp-server (Pexels images)        |      |
+|  |       +- image-search-mcp-server (Pexels images)         |      |
 |  +-------------------------------------------------------------+      |
 |                                                                       |
 |  +-------------------------------------------------------------+      |
 |  |  Storage Layer                                              |      |
-|  |  |- SimpleVectorStore      (in-memory RAG, default)         |      |
-|  |  |- PgVector + PostgreSQL  (persistent RAG, production)     |      |
+|  |- PgVector + PostgreSQL  (persistent RAG, default)        |      |
+|  |- SimpleVectorStore      (in-memory RAG, dev fallback)    |      |
 |  |  |- InMemoryChatMemory     (session memory, default)        |      |
 |  |  +- FileBasedChatMemory    (Kryo disk persistence)          |      |
 |  +-------------------------------------------------------------+      |
@@ -183,7 +185,7 @@ This project answers all four questions in a unified codebase, using the Java ec
              stdio / SSE (MCP Protocol)
                     |
 +-----------------------------------------------------------------------+
-|  ek-image-search-mcp-server  (standalone JAR, stdio mode)             |
+|  image-search-mcp-server  (Spring Boot 3.5.5, Java 21, stdio mode)    |
 |  +- ImageSearchTool  ->  Pexels API                                   |
 +-----------------------------------------------------------------------+
 ```
@@ -197,7 +199,7 @@ src/main/java/com.eric.circuitagent/
 |   +-- BaseAgent          State machine + step-loop controller
 |   +-- ReActAgent         Abstract Think / Act split
 |   +-- ToolCallAgent      LLM -> tool dispatch -> context update
-|   +-- EkManus            Concrete Agent: system prompt + tool binding
+|   +-- CircuitManus       Concrete Agent: system prompt + tool binding (sessionId-keyed cache)
 |
 +-- app/              <- Application layer (scenario-specific)
 |   +-- AlgorithmApp       RAG + memory + streaming entry point
@@ -245,7 +247,7 @@ src/main/java/com.eric.circuitagent/
 User types: "What is quicksort and how does it work?"
 |
 v
-[AlgorithmMaster.vue]
+[Frontend — App.jsx (Algorithm mode)]
   sendMessage(message)
   -> EventSource: GET /api/ai/algorithm_app/chat/sse?message=...&chatId=love_xxx
 |
@@ -294,15 +296,15 @@ User sees the answer rendered in real time
 
 ---
 
-### Flow B — Super Agent (EkManus ReAct Loop)
+### Flow B — Super Agent (CircuitManus ReAct Loop)
 
 ```
 User types: "Search for the latest Spring Boot release and write a summary file"
 |
 v
-[AiController.doChatWithManus(message)]
-  new EkManus(allTools, dashscopeChatModel)
-  -> ekManus.runStream(message)
+[AiController.doChatWithManus(message, sessionId)]
+  circuitManusCache.computeIfAbsent(sessionId, k -> new CircuitManus(...))
+  -> circuitManus.runStream(message)
 |
 v
 [BaseAgent.runStream()]
@@ -343,7 +345,7 @@ v
   })
 |
 v
-[Frontend SSE -- SuperAgent.vue]
+[Frontend SSE — App.jsx (Manus mode)]
   Groups SSE chunks into message bubbles by sentence boundaries
   First response displays immediately; subsequent bubbles throttled
 ```
@@ -352,7 +354,7 @@ v
 
 ## 5. Core Modules Deep Dive
 
-### Module 1 — Agent Hierarchy (`BaseAgent -> ReActAgent -> ToolCallAgent -> EkManus`)
+### Module 1 — Agent Hierarchy (`BaseAgent -> ReActAgent -> ToolCallAgent -> CircuitManus`)
 
 This four-level inheritance chain implements the [ReAct pattern](https://arxiv.org/abs/2210.03629) (Reasoning + Acting) as a clean, extensible Java abstraction.
 
@@ -363,7 +365,7 @@ BaseAgent
 |  - messageList: List<Message>   <- manually maintained context window
 |  - maxSteps: int                <- prevents runaway loops
 |  + run(userPrompt): String      <- blocking execution
-|  + runStream(userPrompt): SseEmitter  <- async SSE execution
+|  + runStream(userPrompt): SseEmitter  <- async SSE execution (emits [DONE])
 |  # abstract step(): String
 |
 +-- ReActAgent
@@ -378,13 +380,14 @@ BaseAgent
 |   + think(): queries LLM, stores ChatResponse, returns hasToolCalls
 |   + act(): executes tools, updates messageList, detects terminate signal
 |
-+-- EkManus   (@Component)
++-- CircuitManus   (@Component)
     - Injects all tools + DashScope ChatModel
-    - Configures system prompt ("You are EkManus, an all-capable assistant...")
+    - Configures system prompt ("You are CircuitManus, an all-capable assistant...")
     - Sets maxSteps = 20
+    - Cached per sessionId in AiController (ConcurrentHashMap)
 ```
 
-**Key design insight**: Internal tool execution is explicitly disabled in Spring AI (`withInternalToolExecutionEnabled(false)`). This gives the Agent full control over *when* tools run — essential for the ReAct pattern where we need to inspect tool calls before executing them, update context after each one, and decide whether to continue the loop.
+**Key design insight**: Internal tool execution is explicitly disabled in Spring AI (`withInternalToolExecutionEnabled(false)`). This gives the Agent full control over _when_ tools run — essential for the ReAct pattern where we need to inspect tool calls before executing them, update context after each one, and decide whether to continue the loop.
 
 ---
 
@@ -428,7 +431,7 @@ User question
 ```
 
 **Why query rewriting?**
-Natural language questions often contain pronouns, colloquialisms, or incomplete phrasing that degrades vector search precision. The `RewriteQueryTransformer` rephrases the question into a form optimized for semantic similarity search *before* hitting the vector store.
+Natural language questions often contain pronouns, colloquialisms, or incomplete phrasing that degrades vector search precision. The `RewriteQueryTransformer` rephrases the question into a form optimized for semantic similarity search _before_ hitting the vector store.
 
 **Why keyword enrichment?**
 Embedding-only retrieval can miss exact-match terms (algorithm names, complexity notation). By extracting keywords at index time and storing them as metadata, we enable future hybrid search strategies (vector similarity + keyword filter) without re-indexing.
@@ -446,17 +449,17 @@ public String searchWeb(
     @ToolParam(description = "Search query keyword") String query) { ... }
 ```
 
-All tools are centrally registered in `ToolRegistration.java` and exposed as a single `ToolCallback[]` bean (`allTools`), injected into both `EkManus` and `AlgorithmApp`:
+All tools are centrally registered in `ToolRegistration.java` and exposed as a single `ToolCallback[]` bean (`allTools`), injected into both `CircuitManus` and `AlgorithmApp`:
 
-| Tool | Capability |
-|------|-----------|
-| `WebSearchTool` | Baidu search via SearchAPI.io — returns Top-5 organic results |
-| `WebScrapingTool` | Fetches and parses the HTML of any URL using Jsoup |
-| `FileOperationTool` | Read/write files within a sandboxed working directory |
-| `TerminalOperationTool` | Execute shell commands and capture stdout |
-| `ResourceDownloadTool` | Download remote resources to local disk |
-| `PDFGenerationTool` | Generate formatted PDF documents using iTextPDF |
-| `TerminateTool` | Signals the Agent to exit the ReAct loop gracefully |
+| Tool                    | Capability                                                    |
+| ----------------------- | ------------------------------------------------------------- |
+| `WebSearchTool`         | Baidu search via SearchAPI.io — returns Top-5 organic results |
+| `WebScrapingTool`       | Fetches and parses the HTML of any URL using Jsoup            |
+| `FileOperationTool`     | Read/write files within a sandboxed working directory         |
+| `TerminalOperationTool` | Execute shell commands and capture stdout                     |
+| `ResourceDownloadTool`  | Download remote resources to local disk                       |
+| `PDFGenerationTool`     | Generate formatted PDF documents using iTextPDF               |
+| `TerminateTool`         | Signals the Agent to exit the ReAct loop gracefully           |
 
 **The Terminate signal mechanism**: `TerminateTool.doTerminate()` returns `"Task finished"`. Inside `ToolCallAgent.act()`, after every tool execution batch, the code scans the `ToolResponseMessage` for any response whose tool name equals `"doTerminate"`. If found, `state` is set to `FINISHED` and the loop exits on the next iteration check. This gives the LLM a clean, protocol-defined way to end the Agent run rather than relying on the max-step limit.
 
@@ -482,7 +485,7 @@ This implementation is profile-switchable, making it easy to toggle between in-m
 
 ---
 
-### Module 5 — MCP Server (`ek-image-search-mcp-server`)
+### Module 5 — MCP Server (`image-search-mcp-server`)
 
 The project includes a standalone Spring Boot application that acts as an **MCP (Model Context Protocol) server**, exposing a Pexels image search capability to the main backend via the MCP protocol.
 
@@ -491,7 +494,7 @@ Main backend (MCP Client)
         |
         |  stdio or SSE (MCP protocol)
         v
-ek-image-search-mcp-server (standalone JAR)
+image-search-mcp-server (Spring Boot 3.5.5, Java 21, standalone JAR)
         |
         v  ImageSearchTool.searchImage(query)
         -> GET https://api.pexels.com/v1/search
@@ -503,11 +506,12 @@ The MCP server is configured via `mcp-servers.json`:
 ```json
 {
   "mcpServers": {
-    "ek-image-search-mcp-server": {
+    "image-search-mcp-server": {
       "command": "java",
       "args": [
         "-Dspring.ai.mcp.server.stdio=true",
-        "-jar", "ek-image-search-mcp-server/target/...jar"
+        "-jar",
+        "image-search-mcp-server/target/...jar"
       ]
     }
   }
@@ -522,7 +526,7 @@ The main application launches the MCP server as a **child process** (stdio mode)
 
 ### Decision 1 — Manual Message Context Management
 
-**The problem**: The ReAct loop needs to accumulate conversation history *within a single HTTP request* — user message, then LLM tool-call decision, then tool response, then LLM re-reasoning. Spring AI's `ChatMemory` Advisor is designed for *cross-request* persistence keyed by `conversationId`. The granularity doesn't match.
+**The problem**: The ReAct loop needs to accumulate conversation history _within a single HTTP request_ — user message, then LLM tool-call decision, then tool response, then LLM re-reasoning. Spring AI's `ChatMemory` Advisor is designed for _cross-request_ persistence keyed by `conversationId`. The granularity doesn't match.
 
 **The choice**: `ToolCallAgent` maintains its own `List<Message> messageList` as an instance variable. After each `think()` / `act()` cycle, the list is extended with the new assistant message + tool response. The LLM always sees the full accumulated history.
 
@@ -532,7 +536,7 @@ The main application launches the MCP server as a **child process** (stdio mode)
 
 ### Decision 2 — Disable Spring AI's Built-in Tool Execution
 
-**The problem**: Spring AI's `ChatClient` defaults to executing tool calls transparently and continuing the conversation automatically. For a ReAct Agent, this breaks the loop — we need full control over *when* tools run, the ability to *observe* results, *update context*, and *decide* whether to continue.
+**The problem**: Spring AI's `ChatClient` defaults to executing tool calls transparently and continuing the conversation automatically. For a ReAct Agent, this breaks the loop — we need full control over _when_ tools run, the ability to _observe_ results, _update context_, and _decide_ whether to continue.
 
 **The choice**:
 
@@ -542,7 +546,7 @@ this.chatOptions = DashScopeChatOptions.builder()
     .build();
 ```
 
-With internal execution disabled, `think()` retrieves the tool-call *intent* from the LLM without executing anything. `act()` then calls `ToolCallingManager.executeToolCalls()` explicitly, giving full observability into tool results before the next reasoning step.
+With internal execution disabled, `think()` retrieves the tool-call _intent_ from the LLM without executing anything. `act()` then calls `ToolCallingManager.executeToolCalls()` explicitly, giving full observability into tool results before the next reasoning step.
 
 **Trade-off**: More manual wiring code in `ToolCallAgent`. The gain is complete control over the ReAct loop — a necessary requirement for this pattern.
 
@@ -553,6 +557,7 @@ With internal execution disabled, `think()` retrieves the tool-call *intent* fro
 **The problem**: Setting up PostgreSQL + pgvector for every development iteration adds friction during the exploration phase.
 
 **The choice**: Two `VectorStore` configurations exist side-by-side:
+
 - `AlgorithmAppVectorStoreConfig` -> `SimpleVectorStore` (active)
 - `PgVectorVectorStoreConfig` -> `PgVectorStore` (ready, activation is a one-line change)
 
@@ -660,7 +665,7 @@ If you want to implement a similar system from scratch, here is the build order 
 ```
 CircuitAgentApplication.java
 AiController.java          GET /ai/chat -> return LLM response string
-application.yml            dashscope.api-key, server.port=8123
+application.yml            dashscope.api-key, server.port=48124
 ```
 
 Make a single ChatClient call work before adding anything else.
@@ -680,7 +685,7 @@ Switch the endpoint to return `Flux<String>` and verify the browser `EventSource
 6. Expose /algorithm_app/chat/sse endpoint
 ```
 
-**Step 4 — Build the Agent layer (EkManus)**
+**Step 4 — Build the Agent layer (CircuitManus)**
 
 ```
 1. BaseAgent  (state machine + step loop + SSE emitter)
@@ -690,47 +695,47 @@ Switch the endpoint to return `Flux<String>` and verify the browser `EventSource
 4. Start with 2 tools: WebSearchTool + TerminateTool
 5. Verify the loop terminates correctly on small tasks
 6. Add remaining tools one at a time
-7. EkManus (system prompt + tool binding)
+7. CircuitManus (system prompt + tool binding + sessionId cache)
 8. Expose /manus/chat SSE endpoint
 ```
 
 **Step 5 — Frontend**
 
 ```
-Vue 3 + Vite + Vue Router
-Views: AlgorithmMaster.vue (streaming into a single expanding bubble)
-       SuperAgent.vue      (streaming into per-step message bubbles)
-api/index.js: wrap EventSource, expose chatWithManus() chatWithLoveApp()
+React 19 + Vite + TailwindCSS
+App.jsx:    Main chat logic — SSE streaming, mode switching, Demo Mode
+Sidebar.jsx: Document workspace with live + offline (demo) document list
+lib/api.js: Axios client + chatStream() wrapping EventSource
 ```
 
 **Step 6 — MCP (optional, add last)**
 
-Build `ek-image-search-mcp-server` as a separate Spring Boot project with `spring-ai-starter-mcp-server`. Verify it works standalone, then integrate via `mcp-servers.json`.
+Build `image-search-mcp-server` as a separate Spring Boot project with `spring-ai-starter-mcp-server`. Verify it works standalone, then integrate via `mcp-servers.json`.
 
 ---
 
 ### Critical Decisions to Make Upfront
 
-| Decision | Recommendation |
-|----------|---------------|
-| Vector store | Start with PgVector (Docker: `ankane/pgvector`), not SimpleVectorStore |
-| Tool execution control | Always set `withInternalToolExecutionEnabled(false)` for ReAct |
-| Agent session model | Bind Agent instances to sessionId in a `ConcurrentHashMap` or Redis from day one |
-| SSE timeout | Set `SseEmitter(300_000L)` (5 min) to handle long Agent runs |
-| Context window | Implement a max-token check or sliding window before passing messageList to LLM |
+| Decision               | Recommendation                                                                                                           |
+| ---------------------- | ------------------------------------------------------------------------------------------------------------------------ |
+| Vector store           | Start with PgVector (Docker: `ankane/pgvector`), not SimpleVectorStore                                                   |
+| Tool execution control | Always set `withInternalToolExecutionEnabled(false)` for ReAct                                                           |
+| Agent session model    | Use a `ConcurrentHashMap<String, CircuitManus>` keyed by sessionId — agents are stateful and must be reused across turns |
+| SSE timeout            | Set `SseEmitter(300_000L)` (5 min) to handle long Agent runs                                                             |
+| Context window         | Implement a max-token check or sliding window before passing messageList to LLM                                          |
 
 ---
 
 ### Common Pitfalls
 
-| Pitfall | What happens | Fix |
-|---------|-------------|-----|
-| Spring AI version mismatch | Compile errors or silent behavioral changes | Use the BOM; lock all spring-ai versions to one release |
-| Nginx SSE buffering | Stutter / batched output instead of smooth streaming | `proxy_buffering off` + `proxy_cache off` |
-| Context window overrun | LLM error or mid-response truncation | Bound `messageList` with a sliding window or token count check |
-| SimpleVectorStore at scale | Slow startup + repeated embedding API costs | Switch to PgVector for any persistent corpus |
-| Agent never terminates | Runs to maxSteps every time, even on trivial tasks | Always include `TerminateTool` in the tool set |
-| Missing terminate check | Loop exits only on maxSteps — wasteful | Scan `ToolResponseMessage` names for `"doTerminate"` in `act()` |
+| Pitfall                    | What happens                                         | Fix                                                             |
+| -------------------------- | ---------------------------------------------------- | --------------------------------------------------------------- |
+| Spring AI version mismatch | Compile errors or silent behavioral changes          | Use the BOM; lock all spring-ai versions to one release         |
+| Nginx SSE buffering        | Stutter / batched output instead of smooth streaming | `proxy_buffering off` + `proxy_cache off`                       |
+| Context window overrun     | LLM error or mid-response truncation                 | Bound `messageList` with a sliding window or token count check  |
+| SimpleVectorStore at scale | Slow startup + repeated embedding API costs          | Switch to PgVector for any persistent corpus                    |
+| Agent never terminates     | Runs to maxSteps every time, even on trivial tasks   | Always include `TerminateTool` in the tool set                  |
+| Missing terminate check    | Loop exits only on maxSteps — wasteful               | Scan `ToolResponseMessage` names for `"doTerminate"` in `act()` |
 
 ---
 
@@ -739,19 +744,19 @@ Build `ek-image-search-mcp-server` as a separate Spring Boot project with `sprin
 ### Backend
 
 ```bash
-# Configure keys (do not commit to version control)
+# Configure keys in application-local.yml (do not commit to version control)
 # spring.ai.dashscope.api-key: <your-key>
 # search-api.api-key: <your-searchapi.io-key>
 
 ./mvnw spring-boot:run
-# API at http://localhost:8123/api
-# Swagger UI: http://localhost:8123/api/swagger-ui.html
+# API at http://localhost:48124/api
+# Swagger UI: http://localhost:48124/api/doc.html
 ```
 
 ### Frontend
 
 ```bash
-cd ek-ai-agent-frontedend
+cd frontend
 npm install
 npm run dev
 # Dev server at http://localhost:5173
@@ -760,7 +765,7 @@ npm run dev
 ### MCP Image Search Server (optional)
 
 ```bash
-cd ek-image-search-mcp-server
+cd image-search-mcp-server
 ./mvnw package -DskipTests
 # Launched automatically by the main app via mcp-servers.json
 # Requires spring.pexels.api-key in application.yml
@@ -789,16 +794,14 @@ Circuit Agent/
 |           +-- documents/           Algorithm knowledge base (.md)
 |           +-- mcp-servers.json     MCP server configuration
 |
-+-- ek-ai-agent-frontedend/          Vue 3 + Vite frontend
++-- frontend/                        React 19 + Vite frontend
 |   +-- src/
-|   |   +-- views/                   Home, AlgorithmMaster, SuperAgent
-|   |   +-- components/              ChatRoom, AppFooter
-|   |   +-- api/index.js             SSE + REST client
-|   |   +-- router/index.js          Vue Router configuration
-|   +-- Dockerfile                   Multi-stage build (node -> nginx)
-|   +-- nginx.conf                   SPA routing + SSE proxy config
+|   |   +-- App.jsx                  Main app — chat logic, SSE, Demo Mode, mode switching
+|   |   +-- components/Sidebar.jsx   Document workspace with live + offline support
+|   |   +-- lib/api.js               Axios client + chatStream (EventSource)
+|   +-- public/favicon.svg           Custom wave-circle SVG brand icon
 |
-+-- ek-image-search-mcp-server/      Standalone MCP server
++-- image-search-mcp-server/         Standalone MCP server (Spring Boot 3.5.5)
     +-- src/main/java/.../
         +-- tools/ImageSearchTool.java   Pexels API integration
 ```
@@ -811,4 +814,3 @@ Circuit Agent/
 - [Spring AI Reference Documentation](https://docs.spring.io/spring-ai/reference/) — official Spring AI guides
 - [Model Context Protocol (MCP)](https://modelcontextprotocol.io/) — Anthropic's open tool protocol standard
 - [OpenManus](https://github.com/mannaandpoem/OpenManus) — open-source Agent framework that inspired the Agent hierarchy design
-
