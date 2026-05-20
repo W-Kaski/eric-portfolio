@@ -2,13 +2,34 @@
   "avatarUrl": "/avatar/avatar.jpg",
   "resumeUrl": "/resume/wangpengxiang_resume_ai.pdf",
   "skills": [
-    { "name": "PyTorch / Transformers", "level": 95 },
-    { "name": "Python", "level": 95 },
-    { "name": "LLM Fine-Tuning / RAG", "level": 90 },
-    { "name": "TypeScript / JavaScript", "level": 85 },
-    { "name": "Docker / Linux / Nginx", "level": 80 },
-    { "name": "Java / Spring Boot", "level": 80 },
-    { "name": "SQL / PGVector / Redis", "level": 75 }
+    {
+      "name": "PyTorch / Transformers",
+      "level": 95
+    },
+    {
+      "name": "Python",
+      "level": 95
+    },
+    {
+      "name": "LLM Fine-Tuning / RAG",
+      "level": 90
+    },
+    {
+      "name": "TypeScript / JavaScript",
+      "level": 85
+    },
+    {
+      "name": "Docker / Linux / Nginx",
+      "level": 80
+    },
+    {
+      "name": "Java / Spring Boot",
+      "level": 80
+    },
+    {
+      "name": "SQL / PGVector / Redis",
+      "level": 75
+    }
   ],
   "timeline": [
     {
@@ -18,14 +39,13 @@
     },
     {
       "year": "2026",
-      "role": "EK AI Agent",
-      "company": "Full-stack AI Agent platform · Spring AI + Java · RAG pipeline, ReAct loop, SSE streaming, PGVector"
+      "role": "Circuit Agent",
+      "company": "Full-stack AI Agent platform · Spring AI + Java 21 · RAG pipeline, ReAct loop, React 19 frontend, SSE streaming, PgVector"
     },
     {
       "year": "2025",
-      "role": "Cloud Gallery",
-      "company": "Cloud image platform · Spring Boot + Vue 3 · WebSocket collab editing, COS pipeline, color similarity search"
+      "role": "Image Workspace",
+      "company": "Cloud image platform · Spring Boot + Vue 3 · WebSocket collab editing, Cloudflare R2, color similarity search"
     }
-  
   ]
 }
