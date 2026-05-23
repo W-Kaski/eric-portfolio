@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef, useMemo } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { Play, Pause, RefreshCw, ChevronRight, MousePointer2, Plus } from 'lucide-react';
+import { useApp } from '../../context/AppContext';
 
 interface Point {
   x: number;
@@ -23,6 +24,7 @@ const COLORS = [
 ];
 
 export default function KMeansLab() {
+  const { t } = useApp();
   const [points, setPoints] = useState<Point[]>([]);
   const [centroids, setCentroids] = useState<Centroid[]>([]);
   const [k, setK] = useState(3);
@@ -206,12 +208,12 @@ export default function KMeansLab() {
       {/* Header Info */}
       <div className="flex justify-between items-center mb-8 border-b border-white/10 pb-6 text-white min-h-[64px]">
         <div>
-          <h3 className="text-[10px] font-bold tracking-[0.4em] uppercase mb-1">Unsupervised Learning</h3>
+          <h3 className="text-[10px] font-bold tracking-[0.4em] uppercase mb-1">{t('lab.kmeans.unsupervised')}</h3>
           <p className="text-[9px] text-white/40 uppercase tracking-widest font-medium">K-Means Iteration: {iteration}</p>
         </div>
         <div className="flex gap-4">
           <div className="px-4 flex items-center border-r border-white/10 text-[9px] uppercase tracking-widest text-white/40 font-bold">
-            Points: <span className="text-white ml-2">{points.length}</span>
+            {t('lab.kmeans.points')}<span className="text-white ml-2">{points.length}</span>
           </div>
           <button 
             onClick={() => setIsPlaying(!isPlaying)}
@@ -257,7 +259,7 @@ export default function KMeansLab() {
           {/* Cluster Count */}
           <div>
             <div className="flex items-center gap-2 mb-4 text-[10px] font-bold uppercase tracking-widest text-white/60">
-              Number of Clusters (K)
+              {t('lab.kmeans.numClusters')}
             </div>
             <div className="flex gap-2">
               {[2, 3, 4, 5].map(val => (
@@ -291,7 +293,7 @@ export default function KMeansLab() {
             </button>
 
             <p className="text-[8px] text-white/30 uppercase tracking-widest leading-relaxed pt-2">
-              The algorithm converges when centroids stop moving. Use "Clear Canvas" to remove all points.
+              {t('lab.kmeans.convergeHint')}
             </p>
           </div>
         </div>

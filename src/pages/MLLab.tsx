@@ -455,7 +455,7 @@ export default function MLLab() {
                     th: ({ children }) => <th className="px-4 py-3 text-left text-xs font-bold uppercase tracking-widest text-brand-muted">{children}</th>,
                     td: ({ children }) => <td className="px-4 py-3 text-brand-text/80 border-t border-brand-border/20">{children}</td>,
                     img: ({ src, alt }) => <img src={src} alt={alt} className="rounded-lg max-w-full my-6 border border-brand-border/30" />,
-                    code({ node, className, children, ...props }: any) {
+                    code({ className, children }: any) {
                       const match = /language-(\w+)/.exec(className || '');
                       const lang = match ? match[1] : '';
                       const codeContent = String(children).replace(/\n$/, '');
@@ -476,7 +476,6 @@ export default function MLLab() {
                               language={lang || 'text'}
                               PreTag="div"
                               customStyle={{ margin: 0, padding: '1.25rem 1.5rem', fontSize: '0.825rem', lineHeight: '1.7', background: '#1e1e1e' }}
-                              {...props}
                             >
                               {codeContent}
                             </SyntaxHighlighter>
@@ -484,7 +483,7 @@ export default function MLLab() {
                         );
                       }
                       return (
-                        <code className="px-1.5 py-0.5 rounded bg-brand-text/10 font-mono text-[0.85em] text-brand-text border border-brand-border/30" {...props}>
+                        <code className="px-1.5 py-0.5 rounded bg-brand-text/10 font-mono text-[0.85em] text-brand-text border border-brand-border/30">
                           {children}
                         </code>
                       );

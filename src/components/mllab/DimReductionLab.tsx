@@ -1,10 +1,12 @@
 import React, { useMemo, useState } from 'react';
 import { Canvas } from '@react-three/fiber';
 import { OrbitControls, Stars } from '@react-three/drei';
+import { useApp } from '../../context/AppContext';
 
 type Algorithm = 'pca' | 'tsne' | 'umap';
 
 export default function DimReductionLab() {
+  const { t } = useApp();
   const [algo, setAlgo] = useState<Algorithm>('tsne');
 
   const points = useMemo(() => {
@@ -67,7 +69,7 @@ export default function DimReductionLab() {
       </div>
       
       <div className="absolute bottom-8 left-8 z-10 pointer-events-none text-brand-muted text-[9px] font-bold tracking-widest uppercase opacity-40">
-        Orbit: Drag / Zoom: Scroll
+        {t('lab.dim.orbitHint')}
       </div>
     </div>
   );

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { Database, Search, ChevronRight, FileText } from 'lucide-react';
+import { useApp } from '../../context/AppContext';
 
 const vectorDB = [
   { id: 1, text: "The quick brown fox jumps over the lazy dog.", coords: [20, 30] },
@@ -11,6 +12,7 @@ const vectorDB = [
 ];
 
 export default function RAGExplorerLab() {
+  const { t } = useApp();
   const [query, setQuery] = useState("How does neural network optimization work?");
   const [step, setStep] = useState(0); 
   // steps: 0 (idle), 1 (embedding query), 2 (searching space), 3 (retrieving), 4 (augmented prompt)
@@ -54,10 +56,10 @@ export default function RAGExplorerLab() {
             onClick={playSimulation}
             disabled={step > 0}
           >
-            Run
+            {t('lab.rag.run')}
           </button>
         </div>
-        <button onClick={reset} className="text-xs text-white/50 uppercase font-bold tracking-widest hover:text-white transition-colors">Reset</button>
+        <button onClick={reset} className="text-xs text-white/50 uppercase font-bold tracking-widest hover:text-white transition-colors">{t('lab.rag.reset')}</button>
       </div>
 
       <div className="flex flex-grow gap-6">
@@ -65,7 +67,7 @@ export default function RAGExplorerLab() {
         <div className="w-1/3 flex flex-col gap-4 border-r border-white/10 pr-6">
           <div className={`p-4 rounded border transition-all duration-500 ${step >= 1 ? 'border-emerald-500/50 bg-emerald-500/5' : 'border-white/10 opacity-40'}`}>
             <h3 className="text-[10px] font-bold uppercase tracking-widest text-white/60 mb-2">1. Embedding Model</h3>
-            <p className="text-xs font-mono text-white/90">text-embedding-v3</p>
+            <p className="text-xs font-mono text-white/90">{t('lab.rag.embeddingModel')}</p>
             {step === 1 && (
               <motion.div initial={{width:0}} animate={{width:'100%'}} className="h-0.5 bg-emerald-500 mt-2" transition={{duration: 1.5}}/>
             )}
@@ -75,7 +77,7 @@ export default function RAGExplorerLab() {
             <h3 className="text-[10px] font-bold uppercase tracking-widest text-white/60 mb-2">2. Vector Database</h3>
             <div className="flex items-center gap-2">
               <Database size={14} className="text-emerald-500"/>
-              <span className="text-xs font-mono text-white/90">PGVector Search</span>
+              <span className="text-xs font-mono text-white/90">{t('lab.rag.pgvector')}</span>
             </div>
           </div>
 
@@ -85,7 +87,7 @@ export default function RAGExplorerLab() {
                 initial={{opacity: 0, y: 10}} animate={{opacity: 1, y: 0}}
                 className="p-4 rounded border border-emerald-500/50 bg-emerald-500/5 mt-auto"
               >
-                <h3 className="text-[10px] font-bold uppercase tracking-widest text-emerald-400 mb-2">Retrieved Context</h3>
+                <h3 className="text-[10px] font-bold uppercase tracking-widest text-emerald-400 mb-2">{t('lab.rag.retrievedContext')}</h3>
                 {topK.map(k => (
                   <div key={k.id} className="text-[9px] text-white/80 font-mono mb-1 truncate border-l-2 border-emerald-500/50 pl-2">
                     {k.text}
@@ -131,12 +133,12 @@ export default function RAGExplorerLab() {
               className="absolute inset-0 bg-black/80 flex flex-col items-center justify-center p-6 backdrop-blur-sm z-20"
             >
               <FileText size={32} className="text-white mb-4" />
-              <h2 className="text-lg font-bold uppercase tracking-widest text-white mb-4">Prompt Augmented</h2>
+              <h2 className="text-lg font-bold uppercase tracking-widest text-white mb-4">{t('lab.rag.promptAugmented')}</h2>
               <div className="bg-[#0a0a0a] border border-white/10 p-4 rounded text-left w-full max-w-lg shadow-2xl">
-                <p className="text-[10px] text-white/50 font-mono mb-2">SYSTEM: Answer the user's question using the provided context.</p>
-                <p className="text-xs text-white/90 font-mono mb-1">CONTEXT:</p>
+                <p className="text-[10px] text-white/50 font-mono mb-2">{t('lab.rag.systemPrompt')}</p>
+                <p className="text-xs text-white/90 font-mono mb-1">{t('lab.rag.contextLabel')}</p>
                 {topK.map(k => <p key={k.id} className="text-xs text-emerald-400 font-mono border-l border-emerald-500/50 pl-2 mb-1">{k.text}</p>)}
-                <p className="text-xs text-white/90 font-mono mt-4 mb-1">USER QUERY: {query}</p>
+                <p className="text-xs text-white/90 font-mono mt-4 mb-1">{t('lab.rag.userQueryLabel')}{query}</p>
               </div>
             </motion.div>
           )}

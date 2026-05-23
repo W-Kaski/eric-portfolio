@@ -1,12 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'motion/react';
 import { RefreshCw, Play, Pause, Zap } from 'lucide-react';
+import { useApp } from '../../context/AppContext';
 
 const GRID_SIZE = 5;
 const GOAL = { x: 4, y: 4 };
 const TRAP = { x: 2, y: 2 };
 
 export default function RLLab() {
+  const { t } = useApp();
   const [isPlaying, setIsPlaying] = useState(true);
   const [agentPos, setAgentPos] = useState({ x: 0, y: 0 });
   const [episode, setEpisode] = useState(1);
@@ -61,8 +63,8 @@ export default function RLLab() {
         <div>
           <h3 className="text-[10px] font-bold tracking-[0.4em] uppercase mb-2">Q-Learning Dashboard</h3>
           <div className="flex gap-6 text-[9px] font-bold tracking-widest uppercase">
-            <span className="text-white/60">EPISODE: <span className="text-white">{episode}</span></span>
-            <span className={score < 0 ? 'text-red-400' : 'text-emerald-400 font-black'}>REWARD: {score}</span>
+            <span className="text-white/60">{t('lab.rl.episode')}<span className="text-white">{episode}</span></span>
+            <span className={score < 0 ? 'text-red-400' : 'text-emerald-400 font-black'}>{t('lab.rl.reward')}{score}</span>
           </div>
         </div>
 
@@ -108,8 +110,8 @@ export default function RLLab() {
                 )}
                 
                 {/* Labels */}
-                {!isAgent && isGoal && <span className="text-xs font-black text-white uppercase tracking-tighter">GOAL</span>}
-                {!isAgent && isTrap && <span className="text-xs font-black text-white uppercase tracking-tighter">TRAP</span>}
+                {!isAgent && isGoal && <span className="text-xs font-black text-white uppercase tracking-tighter">{t('lab.rl.goal')}</span>}
+                {!isAgent && isTrap && <span className="text-xs font-black text-white uppercase tracking-tighter">{t('lab.rl.trap')}</span>}
               </div>
             );
           })}

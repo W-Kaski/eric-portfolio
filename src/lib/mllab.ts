@@ -30,8 +30,8 @@ export async function getAllLabs(): Promise<LabData[]> {
       const raw = await (loader as () => Promise<string>)();
       const { data, content: body } = matter(raw);
       const parts = path.split('/');
-      const id = parts[parts.length - 1].replace('.md', '');
-      let folder = parts.length >= 5 ? parts[parts.length - 2] : 'General';
+      const id = (parts.at(-1) || '').replace('.md', '');
+      let folder = parts.length >= 5 ? (parts.at(-2) || 'General') : 'General';
       if (folder === 'mllab') folder = 'General';
       const date = data.date ? new Date(data.date).toISOString().split('T')[0] : '';
       return {

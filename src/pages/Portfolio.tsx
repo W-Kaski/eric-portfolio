@@ -126,7 +126,7 @@ export default function Portfolio() {
   }, [projectsData]);
 
   const maxYear = years[0] ?? new Date().getFullYear();
-  const minYear = years[years.length - 1] ?? maxYear;
+  const minYear = years.at(-1) ?? maxYear;
 
   const maxScrollLeft = useMemo(() => {
     if (projectsWithPos.length === 0) return 0;

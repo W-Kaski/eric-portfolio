@@ -28,7 +28,7 @@ export default function NNVisualizerLab() {
     <div className="h-full flex flex-col p-8 bg-transparent">
       {/* Header controls */}
       <div className="flex justify-between items-center mb-8 border-b border-white/10 pb-6 text-white">
-        <h3 className="text-[10px] font-bold tracking-[0.4em] uppercase">Feedforward Network</h3>
+        <h3 className="text-[10px] font-bold tracking-[0.4em] uppercase">{t('lab.nn.feedforward')}</h3>
         <div className="flex gap-4">
           <button onClick={() => setIsPlaying(!isPlaying)} className="px-6 py-2 bg-white/5 border border-white/20 text-white hover:bg-white/10 transition-colors flex items-center gap-3 text-[9px] font-bold uppercase tracking-[0.2em]">
             {isPlaying ? <Pause size={12} /> : <Play size={12} />}

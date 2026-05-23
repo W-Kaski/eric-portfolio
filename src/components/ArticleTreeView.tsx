@@ -9,7 +9,7 @@ interface TreeNode {
   name: string;
   path: string;
   isDirectory: boolean;
-  children: Record<string, TreeNode>;
+  children: Map<string, TreeNode>;
   articles: ArticleMeta[];
 }
 
@@ -23,7 +23,7 @@ export function ArticleTreeView({ articles }: { articles: ArticleMeta[] }) {
       name: 'root',
       path: '',
       isDirectory: true,
-      children: {},
+      children: new Map(),
       articles: []
     };
 
@@ -32,16 +32,16 @@ export function ArticleTreeView({ articles }: { articles: ArticleMeta[] }) {
       // Building the hierarchy
       article.pathSegments.forEach((segment, index) => {
         const segPath = article.pathSegments.slice(0, index + 1).join('/');
-        if (!current.children[segment]) {
-          current.children[segment] = {
+        if (!current.children.has(segment)) {
+          current.children.set(segment, {
             name: segment,
             path: segPath,
             isDirectory: true,
-            children: {},
+            children: new Map(),
             articles: []
-          };
+          });
         }
-        current = current.children[segment];
+        current = current.children.get(segment)!;
       });
       // Add article to the final folder
       current.articles.push(article);
@@ -69,7 +69,7 @@ export function ArticleTreeView({ articles }: { articles: ArticleMeta[] }) {
       </div>
 
       <div className="space-y-1">
-        {Object.values(tree.children).map(node => (
+        {Array.from(tree.children.values()).map(node => (
           <TreeFolder key={node.path} node={node} level={0} onNavigate={(id) => navigate(`/articles/${id}`)} expandTrigger={expandTrigger} collapseTrigger={collapseTrigger} />
         ))}
         {tree.articles.map(article => (
@@ -86,7 +86,7 @@ function TreeFolder({ node, level, onNavigate, expandTrigger, collapseTrigger }:
   useEffect(() => { if (expandTrigger > 0) setIsOpen(true); }, [expandTrigger]);
   useEffect(() => { if (collapseTrigger > 0) setIsOpen(level < 1 ? true : false); }, [collapseTrigger]); // Kept root open
 
-  const hasChildren = Object.keys(node.children).length > 0 || node.articles.length > 0;
+  const hasChildren = node.children.size > 0 || node.articles.length > 0;
 
   return (
     <div className="w-full">
@@ -117,7 +117,7 @@ function TreeFolder({ node, level, onNavigate, expandTrigger, collapseTrigger }:
             transition={{ duration: 0.2 }}
             className="overflow-hidden"
           >
-            {Object.values(node.children).map(childNode => (
+            {Array.from(node.children.values()).map(childNode => (
               <TreeFolder key={childNode.path} node={childNode} level={level + 1} onNavigate={onNavigate} expandTrigger={expandTrigger} collapseTrigger={collapseTrigger} />
             ))}
             {node.articles.map(article => (

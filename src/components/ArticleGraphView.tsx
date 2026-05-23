@@ -69,19 +69,19 @@ export function ArticleGraphView({ articles }: { articles: ArticleMeta[] }) {
     ];
     
     // Categorical Colors (Deterministic)
-    const categoryColorMap: Record<string, string> = {
-      'A Symbolic AI': '#EF476F',
-      'B Connectionist AI': '#118AB2',
-      'C Evolutionary Computation': '#06D6A0',
-      'D Decision, Causality & Game Theory': '#FFD166',
-      'E AI Systems & Engineering': '#8338EC',
-      'F AI Safety & Society': '#FB5607',
-      'G Cross-Disciplinary & Emerging Directions': '#3A86FF',
-      'papers': '#073B4C'
-    };
+    const categoryColorMap = new Map<string, string>([
+      ['A Symbolic AI', '#EF476F'],
+      ['B Connectionist AI', '#118AB2'],
+      ['C Evolutionary Computation', '#06D6A0'],
+      ['D Decision, Causality & Game Theory', '#FFD166'],
+      ['E AI Systems & Engineering', '#8338EC'],
+      ['F AI Safety & Society', '#FB5607'],
+      ['G Cross-Disciplinary & Emerging Directions', '#3A86FF'],
+      ['papers', '#073B4C']
+    ]);
 
     const getGroupColor = (group: string) => {
-      return categoryColorMap[group] || '#94a3b8'; // fallback to slate-400
+      return categoryColorMap.get(group) || '#94a3b8'; // fallback to slate-400
     };
 
     // Canvas Setup

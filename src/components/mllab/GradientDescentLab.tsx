@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef, useMemo } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { Play, Pause, RefreshCw, ChevronRight, Settings2 } from 'lucide-react';
+import { useApp } from '../../context/AppContext';
 
 // --- Math Utilities ---
 const FUNCTIONS = {
@@ -26,6 +27,7 @@ const GRADIENTS = {
 type FuncType = keyof typeof FUNCTIONS;
 
 export default function GradientDescentLab() {
+  const { t } = useApp();
   const [funcType, setFuncType] = useState<FuncType>('quadratic');
   const [lr, setLr] = useState(0.1);
   const [momentum, setMomentum] = useState(0);
@@ -170,8 +172,8 @@ export default function GradientDescentLab() {
       {/* Header Info */}
       <div className="flex justify-between items-center mb-8 border-b border-white/10 pb-6 text-white min-h-[64px]">
         <div>
-          <h3 className="text-[10px] font-bold tracking-[0.4em] uppercase mb-1">Foundational Optimization</h3>
-          <p className="text-[9px] text-white/40 uppercase tracking-widest font-medium">Gradient Descent Trajectory</p>
+          <h3 className="text-[10px] font-bold tracking-[0.4em] uppercase mb-1">{t('lab.gradient.foundational')}</h3>
+          <p className="text-[9px] text-white/40 uppercase tracking-widest font-medium">{t('lab.gradient.trajectory')}</p>
         </div>
         <div className="flex gap-4">
           <button 
@@ -210,7 +212,7 @@ export default function GradientDescentLab() {
             }}
           />
           <div className="absolute bottom-4 left-4 text-[9px] text-white/20 uppercase tracking-[0.2em]">
-            Click anywhere to teleport the point
+            {t('lab.gradient.teleportHint')}
           </div>
         </div>
 
@@ -240,7 +242,7 @@ export default function GradientDescentLab() {
           <div className="space-y-6">
             <div className="space-y-3">
               <div className="flex justify-between text-[9px] uppercase tracking-widest">
-                <span className="text-white/40">Learning Rate</span>
+                <span className="text-white/40">{t('lab.gradient.learningRate')}</span>
                 <span className="text-white">{lr.toFixed(3)}</span>
               </div>
               <input 
@@ -252,7 +254,7 @@ export default function GradientDescentLab() {
 
             <div className="space-y-3">
               <div className="flex justify-between text-[9px] uppercase tracking-widest">
-                <span className="text-white/40">Momentum</span>
+                <span className="text-white/40">{t('lab.gradient.momentum')}</span>
                 <span className="text-white">{momentum.toFixed(2)}</span>
               </div>
               <input 

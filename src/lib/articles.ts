@@ -60,8 +60,8 @@ function _extractOutboundLinks(body: string): string[] {
 function _parseMeta(path: string, raw: string): ArticleMeta {
   const { data: fm, content: body } = matter(raw);
   const parts = path.split("/");
-  const folder = parts[parts.length - 2];
-  const id = parts[parts.length - 1].replace(".md", "");
+  const folder = parts.at(-2) || "root";
+  const id = (parts.at(-1) || "").replace(".md", "");
   const prefix = "/src/content/articles/";
   const rel = path.startsWith(prefix) ? path.slice(prefix.length) : path;
   const pathSegments = rel.split("/").slice(0, -1);

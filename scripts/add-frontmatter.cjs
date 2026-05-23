@@ -83,7 +83,11 @@ const ARTICLES_DIR = path.resolve(__dirname, "../src/content/articles");
 
 function walkDir(dir, callback) {
   for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
-    const full = path.join(dir, entry.name);
+    const joined = path.join(dir, entry.name);
+    const full = path.normalize(joined);
+    if (!full.startsWith(ARTICLES_DIR)) {
+      throw new Error("Invalid path traversal detected: " + full);
+    }
     if (entry.isDirectory()) {
       walkDir(full, callback);
     } else if (entry.isFile() && entry.name.endsWith(".md")) {
@@ -99,7 +103,11 @@ let skipped = 0;
 let total = 0;
 
 walkDir(ARTICLES_DIR, (absPath) => {
-  const rel = path.relative(ARTICLES_DIR, absPath).replace(/\\/g, "/");
+  const normalizedPath = path.normalize(absPath);
+  if (!normalizedPath.startsWith(ARTICLES_DIR)) {
+    throw new Error("Invalid path traversal detected: " + normalizedPath);
+  }
+  const rel = path.relative(ARTICLES_DIR, normalizedPath).replace(/\\/g, "/");
 
   // Never touch paper articles
   if (rel.startsWith("papers/")) {
@@ -108,14 +116,14 @@ walkDir(ARTICLES_DIR, (absPath) => {
   }
 
   total++;
-  const raw = fs.readFileSync(absPath, "utf8");
+  const raw = fs.readFileSync(normalizedPath, "utf8");
 
   if (hasTitleField(raw)) {
     // Already has a title — leave it alone
     return;
   }
 
-  const filename = path.basename(absPath);
+  const filename = path.basename(normalizedPath);
   const title = cleanTitle(filename);
   const range = getDateRange(rel);
   const date = dateForPath(rel, range.start, range.end);
@@ -124,7 +132,7 @@ walkDir(ARTICLES_DIR, (absPath) => {
   if (DRY_RUN) {
     console.log(`[DRY] ${rel}\n  → title: "${title}", date: ${date}\n`);
   } else {
-    fs.writeFileSync(absPath, updated, "utf8");
+    fs.writeFileSync(normalizedPath, updated, "utf8");
     console.log(`UPDATED  ${rel}`);
   }
   modified++;

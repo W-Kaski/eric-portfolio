@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'motion/react';
 import { Bot, Search, Terminal, FileCode2, Check } from 'lucide-react';
+import { useApp } from '../../context/AppContext';
 
 const steps = [
   { id: 1, type: "thought", text: "User wants weather in Tokyo and its Fahrenheit equivalent. I need to get the current weather first." },
@@ -14,6 +15,7 @@ const steps = [
 ];
 
 export default function ReActAgentLab() {
+  const { t } = useApp();
   const [currentStepIndex, setCurrentStepIndex] = useState(-1);
   const [playing, setPlaying] = useState(false);
 
@@ -37,8 +39,8 @@ export default function ReActAgentLab() {
     <div className="h-full flex flex-col p-6 bg-transparent relative">
       <div className="flex items-center justify-between gap-4 mb-6 pb-6 border-b border-white/10">
         <div className="flex flex-col">
-          <span className="text-[10px] font-bold tracking-widest text-white/50 uppercase mb-1">User Prompt</span>
-          <span className="text-sm font-mono text-white/90">Find the weather in Tokyo and calculate its celsius to fahrenheit.</span>
+          <span className="text-[10px] font-bold tracking-widest text-white/50 uppercase mb-1">{t('lab.react.userPrompt')}</span>
+          <span className="text-sm font-mono text-white/90">{t('lab.react.defaultPrompt')}</span>
         </div>
         <button 
           onClick={startReAct}
@@ -103,7 +105,7 @@ export default function ReActAgentLab() {
             className="flex items-center gap-3 p-4 text-white/50"
           >
             <div className="w-4 h-4 border-2 border-white/50 border-t-white rounded-full animate-spin" />
-            <span className="text-[10px] font-bold uppercase tracking-widest text-white/60">Agent is processing...</span>
+            <span className="text-[10px] font-bold uppercase tracking-widest text-white/60">{t('lab.react.processing')}</span>
           </motion.div>
         )}
       </div>

@@ -181,7 +181,7 @@ export default function DecisionBoundaryLab() {
         {points.length === 0 && (
           <div className="absolute inset-0 flex flex-col items-center justify-center text-white/30 pointer-events-none">
             <MousePointer2 size={24} className="mb-3 opacity-30" />
-            <p className="text-[10px] font-bold tracking-[0.3em] uppercase text-center">Add Data Points</p>
+            <p className="text-[10px] font-bold tracking-[0.3em] uppercase text-center">{t('lab.decision.addDataPoints')}</p>
           </div>
         )}
       </div>

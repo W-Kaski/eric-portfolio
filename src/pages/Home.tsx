@@ -130,19 +130,36 @@ const GenerativeProjectVisual = ({ seed, active = false, index }: { seed: string
             />
          ))}
          {rings.map((r, i) => {
-            const props = {
-              fill: "none", 
-              stroke: "currentColor", 
-              strokeWidth: "0.3", 
-              strokeOpacity: r.opacity,
-              strokeDasharray: r.dash !== 'none' ? r.dash : undefined,
-              animate: active ? { rotate: r.reverse ? -360 : 360 } : { rotate: 0 },
-              transition: { duration: r.speed, repeat: Infinity, ease: "linear" as const }
-            };
             if (shapeType === 0) {
-              return <motion.circle key={`ring-${i}`} cx="0" cy="0" r={r.radius} {...props} />;
+              return (
+                <motion.circle
+                  key={`ring-${i}`}
+                  cx="0"
+                  cy="0"
+                  r={r.radius}
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="0.3"
+                  strokeOpacity={r.opacity}
+                  strokeDasharray={r.dash !== 'none' ? r.dash : undefined}
+                  animate={active ? { rotate: r.reverse ? -360 : 360 } : { rotate: 0 }}
+                  transition={{ duration: r.speed, repeat: Infinity, ease: "linear" }}
+                />
+              );
             } else {
-              return <motion.polygon key={`ring-${i}`} points={getPolygonPoints(shapeType === 1 ? 3 : 4, r.radius)} {...props} />;
+              return (
+                <motion.polygon
+                  key={`ring-${i}`}
+                  points={getPolygonPoints(shapeType === 1 ? 3 : 4, r.radius)}
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="0.3"
+                  strokeOpacity={r.opacity}
+                  strokeDasharray={r.dash !== 'none' ? r.dash : undefined}
+                  animate={active ? { rotate: r.reverse ? -360 : 360 } : { rotate: 0 }}
+                  transition={{ duration: r.speed, repeat: Infinity, ease: "linear" }}
+                />
+              );
             }
          })}
          {nodes.map((node, i) => (
@@ -179,6 +196,7 @@ const GenerativeProjectVisual = ({ seed, active = false, index }: { seed: string
  */
 const ProjectStack = ({ projects, hoveredId, onHover }: { projects: ProjectData[], hoveredId: string | null, onHover: (id: string | null) => void }) => {
   const navigate = useNavigate();
+  const { t } = useApp();
   return (
     <div className="relative w-full aspect-square flex items-center justify-center translate-y-[-5%] scale-95 perspective-[1000px]">
       <AnimatePresence>
@@ -222,7 +240,7 @@ const ProjectStack = ({ projects, hoveredId, onHover }: { projects: ProjectData[
                     ))}
                   </div>
                   <div className="space-y-1">
-                    <span className="text-[8px] font-mono text-brand-muted/50 uppercase tracking-[0.3em]">Project.v{i+1}</span>
+                    <span className="text-[8px] font-mono text-brand-muted/50 uppercase tracking-[0.3em]">{t('Project.v')}{i+1}</span>
                     <h4 className="text-xl font-bold tracking-tight text-brand-text uppercase leading-none">{project.title}</h4>
                   </div>
                 </div>
@@ -385,7 +403,7 @@ const scenes = [
                   </div>
                 </motion.div>
                 <div className="absolute top-4 left-1/2 -translate-x-1/2 -translate-y-full bg-brand-text text-brand-bg px-3 py-1.5 rounded-sm shadow-md opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
-                  <span className="text-[9px] font-bold tracking-[0.2em] uppercase whitespace-nowrap">Click · Explore</span>
+                  <span className="text-[9px] font-bold tracking-[0.2em] uppercase whitespace-nowrap">{t('Click · Explore')}</span>
                   <div className="absolute bottom-0 left-1/2 -translate-x-1/2 translate-y-1/2 w-2 h-2 bg-brand-text rotate-45" />
                 </div>
               </motion.div>
@@ -398,7 +416,7 @@ const scenes = [
         </div>
 
         <motion.div animate={{ y: [0, 8, 0] }} transition={{ duration: 2, repeat: Infinity }} className="absolute bottom-8 left-1/2 -translate-x-1/2 text-brand-muted opacity-40 flex flex-col items-center gap-2">
-          <span className="text-[8px] font-bold tracking-widest uppercase mb-1">Scroll to Explore</span>
+          <span className="text-[8px] font-bold tracking-widest uppercase mb-1">{t('Scroll to Explore')}</span>
           <ChevronDown size={24} />
         </motion.div>
       </section>
@@ -463,7 +481,7 @@ const scenes = [
 
             {/* In a real scenario, you can add an 'All Labs' link if needed, or keep it perfectly aligned with 'Explore Work' */}
             <Link to="/ml-lab" className="inline-flex items-center gap-2 text-sm font-bold uppercase tracking-widest hover:text-brand-muted transition-colors">
-              Enter Laboratory <ArrowRight size={16} />
+              {t('Enter Laboratory ')} <ArrowRight size={16} />
             </Link>
           </div>
 
@@ -507,7 +525,7 @@ const scenes = [
                     </div>
                     <div className="flex items-center gap-4">
                        <span className="hidden md:inline-block text-[8px] font-mono text-brand-muted/30 opacity-0 group-hover:opacity-100 transition-opacity">
-                         ID: ARTICLE_REC_{article.id.substring(0, 4).toUpperCase()}
+                         {t('ID: ARTICLE_REC_')}{article.id.substring(0, 4).toUpperCase()}
                        </span>
                        <BookOpen size={18} className="text-brand-muted group-hover:text-brand-text transition-colors" />
                     </div>
@@ -540,7 +558,7 @@ const scenes = [
 
                <div className="space-y-8 relative">
                   <a href={`mailto:${siteConfig?.email}`} className="group/email block">
-                    <span className="text-[10px] font-mono font-bold uppercase tracking-widest text-brand-muted/60 mb-2 block">Direct Access</span>
+                    <span className="text-[10px] font-mono font-bold uppercase tracking-widest text-brand-muted/60 mb-2 block">{t('Direct Access')}</span>
                     <span className="block text-base md:text-xl font-bold hover:text-brand-muted transition-all duration-500 truncate decoration-brand-border underline underline-offset-8">
                        {siteConfig?.email}
                     </span>

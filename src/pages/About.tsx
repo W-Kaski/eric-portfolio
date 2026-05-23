@@ -23,7 +23,7 @@ export default function About() {
       <section className="flex flex-col lg:flex-row items-center lg:items-end gap-12 mb-32 relative">
         {/* Background Watermark */}
         <div className="absolute -top-10 -left-10 text-[180px] font-black text-brand-text/[0.015] select-none pointer-events-none tracking-tighter uppercase whitespace-nowrap">
-           IDENTITY
+           {t('about.identity')}
         </div>
 
         {/* Avatar Frame - Industrial Square */}

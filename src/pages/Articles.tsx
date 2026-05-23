@@ -236,9 +236,11 @@ export default function Articles() {
                       const id = String(children).toLowerCase().replace(/[^\w\s-]/g, '').replace(/\s+/g, '-');
                       return <h3 id={id} className="text-xl font-bold mt-8 mb-3">{children}</h3>;
                     },
-                    code({ node, inline, className, children, ...props }: any) {
+                    code({ className, children }: any) {
                       const match = /language-(\w+)/.exec(className || '');
-                      return !inline && match ? (
+                      const codeContent = String(children).replace(/\n$/, '');
+                      const isBlock = match || codeContent.includes('\n');
+                      return isBlock ? (
                         <div className="my-10 rounded-2xl overflow-hidden border border-brand-border bg-brand-card/50 shadow-2xl backdrop-blur-sm">
                           <div className="flex items-center justify-between px-5 py-3 bg-brand-text/5 border-b border-brand-border">
                             <span className="text-[10px] font-bold tracking-[0.2em] uppercase text-brand-muted/80">{match[1]}</span>
@@ -259,13 +261,12 @@ export default function Articles() {
                               lineHeight: '1.7',
                               background: 'transparent',
                             }}
-                            {...props}
                           >
-                            {String(children).replace(/\n$/, '')}
+                            {codeContent}
                           </SyntaxHighlighter>
                         </div>
                       ) : (
-                        <code className={cn("px-1.5 py-0.5 rounded bg-brand-text/10 font-mono text-sm", className)} {...props}>
+                        <code className={cn("px-1.5 py-0.5 rounded bg-brand-text/10 font-mono text-sm", className)}>
                           {children}
                         </code>
                       );
@@ -350,7 +351,7 @@ export default function Articles() {
           {/* Main Grid: Articles (65%) */}
           <div className="lg:col-span-8 space-y-12">
             <div className="flex items-center gap-4 mb-8">
-              <h2 className="text-xs font-black uppercase tracking-[0.3em] text-brand-muted">Core Articles</h2>
+              <h2 className="text-xs font-black uppercase tracking-[0.3em] text-brand-muted">{t('Core Articles')}</h2>
               <div className="flex-grow h-px bg-brand-border/20" />
             </div>
 
@@ -401,7 +402,7 @@ export default function Articles() {
             {totalPages > 1 && (
               <div className="flex items-center justify-between mt-8 border-t border-brand-border/40 pt-4">
                 <div className="text-[10px] text-brand-muted/60 font-bold uppercase tracking-widest">
-                  Page {currentPage} / {totalPages}
+                  {t('Page')} {currentPage} / {totalPages}
                 </div>
                 <div className="flex items-center gap-2">
                   <button
@@ -426,7 +427,7 @@ export default function Articles() {
           {/* Sidebar: Research Papers (35%) */}
           <div className="lg:col-span-4 space-y-12 bg-brand-card/20 p-8 border border-brand-border/30 backdrop-blur-sm self-start">
             <div className="flex items-center gap-4 mb-8">
-              <h2 className="text-xs font-black uppercase tracking-[0.3em] text-brand-text">Research / Papers</h2>
+              <h2 className="text-xs font-black uppercase tracking-[0.3em] text-brand-text">{t('Research / Papers')}</h2>
               <div className="flex-grow h-px bg-brand-text/10" />
             </div>
 
@@ -442,7 +443,7 @@ export default function Articles() {
                     className="group cursor-pointer space-y-3 border-b border-brand-border/20 pb-8 last:border-0"
                   >
                     <div className="flex items-center justify-between gap-3">
-                      <span className="text-[8px] font-mono p-1 bg-brand-text/5 text-brand-muted border border-brand-border/40">DOC_{index + 1}</span>
+                      <span className="text-[8px] font-mono p-1 bg-brand-text/5 text-brand-muted border border-brand-border/40">{t('DOC_')}{index + 1}</span>
                       <span className="text-[8px] font-mono text-brand-muted/40 uppercase tracking-widest">{paper.date}</span>
                     </div>
                     <h4 className="text-sm font-black uppercase tracking-tight group-hover:text-brand-text transition-colors leading-snug">
@@ -452,14 +453,14 @@ export default function Articles() {
                 ))
               ) : (
                 <div className="py-12 text-center text-[9px] text-brand-muted/40 italic">
-                  NO PUBLISHED PAPERS FOUND.
+                  {t('NO PUBLISHED PAPERS FOUND.')}
                 </div>
               )}
             </div>
 
             <div className="pt-8 border-t border-brand-border/20">
               <p className="text-[9px] leading-relaxed text-brand-muted/60 font-light">
-                Academic research focusing on geometric machine learning, latent space navigation, and human-computer interaction patterns.
+                {t('Academic research focusing on geometric machine learning, latent space navigation, and human-computer interaction patterns.')}
               </p>
             </div>
           </div>

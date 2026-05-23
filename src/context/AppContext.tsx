@@ -46,7 +46,13 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
 
   const t = (key: string) => {
     if (!translations) return key;
-    return translations[lang]?.[key] || key;
+    const transMap = new Map<string, Record<string, string>>(Object.entries(translations));
+    const langDict = transMap.get(lang);
+    if (langDict) {
+      const dictMap = new Map<string, string>(Object.entries(langDict));
+      return dictMap.get(key) || key;
+    }
+    return key;
   };
 
   return (

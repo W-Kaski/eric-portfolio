@@ -1,9 +1,9 @@
 import React from 'react';
 import Navbar from './Navbar';
-// ...existing code...
 import { motion } from 'motion/react';
 import { useLocation } from 'react-router-dom';
 import { useConfig } from '../context/ConfigContext';
+import { useApp } from '../context/AppContext';
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -11,6 +11,7 @@ interface LayoutProps {
 
 export default function Layout({ children }: LayoutProps) {
   const { siteConfig, loading } = useConfig();
+  const { t } = useApp();
   const location = useLocation();
 
   if (loading) {
@@ -24,8 +25,8 @@ export default function Layout({ children }: LayoutProps) {
   if (!siteConfig) {
     return (
       <div className="min-h-screen w-full flex flex-col items-center justify-center bg-brand-bg text-brand-text gap-4">
-        <h2 className="text-xl font-bold text-red-500">Configuration Error</h2>
-        <p className="text-brand-muted">Failed to load site configuration. Please check your JSON files for syntax errors.</p>
+        <h2 className="text-xl font-bold text-red-500">{t('Configuration Error')}</h2>
+        <p className="text-brand-muted">{t('Failed to load site configuration. Please check your JSON files for syntax errors.')}</p>
       </div>
     );
   }

@@ -12,11 +12,11 @@ import { getAllProjects, ProjectData } from '../lib/projects';
 import { useApp } from '../context/AppContext';
 import { cn } from '../lib/utils';
 
-const CATEGORY_COLORS: Record<string, string> = {
-  'Machine Learning': '#3B82F6',
-  'UI/UX':            '#8B5CF6',
-  'Dev':              '#10B981',
-};
+const CATEGORY_COLORS = new Map<string, string>([
+  ['Machine Learning', '#3B82F6'],
+  ['UI/UX',            '#8B5CF6'],
+  ['Dev',              '#10B981'],
+]);
 
 interface Header {
   id: string;
@@ -98,7 +98,7 @@ export default function ProjectDetail() {
   if (!project) {
     return (
       <div className="flex flex-col items-center justify-center min-h-[60vh]">
-        <h1 className="text-2xl font-bold mb-4">Project not found</h1>
+        <h1 className="text-2xl font-bold mb-4">{t('Project not found')}</h1>
         <button
           onClick={() => navigate('/portfolio')}
           className="px-6 py-2 bg-brand-text text-brand-bg rounded-full"
@@ -109,7 +109,7 @@ export default function ProjectDetail() {
     );
   }
 
-  const accentColor = CATEGORY_COLORS[project.category] ?? '#888';
+  const accentColor = CATEGORY_COLORS.get(project.category) ?? '#888';
 
   return (
     <motion.div
@@ -127,12 +127,12 @@ export default function ProjectDetail() {
               className="flex items-center gap-2 text-brand-muted hover:text-brand-text transition-colors group w-fit"
             >
               <ArrowLeft size={18} className="group-hover:-translate-x-1 transition-transform" />
-              Back to Portfolio
+              {t('Back to Portfolio')}
             </button>
 
             <div className="mt-12 max-h-[calc(100vh-14rem)] flex flex-col">
               <div className="flex items-center gap-2 text-xs font-bold tracking-widest uppercase text-brand-muted mb-6">
-                <List size={14} /> Outline
+                <List size={14} /> {t('articles.outline')}
               </div>
               <nav className="space-y-1 overflow-y-auto scrollbar-hide pr-4">
                 {headers.map((header) => (
@@ -149,7 +149,7 @@ export default function ProjectDetail() {
                   </button>
                 ))}
                 {headers.length === 0 && (
-                  <p className="text-[10px] text-brand-muted/40 italic px-4">No headers found</p>
+                  <p className="text-[10px] text-brand-muted/40 italic px-4">{t('articles.noHeaders')}</p>
                 )}
               </nav>
             </div>
@@ -164,7 +164,7 @@ export default function ProjectDetail() {
         className="lg:hidden flex items-center gap-2 text-brand-muted hover:text-brand-text mb-12 transition-colors group"
       >
         <ArrowLeft size={18} className="group-hover:-translate-x-1 transition-transform" />
-        Back to Portfolio
+        {t('Back to Portfolio')}
       </button>
 
       {/* Header */}
@@ -179,7 +179,7 @@ export default function ProjectDetail() {
           </span>
           {project.featured && (
             <span className="text-[10px] font-bold uppercase tracking-widest px-3 py-1.5 rounded-full bg-brand-text/5 border border-brand-border text-brand-muted">
-              Featured
+              {t('Featured')}
             </span>
           )}
           <span className="text-[10px] font-bold uppercase tracking-widest text-brand-muted/60">
@@ -318,13 +318,13 @@ export default function ProjectDetail() {
               th: ({ children }) => <th className="px-4 py-3 text-left text-xs font-bold uppercase tracking-widest text-brand-muted">{children}</th>,
               td: ({ children }) => <td className="px-4 py-3 text-brand-text/80 border-t border-brand-border/20">{children}</td>,
               img: ({ src, alt }) => <img src={src} alt={alt} className="rounded-lg max-w-full my-6 border border-brand-border/30" />,
-              code({ node, inline, className, children, ...props }: any) {
+              code({ className, children }: any) {
                 const match = /language-(\w+)/.exec(className || '');
                 const lang = match ? match[1] : '';
                 const codeContent = String(children).replace(/\n$/, '');
                 const isMultiLine = codeContent.includes('\n');
                 // Only use block style for: explicitly fenced multi-line OR has language tag
-                if (!inline && (match || isMultiLine)) {
+                if (match || isMultiLine) {
                   return (
                     <div className="my-8 rounded-xl overflow-hidden border border-brand-border/60 shadow-lg">
                       <div className="flex items-center justify-between px-5 py-2.5 bg-[#1e1e1e] border-b border-white/10">
@@ -340,7 +340,6 @@ export default function ProjectDetail() {
                         language={lang || 'text'}
                         PreTag="div"
                         customStyle={{ margin: 0, padding: '1.25rem 1.5rem', fontSize: '0.825rem', lineHeight: '1.7', background: '#1e1e1e' }}
-                        {...props}
                       >
                         {codeContent}
                       </SyntaxHighlighter>
@@ -349,7 +348,7 @@ export default function ProjectDetail() {
                 }
                 // Inline code (short snippets, single-line without language)
                 return (
-                  <code className="px-1.5 py-0.5 rounded bg-brand-text/10 font-mono text-[0.85em] text-brand-text border border-brand-border/30" {...props}>
+                  <code className="px-1.5 py-0.5 rounded bg-brand-text/10 font-mono text-[0.85em] text-brand-text border border-brand-border/30">
                     {children}
                   </code>
                 );

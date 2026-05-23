@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'motion/react';
 import { RefreshCw, Search } from 'lucide-react';
+import { useApp } from '../../context/AppContext';
 
 const sentence = ["The", "animal", "didn't", "cross", "the", "street", "because", "it", "was", "too", "tired"];
 
@@ -27,6 +28,7 @@ const getAttentionWeights = (sourceIndex: number): number[] => {
 };
 
 export default function SelfAttentionLab() {
+  const { t } = useApp();
   const [activeIndex, setActiveIndex] = useState<number>(7);
   const [weights, setWeights] = useState<number[]>(getAttentionWeights(7));
 
@@ -37,7 +39,7 @@ export default function SelfAttentionLab() {
   return (
     <div className="h-full flex flex-col p-6 bg-transparent relative">
       <div className="flex items-center justify-between gap-4 mb-10">
-        <div className="text-[10px] font-bold tracking-[0.2em] uppercase text-white">Select token to view attention weights</div>
+        <div className="text-[10px] font-bold tracking-[0.2em] uppercase text-white">{t('lab.attention.selectToken')}</div>
       </div>
       
       <div className="flex-grow flex flex-col items-center justify-center gap-12 relative">
