@@ -1038,7 +1038,7 @@ cd image-workspace
 ### Frontend
 
 ```bash
-cd ek-cloud-gallery-frontend
+cd image-workspace-frontend
 
 npm install
 
@@ -1095,7 +1095,7 @@ cloud-gallery/
 |           +-- biz/                    Space-level permission configs
 |           +-- mapper/                 MyBatis XML mappers
 |
-+-- ek-cloud-gallery-frontend/          Vue 3 + Vite frontend
++-- image-workspace-frontend/          Vue 3 + Vite frontend
     +-- package.json
     +-- vite.config.ts
     +-- openapi.config.js               @umijs/openapi generation config
