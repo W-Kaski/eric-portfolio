@@ -1,12 +1,11 @@
 {
   "name": "Animus",
-  "author": "",
+  "author": "Eric Wang",
   "email": "ericwang7717@gmail.com",
   "copyrightYear": 2026,
   "footerMessage": "Built and maintained by Eric.",
   "socials": {
     "github": "https://github.com/W-Kaski",
-    "twitter": "https://twitter.com",
     "linkedin": "https://www.linkedin.com/in/-ericwang-"
   },
   "navItems": [

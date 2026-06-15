@@ -4,22 +4,18 @@
   "skills": [
     {
       "name": "PyTorch / Transformers",
-      "level": 95
-    },
-    {
-      "name": "Python",
-      "level": 95
-    },
-    {
-      "name": "LLM Fine-Tuning / RAG",
-      "level": 90
-    },
-    {
-      "name": "TypeScript / JavaScript",
       "level": 85
     },
     {
-      "name": "Docker / Linux / Nginx",
+      "name": "Python",
+      "level": 90
+    },
+    {
+      "name": "LLM / RAG / Agents",
+      "level": 85
+    },
+    {
+      "name": "TypeScript / JavaScript",
       "level": 80
     },
     {
@@ -27,7 +23,11 @@
       "level": 80
     },
     {
-      "name": "SQL / PGVector / Redis",
+      "name": "Docker / Linux",
+      "level": 75
+    },
+    {
+      "name": "SQL / PgVector",
       "level": 75
     }
   ],
@@ -40,7 +40,17 @@
     {
       "year": "2026",
       "role": "Circuit Agent",
-      "company": "Full-stack AI Agent platform · Spring AI + Java 21 · RAG pipeline, ReAct loop, React 19 frontend, SSE streaming, PgVector"
+      "company": "Full-stack AI Agent platform · Spring AI + Java 21 · RAG pipeline, ReAct loop, SSE streaming, PgVector"
+    },
+    {
+      "year": "2025",
+      "role": "NeuTTS-Express",
+      "company": "Expressive TTS via synthetic distillation · PyTorch · Knowledge distillation, evaluation pipeline, MOS human study"
+    },
+    {
+      "year": "2025",
+      "role": "Safe RL (SGPS)",
+      "company": "Shield-guided policy stabilization · JAX + DreamerV3 · Cost penalty, KL regularization, ablation study"
     },
     {
       "year": "2025",
