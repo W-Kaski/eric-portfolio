@@ -1,9 +1,8 @@
-import React, { useMemo } from 'react';
+import React from 'react';
 import { motion } from 'motion/react';
-import { Github, Twitter, Linkedin, Mail, ExternalLink, User, Code2, History, Award } from 'lucide-react';
+import { Github, Linkedin, Mail, ExternalLink, User, Code2, History } from 'lucide-react';
 import { useApp } from '@/src/context/AppContext';
 import { useConfig } from '../context/ConfigContext';
-import { cn } from '@/src/lib/utils';
 
 export default function About() {
   const { t } = useApp();
@@ -52,7 +51,9 @@ export default function About() {
         
         <div className="flex-1 space-y-8 text-center lg:text-left z-10">
           <div className="space-y-2">
-            <span className="text-xs font-mono font-bold uppercase tracking-[0.4em] text-brand-muted/60 mb-2 block"></span>
+            <span className="text-xs font-mono font-bold uppercase tracking-[0.35em] text-brand-muted/70 mb-2 block">
+              {t('about.available')}
+            </span>
             <h1 className="text-5xl sm:text-7xl md:text-9xl font-black tracking-tighter uppercase leading-[0.8] mb-6">
               {t('about.title')}
             </h1>
@@ -152,7 +153,6 @@ export default function About() {
                      <span className="text-[10px] font-mono font-bold tracking-[0.2em] uppercase text-brand-muted group-hover:text-brand-text transition-colors">
                         {skill.name}
                      </span>
-                     <span className="text-[10px] font-mono text-brand-muted/50">{skill.level}/100</span>
                    </div>
                    <div className="h-1 bg-brand-border/30 overflow-hidden relative">
                      <motion.div 
