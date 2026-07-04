@@ -3,32 +3,36 @@
   "resumeUrl": "/resume/wangpengxiang_resume_ai.pdf",
   "skills": [
     {
-      "name": "PyTorch / Transformers",
-      "level": 85
+      "name": "QLoRA / PEFT / Transformers",
+      "level": 88
     },
     {
       "name": "Python",
       "level": 90
     },
     {
-      "name": "LLM / RAG / Agents",
-      "level": 85
+      "name": "LLM Evaluation / Serving",
+      "level": 84
     },
     {
-      "name": "TypeScript / JavaScript",
-      "level": 80
+      "name": "LLM / RAG / Agents",
+      "level": 85
     },
     {
       "name": "Java / Spring Boot",
       "level": 80
     },
     {
-      "name": "Docker / Linux",
+      "name": "TypeScript / JavaScript",
+      "level": 80
+    },
+    {
+      "name": "Docker / Linux / uv",
       "level": 75
     },
     {
-      "name": "SQL / PgVector",
-      "level": 75
+      "name": "SQL / PgVector / sqlglot",
+      "level": 76
     }
   ],
   "timeline": [
@@ -36,6 +40,11 @@
       "year": "2023 — 2028 (Expected)",
       "role": "B.Sc. Computer Science (Specialist)",
       "company": "University of Toronto"
+    },
+    {
+      "year": "2026",
+      "role": "Qwen2.5 QLoRA Text-to-SQL Benchmark",
+      "company": "ML engineering benchmark · QLoRA rank ablation, SQL parse validation, SQLite execution check, vLLM / Transformers serving comparison"
     },
     {
       "year": "2026",
