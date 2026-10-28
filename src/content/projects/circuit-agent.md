@@ -3,6 +3,8 @@ title: Circuit Agent
 category: AI
 color: "#8B5CF6"
 date: 2025-09-01
+image: /projects/circuit-agent.png
+featured: true
 github: "https://github.com/W-Kaski/circuit-agent"
 demo: "https://www.circuit.anio.me/"
 ---

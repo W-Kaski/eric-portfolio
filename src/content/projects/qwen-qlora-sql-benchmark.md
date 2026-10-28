@@ -6,6 +6,7 @@ date: 2026-07-01
 github: "https://github.com/W-Kaski/qwen-qlora-sql-benchmark"
 demo: "https://huggingface.co/W-Kaski/qwen25-15b-text2sql-lora-r32"
 tech: [Python, PyTorch, Transformers, PEFT, QLoRA, vLLM, FastAPI, sqlglot]
+image: /projects/qwen-sql-benchmark.png
 featured: true
 ---
 

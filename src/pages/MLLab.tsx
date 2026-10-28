@@ -3,7 +3,7 @@ import { useSearchParams } from 'react-router-dom';
 import { motion, AnimatePresence } from 'motion/react';
 import {
   Folder, Calendar, ArrowLeft, Tag, Maximize2, SortAsc, ArrowRight,
-  MousePointer2, Network, Box, Zap, List
+  MousePointer2, Network, Zap, Box as BoxIcon
 } from 'lucide-react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
@@ -11,6 +11,11 @@ import remarkMath from 'remark-math';
 import rehypeKatex from 'rehype-katex';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { atomDark } from 'react-syntax-highlighter/dist/esm/styles/prism';
+import {
+  Badge, Box, Button, Flex, Heading, Menu, MenuButton, MenuList, MenuItem, useColorModeValue
+} from '@chakra-ui/react';
+import { ChevronLeftIcon, ChevronDownIcon } from '@chakra-ui/icons';
+import { Title, Meta } from '../components/craftzdog/work';
 
 import { useApp } from '../context/AppContext';
 import { cn } from '../lib/utils';
@@ -63,7 +68,7 @@ const MiniNNVisualizer = () => (
 const MiniDimReduction = () => (
   <div className="w-full h-full relative overflow-hidden bg-black/40 flex items-center justify-center border-b border-brand-border/30">
     <div className="absolute inset-0 flex items-center justify-center">
-      <Box size={28} className="text-white/5 absolute scale-150" />
+      <BoxIcon size={28} className="text-white/5 absolute scale-150" />
       <div className="w-2 h-2 bg-blue-500/60 absolute -ml-8 -mt-5" />
       <div className="w-2 h-2 bg-red-500/60 absolute ml-8 mt-5" />
       <div className="w-2 h-2 bg-emerald-500/60 absolute ml-5 -mt-8" />
@@ -167,7 +172,7 @@ const MiniCodePreview = ({ snippet }: { snippet?: string }) => {
 // ─── Main Page ──────────────────────────────────────────────────────────────
 
 export default function MLLab() {
-  const { t } = useApp();
+  const { t, lang } = useApp();
   const [searchParams, setSearchParams] = useSearchParams();
   const targetId = searchParams.get('id');
   
@@ -179,6 +184,14 @@ export default function MLLab() {
   const [activeFolder, setActiveFolder] = useState<string>(t('common.all'));
   const [sortBy, setSortBy] = useState<'date' | 'title'>('date');
   const [currentPage, setCurrentPage] = useState(1);
+
+  useEffect(() => {
+    if (selectedModule) {
+      document.title = `${selectedModule.title} - ML Lab`
+    } else {
+      document.title = lang === 'zh' ? '实验室 - 王鹏翔' : 'ML Lab - Eric Wang'
+    }
+  }, [selectedModule, lang]);
 
   // Extract headers for outline
   const headers = useMemo(() => {
@@ -275,6 +288,12 @@ export default function MLLab() {
     );
   }
 
+  const handleBackToList = () => {
+    setSelectedModule(null);
+    setSearchParams({});
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
   // ── Detail View ──────────────────────────────────────────────────────────
 
   if (selectedModule) {
@@ -292,95 +311,44 @@ export default function MLLab() {
     }
 
     return (
-      <div className="px-6 max-w-7xl mx-auto pb-32">
-        <div className="flex flex-col lg:flex-row items-start gap-12">
-          {/* Sidebar Outline */}
-          <aside className="hidden lg:block w-64 flex-shrink-0 relative">
-            <div className="fixed top-24 w-64 flex flex-col h-[calc(100vh-8rem)] z-10 pb-8">
-              <button 
-                onClick={() => {
-                  setSelectedModule(null);
-                  setSearchParams({});
-                }}
-                className="flex items-center gap-2 text-brand-muted hover:text-brand-text transition-colors group w-fit"
-              >
-                <ArrowLeft size={18} className="group-hover:-translate-x-1 transition-transform" />
-                {t('lab.back')}
-              </button>
+      <div className="w-full max-w-3xl mx-auto px-4 pb-32">
+        <Box mb={2}>
+          <Button
+            leftIcon={<ChevronLeftIcon />}
+            size="sm"
+            variant="ghost"
+            colorScheme="teal"
+            onClick={handleBackToList}
+            px={2}
+          >
+            {lang === 'zh' ? '返回实验室列表' : 'Back to ML Lab'}
+          </Button>
+        </Box>
 
-              <div className="mt-12 max-h-[calc(100vh-14rem)] flex flex-col">
-                <div className="flex items-center gap-2 text-xs font-bold tracking-widest uppercase text-brand-muted mb-6">
-                  <List size={14} /> {t('articles.outline')}
-                </div>
-                <nav className="space-y-1 overflow-y-auto scrollbar-hide pr-4">
-                  {headers.map((header) => (
-                    <button
-                      key={header.id}
-                      onClick={() => scrollToHeader(header.id)}
-                      className={cn(
-                        "block w-full text-left text-sm py-1.5 transition-all hover:text-brand-text",
-                        header.level === 1 ? "font-bold" : "pl-4 text-brand-muted",
-                        activeHeader === header.id ? "text-brand-text border-l-2 border-brand-text pl-3 bg-brand-text/5" : "border-l border-brand-border/50 text-brand-muted/60"
-                      )}
-                    >
-                      {header.text}
-                    </button>
-                  ))}
-                  {headers.length === 0 && (
-                     <p className="text-[10px] text-brand-muted/40 italic px-4">{t('articles.noHeaders')}</p>
-                  )}
-                </nav>
-              </div>
-            </div>
-          </aside>
+        <Title backTo="/ml-lab" backLabel={lang === 'zh' ? '实验室' : 'ML Lab'} onBackClick={handleBackToList}>
+          {selectedModule.title} <Badge colorScheme="teal" ml={2} px={2} py={0.5} borderRadius="md" textTransform="none">{selectedModule.date}</Badge>
+        </Title>
 
-          {/* Main Content */}
-          <div className="flex-grow max-w-3xl">
-            <button 
-              onClick={() => {
-                setSelectedModule(null);
-                setSearchParams({}); // Clear query param when going back
-              }}
-              className="lg:hidden flex items-center gap-2 text-brand-muted hover:text-brand-text mb-12 transition-colors group"
-            >
-              <ArrowLeft size={18} className="group-hover:-translate-x-1 transition-transform" />
-              {t('lab.back')}
-            </button>
+        <div className="flex items-center gap-2 mb-6">
+          <Meta>Folder</Meta>
+          <span className="text-sm text-brand-muted">{selectedModule.folder}</span>
+        </div>
 
-            <header className="mb-16">
-              <div className="flex flex-wrap gap-3 mb-8">
-                <span className="text-[10px] font-bold tracking-[0.2em] uppercase px-3 py-1.5 bg-brand-muted/5 text-brand-muted rounded-full border border-brand-border flex items-center gap-2">
-                  <Folder size={10} /> {selectedModule.folder}
-                </span>
-                <span className="text-[10px] font-bold tracking-[0.2em] uppercase px-3 py-1.5 bg-brand-muted/5 text-brand-muted rounded-full border border-brand-border">
-                  {selectedModule.date}
-                </span>
-              </div>
+        {selectedModule.description && (
+          <p className="text-brand-muted text-base leading-relaxed mb-8 border-l-2 border-teal-500 pl-4">
+            {selectedModule.description}
+          </p>
+        )}
 
-              <h1 className="text-4xl md:text-6xl font-bold tracking-tight mb-8 leading-[1.1] text-brand-text/90">
-                {selectedModule.title}
-              </h1>
-
-              {selectedModule.description && (
-                <p className="text-brand-muted text-xl max-w-2xl leading-relaxed font-light mb-8 border-l border-brand-border pl-6">
-                  {selectedModule.description}
-                </p>
-              )}
-            </header>
-
-            {InteractiveComponent && (
-              <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                className="border border-brand-border overflow-hidden h-[600px] bg-neutral-900 mb-16 relative"
-              >
-                <div className="absolute top-0 left-0 w-4 h-4 border-t border-l border-brand-text/30" />
-                <div className="absolute top-0 right-0 w-4 h-4 border-t border-r border-brand-text/30" />
-                <div className="absolute bottom-0 left-0 w-4 h-4 border-b border-l border-brand-text/30" />
-                <div className="absolute bottom-0 right-0 w-4 h-4 border-b border-r border-brand-text/30" />
-                {InteractiveComponent}
-              </motion.div>
-            )}
+        {InteractiveComponent && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            className="border border-brand-border/60 rounded-2xl overflow-hidden min-h-[560px] bg-white/70 dark:bg-white/[0.04] backdrop-blur-md shadow-sm mb-16 relative"
+          >
+            {InteractiveComponent}
+          </motion.div>
+        )}
 
             <div className="max-w-none">
               <div className="text-brand-text leading-[1.8] text-base">
@@ -452,7 +420,7 @@ export default function MLLab() {
                       </div>
                     ),
                     thead: ({ children }) => <thead className="bg-brand-card/50 border-b border-brand-border/40">{children}</thead>,
-                    th: ({ children }) => <th className="px-4 py-3 text-left text-xs font-bold uppercase tracking-widest text-brand-muted">{children}</th>,
+                    th: ({ children }) => <th className="px-4 py-3 text-left text-xs font-semibold text-brand-muted">{children}</th>,
                     td: ({ children }) => <td className="px-4 py-3 text-brand-text/80 border-t border-brand-border/20">{children}</td>,
                     img: ({ src, alt }) => <img src={src} alt={alt} className="rounded-lg max-w-full my-6 border border-brand-border/30" />,
                     code({ className, children }: any) {
@@ -464,7 +432,7 @@ export default function MLLab() {
                         return (
                           <div className="my-8 rounded-xl overflow-hidden border border-brand-border/60 shadow-lg">
                             <div className="flex items-center justify-between px-5 py-2.5 bg-[#1e1e1e] border-b border-white/10">
-                              <span className="text-[10px] font-bold tracking-[0.2em] uppercase text-white/50">{lang || 'code'}</span>
+                              <span className="text-xs font-mono font-medium text-white/60">{lang || 'code'}</span>
                               <div className="flex gap-1.5">
                                 <div className="w-3 h-3 rounded-full bg-[#ff5f57]" />
                                 <div className="w-3 h-3 rounded-full bg-[#febc2e]" />
@@ -495,67 +463,93 @@ export default function MLLab() {
               </div>
             </div>
           </div>
-        </div>
-      </div>
-    );
-  }
+        );
+      }
 
   // ── Main List View (Minimalist Grid) ──────────────────────────────────────
 
   return (
-    <div className="px-6 max-w-7xl mx-auto pb-0 pt-2 flex flex-col">
-      {/* Header + Controls — single row */}
-      <div className="flex items-end justify-between mb-6 border-b border-brand-border/40 pb-4 flex-shrink-0">
-        <div className="space-y-1">
-          <h1 className="text-3xl font-black tracking-tighter uppercase leading-none">{t('lab.title')}</h1>
-        </div>
+    <div className="w-full max-w-5xl mx-auto px-4 pb-16 pt-2 flex flex-col">
+      {/* Header + Controls */}
+      <Flex 
+        flexDirection={{ base: 'column', sm: 'row' }} 
+        alignItems={{ base: 'flex-start', sm: 'center' }} 
+        justifyContent="space-between" 
+        gap={4} 
+        mb={6} 
+        pb={4} 
+        borderBottomWidth="1px" 
+        borderColor={useColorModeValue('blackAlpha.200', 'whiteAlpha.200')}
+      >
+        <Heading as="h3" fontSize={20} className="section-title">
+          {lang === 'zh' ? '实验室' : 'ML Lab'}
+        </Heading>
 
-        <div className="flex items-center gap-6">
-          {/* Folder */}
-          <div className="flex items-center gap-2">
-            <div className="flex items-center gap-1.5 text-brand-muted text-sm font-medium">
-              <Folder size={14} /> {t('articles.folder')}:
-            </div>
-            <select 
-              value={activeFolder} 
-              onChange={(e) => setActiveFolder(e.target.value)}
-              className="bg-brand-card border border-brand-border rounded-lg px-3 py-1.5 text-sm focus:outline-none focus:ring-1 focus:ring-brand-text/20 appearance-none cursor-pointer hover:bg-brand-text/5 transition-colors"
+        <Flex alignItems="center" gap={3} flexWrap="wrap">
+          {/* Folder Menu */}
+          <Menu>
+            <MenuButton
+              as={Button}
+              rightIcon={<ChevronDownIcon />}
+              leftIcon={<Folder size={14} />}
+              size="sm"
+              variant="outline"
+              borderRadius="lg"
+              fontSize="xs"
+              fontWeight="medium"
+              borderColor={useColorModeValue('blackAlpha.300', 'whiteAlpha.200')}
+              bg={useColorModeValue('whiteAlpha.600', 'whiteAlpha.100')}
             >
-              {folders.map(f => <option key={f} value={f}>{f}</option>)}
-            </select>
-          </div>
+              {activeFolder}
+            </MenuButton>
+            <MenuList 
+              zIndex={50} 
+              bg={useColorModeValue('#f0e7db', '#202023')} 
+              borderColor={useColorModeValue('blackAlpha.200', 'whiteAlpha.200')}
+              boxShadow="lg"
+            >
+              {folders.map(f => (
+                <MenuItem
+                  key={f}
+                  onClick={() => setActiveFolder(f)}
+                  fontSize="xs"
+                  bg={activeFolder === f ? useColorModeValue('blackAlpha.100', 'whiteAlpha.100') : 'transparent'}
+                  fontWeight={activeFolder === f ? 'bold' : 'normal'}
+                  color={activeFolder === f ? 'teal.400' : undefined}
+                >
+                  {f}
+                </MenuItem>
+              ))}
+            </MenuList>
+          </Menu>
 
-          {/* Sort */}
-          <div className="flex items-center gap-2">
-            <div className="flex items-center gap-1.5 text-brand-muted text-sm font-medium">
-              <SortAsc size={14} /> {t('articles.sort')}:
-            </div>
-            <div className="flex bg-brand-card border border-brand-border rounded-lg overflow-hidden">
-              <button 
-                onClick={() => setSortBy('date')}
-                className={cn("px-3 py-1.5 text-xs font-bold uppercase transition-colors", sortBy === 'date' ? 'bg-brand-text text-brand-bg' : 'text-brand-muted hover:bg-brand-text/5')}
-              >
-                {t('articles.sort.date')}
-              </button>
-              <button 
-                onClick={() => setSortBy('title')}
-                className={cn("px-3 py-1.5 text-xs font-bold uppercase transition-colors", sortBy === 'title' ? 'bg-brand-text text-brand-bg' : 'text-brand-muted hover:bg-brand-text/5')}
-              >
-                {t('articles.sort.title')}
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
+          {/* Single Sort Toggle Button */}
+          <Button
+            size="sm"
+            variant="outline"
+            leftIcon={<SortAsc size={14} />}
+            onClick={() => setSortBy(prev => prev === 'date' ? 'title' : 'date')}
+            borderRadius="lg"
+            fontSize="xs"
+            fontWeight="medium"
+            borderColor={useColorModeValue('blackAlpha.300', 'whiteAlpha.200')}
+            bg={useColorModeValue('whiteAlpha.600', 'whiteAlpha.100')}
+          >
+            {lang === 'zh'
+              ? `排序: ${sortBy === 'date' ? '日期' : '标题'}`
+              : `Sort: ${sortBy === 'date' ? 'Date' : 'Title'}`}
+          </Button>
+        </Flex>
+      </Flex>
 
       {/* Grid List */}
       <AnimatePresence mode="popLayout">
         {filteredModules.length === 0 ? (
-          <div className="py-40 border border-brand-border text-center">
-            <div className="text-brand-muted text-[10px] font-bold tracking-[0.5em] uppercase">        {t('articles.empty')}</div>
+          <div className="py-24 text-center rounded-xl border border-brand-border/30 bg-brand-card/20">
+            <p className="text-brand-muted text-sm">No lab modules found in this category.</p>
           </div>
         ) : (
-          <motion.div layout className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 border-l border-t border-brand-border">
+          <motion.div layout className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {paginatedModules.map((module, index) => {
               let miniPreview = null;
               if (module.id === 'decision-boundary') {
@@ -584,40 +578,37 @@ export default function MLLab() {
                 <motion.div
                   key={module.id}
                   layout
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0 }}
-                  transition={{ delay: index * 0.03 }}
+                  transition={{ delay: index * 0.04 }}
                   onClick={() => setSelectedModule(module)}
-                  className={cn(
-                    'group relative cursor-pointer border-r border-b border-brand-border bg-brand-bg flex flex-col h-full min-h-[300px] lg:min-h-[380px]',
-                    'hover:bg-brand-text/[0.02] transition-colors duration-500'
-                  )}
+                  className="group relative cursor-pointer rounded-2xl overflow-hidden border border-brand-border/40 bg-brand-card/40 backdrop-blur-sm flex flex-col h-full hover:-translate-y-1 hover:shadow-xl transition-all duration-300"
                 >
-                  <div className="relative overflow-hidden flex-shrink-0 h-[140px] lg:h-[180px] border-b border-brand-border/20">
+                  <div className="relative overflow-hidden flex-shrink-0 h-[150px] border-b border-brand-border/20 bg-black/10">
                     {miniPreview}
-                    <div className="absolute top-4 right-4 text-white/0 group-hover:text-white/40 transition-colors duration-500">
-                      <ArrowRight size={16} />
+                    <div className="absolute top-3 right-3 opacity-0 group-hover:opacity-100 transition-opacity duration-300 text-teal-400">
+                      <ArrowRight size={18} />
                     </div>
                   </div>
                   
-                  <div className="p-4 lg:p-6 flex flex-col flex-1 min-h-0">
-                    <div className="flex items-center justify-between mb-2">
-                       <span className="text-[9px] font-bold tracking-widest uppercase text-brand-muted">{module.folder}</span>
-                       <span className="text-[9px] font-bold tracking-widest uppercase text-brand-muted/60">{module.date}</span>
+                  <div className="p-5 flex flex-col flex-1 min-h-0">
+                    <div className="flex items-center justify-between mb-2 text-xs text-brand-muted">
+                       <span className="font-medium text-teal-400">{module.folder}</span>
+                       <span>{module.date}</span>
                     </div>
                     
-                    <h2 className="text-lg lg:text-xl font-black tracking-tight leading-[0.95] uppercase mb-2 transition-transform group-hover:translate-x-1 duration-500">
+                    <h3 className="text-lg font-bold text-brand-text mb-2 group-hover:text-teal-400 transition-colors">
                       {module.title}
-                    </h2>
+                    </h3>
                     
-                    <p className="text-brand-text/70 text-xs leading-relaxed font-normal line-clamp-2 md:line-clamp-1 lg:line-clamp-2 mb-3 lg:mb-4 group-hover:text-brand-text transition-colors">
+                    <p className="text-brand-muted text-sm leading-relaxed line-clamp-2 mb-4">
                       {module.description}
                     </p>
                     
-                    <div className="mt-auto pt-3 border-t border-brand-border/30 flex flex-wrap gap-2">
-                       {module.tags.slice(0, 2).map(tag => (
-                         <span key={tag} className="text-[8px] font-bold tracking-widest uppercase text-brand-muted/90 border border-brand-border/80 px-1.5 py-0.5">
+                    <div className="mt-auto pt-3 border-t border-brand-border/20 flex flex-wrap gap-2">
+                       {module.tags.slice(0, 3).map(tag => (
+                         <span key={tag} className="text-xs px-2.5 py-0.5 rounded-full bg-brand-text/5 text-brand-muted border border-brand-border/30">
                             {tag}
                          </span>
                        ))}
@@ -632,17 +623,17 @@ export default function MLLab() {
 
       {/* Pagination Controls */}
       {totalPages > 1 && !selectedModule && (
-        <div className="flex items-center justify-between mt-0 border-t border-brand-border/40 pt-4">
-          <div className="text-[10px] text-brand-muted/60 font-bold uppercase tracking-widest">
-            {t('lab.pagination.page')} {currentPage} / {totalPages}
+        <div className="flex items-center justify-between mt-8 border-t border-brand-border/30 pt-4">
+          <div className="text-xs text-brand-muted">
+            Page {currentPage} of {totalPages}
           </div>
           <div className="flex items-center gap-2">
             <button
               onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
               disabled={currentPage === 1}
-              className="px-3 py-1.5 border border-brand-border rounded text-[10px] font-bold uppercase transition-colors hover:bg-brand-text/5 disabled:opacity-30 disabled:hover:bg-transparent"
+              className="px-3 py-1 rounded-lg border border-brand-border/40 text-xs font-medium transition-colors hover:bg-brand-text/5 disabled:opacity-30"
             >
-              {t('lab.pagination.prev')}
+              Previous
             </button>
             <div className="flex gap-1">
               {Array.from({ length: totalPages }).map((_, i) => (
@@ -650,8 +641,8 @@ export default function MLLab() {
                   key={i}
                   onClick={() => setCurrentPage(i + 1)}
                   className={cn(
-                    "w-7 h-7 flex items-center justify-center border rounded text-[10px] font-bold transition-colors",
-                    currentPage === i + 1 ? "border-brand-text bg-brand-text text-brand-bg" : "border-brand-border text-brand-muted hover:bg-brand-text/5"
+                    "w-7 h-7 flex items-center justify-center rounded-lg text-xs font-medium transition-colors",
+                    currentPage === i + 1 ? "bg-teal-500 text-white font-bold" : "border border-brand-border/40 text-brand-muted hover:bg-brand-text/5"
                   )}
                 >
                   {i + 1}
@@ -661,9 +652,9 @@ export default function MLLab() {
             <button
               onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
               disabled={currentPage === totalPages}
-              className="px-3 py-1.5 border border-brand-border rounded text-[10px] font-bold uppercase transition-colors hover:bg-brand-text/5 disabled:opacity-30 disabled:hover:bg-transparent"
+              className="px-3 py-1 rounded-lg border border-brand-border/40 text-xs font-medium transition-colors hover:bg-brand-text/5 disabled:opacity-30"
             >
-              {t('lab.pagination.next')}
+              Next
             </button>
           </div>
         </div>

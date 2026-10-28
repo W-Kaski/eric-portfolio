@@ -2,17 +2,23 @@ import React, { useState, useEffect } from 'react';
 import { motion } from 'motion/react';
 import { RefreshCw, Play, Pause, Zap } from 'lucide-react';
 import { useApp } from '../../context/AppContext';
+import { Button, useColorModeValue } from '@chakra-ui/react';
 
 const GRID_SIZE = 5;
 const GOAL = { x: 4, y: 4 };
 const TRAP = { x: 2, y: 2 };
 
 export default function RLLab() {
-  const { t } = useApp();
+  const { t, lang } = useApp();
   const [isPlaying, setIsPlaying] = useState(true);
   const [agentPos, setAgentPos] = useState({ x: 0, y: 0 });
   const [episode, setEpisode] = useState(1);
   const [score, setScore] = useState(0);
+
+  const gridBg = useColorModeValue('rgba(0, 0, 0, 0.03)', 'rgba(0, 0, 0, 0.25)');
+  const cellBorder = useColorModeValue('blackAlpha.200', 'whiteAlpha.200');
+  const agentBg = useColorModeValue('teal.600', 'teal.300');
+  const agentIconColor = useColorModeValue('white', 'gray.900');
 
   // Q-Table mock logic
   useEffect(() => {
@@ -56,33 +62,56 @@ export default function RLLab() {
   }, [isPlaying]);
 
   return (
-    <div className="h-full flex flex-col p-8 bg-transparent">
-      
+    <div className="h-full flex flex-col p-6 sm:p-8 bg-transparent">
       {/* Header */}
-      <div className="flex justify-between items-center mb-10 border-b border-white/10 pb-6 text-white">
+      <div className="flex justify-between items-center mb-8 border-b pb-4" style={{ borderColor: 'var(--border)' }}>
         <div>
-          <h3 className="text-[10px] font-bold tracking-[0.4em] uppercase mb-2">Q-Learning Dashboard</h3>
-          <div className="flex gap-6 text-[9px] font-bold tracking-widest uppercase">
-            <span className="text-white/60">{t('lab.rl.episode')}<span className="text-white">{episode}</span></span>
-            <span className={score < 0 ? 'text-red-400' : 'text-emerald-400 font-black'}>{t('lab.rl.reward')}{score}</span>
+          <h3 className="text-sm font-semibold tracking-wide text-brand-text mb-1">
+            {lang === 'zh' ? 'Q-Learning 强化学习控制面板' : 'Q-Learning Dashboard'}
+          </h3>
+          <div className="flex gap-4 text-xs font-medium">
+            <span className="text-brand-muted">
+              {t('lab.rl.episode')}: <strong className="text-brand-text font-mono">{episode}</strong>
+            </span>
+            <span className={score < 0 ? 'text-red-500 font-mono font-bold' : 'text-emerald-500 font-mono font-bold'}>
+              {t('lab.rl.reward')}: {score}
+            </span>
           </div>
         </div>
 
         <div className="flex gap-2">
-          <button onClick={() => setIsPlaying(!isPlaying)} className="w-10 h-10 border border-white/10 flex items-center justify-center transition-colors hover:bg-white/5">
+          <Button
+            size="sm"
+            variant="outline"
+            borderRadius="lg"
+            fontSize="xs"
+            onClick={() => setIsPlaying(!isPlaying)}
+            title={isPlaying ? 'Pause' : 'Play'}
+          >
             {isPlaying ? <Pause size={14} /> : <Play size={14} />}
-          </button>
-          <button onClick={() => { setAgentPos({ x: 0, y: 0 }); setEpisode(1); setScore(0); }} className="w-10 h-10 border border-white/10 flex items-center justify-center transition-colors hover:bg-white/5">
+          </Button>
+          <Button
+            size="sm"
+            variant="outline"
+            borderRadius="lg"
+            fontSize="xs"
+            onClick={() => { setAgentPos({ x: 0, y: 0 }); setEpisode(1); setScore(0); }}
+            title="Reset"
+          >
             <RefreshCw size={14} />
-          </button>
+          </Button>
         </div>
       </div>
 
       {/* Grid World */}
-      <div className="flex-grow flex items-center justify-center">
+      <div className="flex-grow flex items-center justify-center min-h-[320px]">
         <div 
-          className="grid gap-1 p-1 bg-black/20 border border-white/5" 
-          style={{ gridTemplateColumns: `repeat(${GRID_SIZE}, minmax(0, 1fr))` }}
+          className="grid gap-1.5 p-2 rounded-2xl border shadow-sm"
+          style={{ 
+            gridTemplateColumns: `repeat(${GRID_SIZE}, minmax(0, 1fr))`,
+            backgroundColor: gridBg,
+            borderColor: 'var(--border)'
+          }}
         >
           {Array.from({ length: GRID_SIZE * GRID_SIZE }).map((_, i) => {
             const x = i % GRID_SIZE;
@@ -94,30 +123,43 @@ export default function RLLab() {
             return (
               <div 
                 key={i} 
-                className="w-12 h-12 md:w-16 md:h-16 relative flex items-center justify-center transition-colors duration-300 border border-white/20"
+                className="w-12 h-12 md:w-16 md:h-16 rounded-xl relative flex items-center justify-center transition-colors duration-300 border"
                 style={{
-                  backgroundColor: isGoal ? 'rgba(16, 185, 129, 0.4)' : isTrap ? 'rgba(239, 68, 68, 0.4)' : 'transparent'
+                  borderColor: cellBorder,
+                  backgroundColor: isGoal 
+                    ? 'rgba(16, 185, 129, 0.25)' 
+                    : isTrap 
+                    ? 'rgba(239, 68, 68, 0.25)' 
+                    : 'var(--card)'
                 }}
               >
                 {/* Agent Token */}
                 {isAgent && (
                   <motion.div 
                     layoutId="agent"
-                    className="w-10 h-10 bg-brand-text shadow-[0_0_20px_rgba(255,255,255,0.3)] z-10 flex items-center justify-center text-brand-bg"
+                    className="w-9 h-9 md:w-11 md:h-11 rounded-lg z-10 flex items-center justify-center shadow-md"
+                    style={{ backgroundColor: agentBg, color: agentIconColor }}
                   >
                     <Zap size={16} fill="currentColor" />
                   </motion.div>
                 )}
                 
                 {/* Labels */}
-                {!isAgent && isGoal && <span className="text-xs font-black text-white uppercase tracking-tighter">{t('lab.rl.goal')}</span>}
-                {!isAgent && isTrap && <span className="text-xs font-black text-white uppercase tracking-tighter">{t('lab.rl.trap')}</span>}
+                {!isAgent && isGoal && (
+                  <span className="text-xs font-bold text-emerald-600 dark:text-emerald-300">
+                    {t('lab.rl.goal')}
+                  </span>
+                )}
+                {!isAgent && isTrap && (
+                  <span className="text-xs font-bold text-red-600 dark:text-red-300">
+                    {t('lab.rl.trap')}
+                  </span>
+                )}
               </div>
             );
           })}
         </div>
       </div>
-
     </div>
   );
 }

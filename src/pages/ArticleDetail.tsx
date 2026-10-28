@@ -8,9 +8,13 @@ import rehypeKatex from 'rehype-katex';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { vscDarkPlus, prism } from 'react-syntax-highlighter/dist/esm/styles/prism';
 import { cn } from '@/src/lib/utils';
-import { Calendar, ArrowLeft, Folder, List, FileText } from 'lucide-react';
+import { ArrowLeft } from 'lucide-react';
 import { getArticleById, Article } from '@/src/lib/articles';
 import { useApp } from '@/src/context/AppContext';
+import { Badge, List, ListItem, Link, Box, Button } from '@chakra-ui/react';
+import { ExternalLinkIcon, ChevronLeftIcon } from '@chakra-ui/icons';
+import { Link as RouterLink } from 'react-router-dom';
+import { Title, Meta } from '../components/craftzdog/work';
 
 interface Header {
   id: string;
@@ -21,7 +25,7 @@ interface Header {
 export default function ArticleDetail() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
-  const { theme, t } = useApp();
+  const { t, lang } = useApp();
 
   const [article, setArticle] = useState<Article | null>(null);
   const [notFound, setNotFound] = useState(false);
@@ -37,6 +41,12 @@ export default function ArticleDetail() {
       }
     });
   }, [id]);
+
+  useEffect(() => {
+    if (article) {
+      document.title = `${article.title} - Eric Wang`;
+    }
+  }, [article]);
 
   const headers = useMemo(() => {
     if (!article) return [];
@@ -87,9 +97,9 @@ export default function ArticleDetail() {
   if (notFound) {
     return (
       <div className="px-6 max-w-7xl mx-auto py-32 text-center">
-        <p className="text-brand-muted text-sm uppercase tracking-widest">{t('Article not found')}</p>
+        <p className="text-brand-muted text-sm">{lang === 'zh' ? '未找到对应文章' : 'Article not found'}</p>
         <button onClick={() => navigate('/articles')} className="mt-6 flex items-center gap-2 mx-auto text-brand-text hover:text-brand-muted transition-colors">
-          <ArrowLeft size={16} /> {t('articles.back')}
+          <ArrowLeft size={16} /> {lang === 'zh' ? '返回文章列表' : 'Back to Posts'}
         </button>
       </div>
     );
@@ -108,87 +118,46 @@ export default function ArticleDetail() {
       initial={{ opacity: 0, y: 12 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5 }}
-      className="px-6 max-w-7xl mx-auto pb-32"
+      className="w-full max-w-3xl mx-auto px-4 pb-32"
     >
-      <div className="flex flex-col lg:flex-row items-start gap-12">
-        {/* Sidebar Outline */}
-        <aside className="hidden lg:block w-64 flex-shrink-0 relative">
-          <div className="fixed top-24 w-64 flex flex-col h-[calc(100vh-8rem)] z-10 pb-8">
-            <button
-              onClick={() => navigate('/articles')}
-              className="flex items-center gap-2 text-brand-muted hover:text-brand-text transition-colors group w-fit"
-            >
-              <ArrowLeft size={18} className="group-hover:-translate-x-1 transition-transform" />
-              {t('articles.back')}
-            </button>
+      <Box mb={2}>
+        <Button
+          as={RouterLink}
+          to="/articles"
+          leftIcon={<ChevronLeftIcon />}
+          size="sm"
+          variant="ghost"
+          colorScheme="teal"
+          px={2}
+        >
+          {lang === 'zh' ? '返回文章列表' : 'Back to Posts'}
+        </Button>
+      </Box>
 
-            <div className="mt-12 max-h-[calc(100vh-14rem)] flex flex-col">
-              <div className="flex items-center gap-2 text-xs font-bold tracking-widest uppercase text-brand-muted mb-6">
-                <List size={14} /> {t('articles.outline')}
-              </div>
-              <nav className="space-y-1 overflow-y-auto scrollbar-hide pr-4">
-                {headers.map(header => (
-                  <button
-                    key={header.id}
-                    onClick={() => scrollToHeader(header.id)}
-                    className={cn(
-                      'block w-full text-left text-sm py-1.5 transition-all hover:text-brand-text',
-                      header.level === 1 ? 'font-bold' : 'pl-4 text-brand-muted',
-                      activeHeader === header.id
-                        ? 'text-brand-text border-l-2 border-brand-text pl-3 bg-brand-text/5'
-                        : 'border-l border-brand-border/50 text-brand-muted/60'
-                    )}
-                  >
-                    {header.text}
-                  </button>
-                ))}
-                {headers.length === 0 && (
-                  <p className="text-[10px] text-brand-muted/40 italic px-4">{t('articles.noHeaders')}</p>
-                )}
-              </nav>
-            </div>
-          </div>
-        </aside>
+      <Title backTo="/articles" backLabel={lang === 'zh' ? '文章' : 'Posts'}>
+        {article.title} <Badge colorScheme="teal" ml={2} px={2} py={0.5} borderRadius="md" textTransform="none">{article.date}</Badge>
+      </Title>
 
-        {/* Main Content */}
-        <div className="flex-grow max-w-3xl">
-          {/* Mobile back */}
-          <button
-            onClick={() => navigate('/articles')}
-            className="lg:hidden flex items-center gap-2 text-brand-muted hover:text-brand-text mb-12 transition-colors group"
-          >
-            <ArrowLeft size={18} className="group-hover:-translate-x-1 transition-transform" />
-            {t('articles.back')}
-          </button>
-
-          <header className="mb-16">
-            <div className="flex flex-wrap gap-3 mb-8">
-              <span className="text-[10px] font-bold tracking-[0.2em] uppercase px-3 py-1.5 bg-brand-muted/5 text-brand-muted rounded-full border border-brand-border flex items-center gap-2">
-                <Folder size={10} /> {article.folder}
-              </span>
-              <span className="text-[10px] font-bold tracking-[0.2em] uppercase px-3 py-1.5 bg-brand-muted/5 text-brand-muted rounded-full border border-brand-border">
-                {article.category}
-              </span>
-            </div>
-            <h1 className="text-4xl md:text-6xl font-bold tracking-tight mb-8 leading-[1.1] text-brand-text/90">
-              {article.title}
-            </h1>
-            <div className="flex items-center gap-6 text-brand-muted/70 text-xs font-medium tracking-wide">
-              <div className="flex items-center gap-2"><Calendar size={14} /> {article.date}</div>
-            </div>
-            {article.pdfUrl && (
-              <div className="flex flex-wrap gap-3 mt-6">
-                <a
-                  href={article.pdfUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex items-center gap-2 px-5 py-2.5 rounded-full bg-brand-text text-brand-bg text-xs font-bold uppercase tracking-widest hover:opacity-90 transition-opacity"
-                >
-                  <FileText size={14} /> View Paper
-                </a>
-              </div>
-            )}
-          </header>
+      <List ml={2} my={4} spacing={2} fontSize="sm">
+        <ListItem>
+          <Meta>Category</Meta>
+          <span>{article.category || 'Article'}</span>
+        </ListItem>
+        {article.folder && (
+          <ListItem>
+            <Meta>Folder</Meta>
+            <span>{article.folder}</span>
+          </ListItem>
+        )}
+        {article.pdfUrl && (
+          <ListItem>
+            <Meta>Paper</Meta>
+            <Link href={article.pdfUrl} target="_blank" color="teal.400">
+              View Publication <ExternalLinkIcon mx="2px" />
+            </Link>
+          </ListItem>
+        )}
+      </List>
 
           <div className="max-w-none">
             <div className="text-brand-text leading-[1.8] text-base">
@@ -264,7 +233,7 @@ export default function ArticleDetail() {
                     </div>
                   ),
                   thead: ({ children }) => <thead className="bg-brand-card/50 border-b border-brand-border/40">{children}</thead>,
-                  th: ({ children }) => <th className="px-4 py-3 text-left text-xs font-bold uppercase tracking-widest text-brand-muted">{children}</th>,
+                  th: ({ children }) => <th className="px-4 py-3 text-left text-xs font-semibold text-brand-muted">{children}</th>,
                   td: ({ children }) => <td className="px-4 py-3 text-brand-text/80 border-t border-brand-border/20">{children}</td>,
                   img: ({ src, alt }) => <img src={src} alt={alt} className="rounded-lg max-w-full my-6 border border-brand-border/30" />,
                   code({ className, children }: any) {
@@ -276,7 +245,7 @@ export default function ArticleDetail() {
                       return (
                         <div className="my-8 rounded-xl overflow-hidden border border-brand-border/60 shadow-lg">
                           <div className="flex items-center justify-between px-5 py-2.5 bg-[#1e1e1e] border-b border-white/10">
-                            <span className="text-[10px] font-bold tracking-[0.2em] uppercase text-white/50">{lang || 'code'}</span>
+                            <span className="text-xs font-mono font-medium text-white/60">{lang || 'code'}</span>
                             <div className="flex gap-1.5">
                               <div className="w-3 h-3 rounded-full bg-[#ff5f57]" />
                               <div className="w-3 h-3 rounded-full bg-[#febc2e]" />
@@ -306,8 +275,6 @@ export default function ArticleDetail() {
               </ReactMarkdown>
             </div>
           </div>
-        </div>
-      </div>
-    </motion.div>
-  );
-}
+        </motion.div>
+      );
+    }

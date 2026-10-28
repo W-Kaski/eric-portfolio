@@ -4,6 +4,7 @@ date: "2025-12-14"
 category: "Research"
 tags: ["Machine Learning", "Audio Generation", "Text-to-Speech", "Knowledge Distillation"]
 excerpt: "A structured breakdown of transferring fine-grained expressive control into lightweight TTS models via synthetic distillation."
+image: /projects/synthetic-tts.png
 pdfUrl: "/papers/Synthetic TTS.pdf"
 github: "https://github.com/BarryFutureman/NeuTTS-Express"
 ---

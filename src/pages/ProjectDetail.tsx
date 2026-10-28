@@ -7,10 +7,13 @@ import rehypeKatex from 'rehype-katex';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { vscDarkPlus, prism } from 'react-syntax-highlighter/dist/esm/styles/prism';
 import { motion } from 'motion/react';
-import { ArrowLeft, Github, ExternalLink, Code2, List, FileText } from 'lucide-react';
 import { getAllProjects, ProjectData } from '../lib/projects';
 import { useApp } from '../context/AppContext';
 import { cn } from '../lib/utils';
+import { Badge, List, ListItem, Link, Box, Button } from '@chakra-ui/react';
+import { ExternalLinkIcon, ChevronLeftIcon } from '@chakra-ui/icons';
+import { Link as RouterLink } from 'react-router-dom';
+import { Title, Meta, WorkImage } from '../components/craftzdog/work';
 
 const CATEGORY_COLORS = new Map<string, string>([
   ['Machine Learning', '#3B82F6'],
@@ -26,7 +29,7 @@ interface Header {
 
 
 export default function ProjectDetail() {
-  const { t, theme } = useApp();
+  const { t, lang } = useApp();
   const { id } = useParams();
   const navigate = useNavigate();
   const [project, setProject] = useState<ProjectData | null>(null);
@@ -40,6 +43,12 @@ export default function ProjectDetail() {
       setLoading(false);
     });
   }, [id]);
+
+  useEffect(() => {
+    if (project) {
+      document.title = `${project.title} - Eric Wang`;
+    }
+  }, [project]);
 
   const headers = useMemo(() => {
     if (!project) return [];
@@ -116,129 +125,68 @@ export default function ProjectDetail() {
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: -20 }}
-      className="px-6 max-w-7xl mx-auto pb-32 pt-10"
+      className="w-full max-w-3xl mx-auto px-4 pb-32 pt-10"
     >
-      <div className="flex flex-col lg:flex-row items-start gap-12">
-        {/* Sidebar Outline */}
-        <aside className="hidden lg:block w-64 flex-shrink-0 relative">
-          <div className="fixed top-24 w-64 flex flex-col h-[calc(100vh-8rem)] z-10 pb-8">
-            <button
-              onClick={() => navigate('/portfolio')}
-              className="flex items-center gap-2 text-brand-muted hover:text-brand-text transition-colors group w-fit"
-            >
-              <ArrowLeft size={18} className="group-hover:-translate-x-1 transition-transform" />
-              {t('Back to Portfolio')}
-            </button>
+      <Box mb={2}>
+        <Button
+          as={RouterLink}
+          to="/portfolio"
+          leftIcon={<ChevronLeftIcon />}
+          size="sm"
+          variant="ghost"
+          colorScheme="teal"
+          px={2}
+        >
+          {lang === 'zh' ? '返回作品列表' : 'Back to Works'}
+        </Button>
+      </Box>
 
-            <div className="mt-12 max-h-[calc(100vh-14rem)] flex flex-col">
-              <div className="flex items-center gap-2 text-xs font-bold tracking-widest uppercase text-brand-muted mb-6">
-                <List size={14} /> {t('articles.outline')}
-              </div>
-              <nav className="space-y-1 overflow-y-auto scrollbar-hide pr-4">
-                {headers.map((header) => (
-                  <button
-                    key={header.id}
-                    onClick={() => scrollToHeader(header.id)}
-                    className={cn(
-                      "block w-full text-left text-sm py-1.5 transition-all hover:text-brand-text",
-                      header.level === 1 ? "font-bold" : "pl-4 text-brand-muted",
-                      activeHeader === header.id ? "text-brand-text border-l-2 border-brand-text pl-3 bg-brand-text/5" : "border-l border-brand-border/50 text-brand-muted/60"
-                    )}
-                  >
-                    {header.text}
-                  </button>
-                ))}
-                {headers.length === 0 && (
-                  <p className="text-[10px] text-brand-muted/40 italic px-4">{t('articles.noHeaders')}</p>
-                )}
-              </nav>
-            </div>
-          </div>
-        </aside>
+      <Title backTo="/portfolio" backLabel={lang === 'zh' ? '作品集' : 'Works'}>
+        {project.title} <Badge colorScheme="teal" ml={2} px={2} py={0.5} borderRadius="md" textTransform="none">{project.date}</Badge>
+      </Title>
 
-        {/* Main Content */}
-        <div className="flex-grow max-w-4xl">
-      {/* Back */}
-      <button
-        onClick={() => navigate('/portfolio')}
-        className="lg:hidden flex items-center gap-2 text-brand-muted hover:text-brand-text mb-12 transition-colors group"
-      >
-        <ArrowLeft size={18} className="group-hover:-translate-x-1 transition-transform" />
-        {t('Back to Portfolio')}
-      </button>
+      <List ml={2} my={4} spacing={2} fontSize="sm">
+        <ListItem>
+          <Meta>Category</Meta>
+          <span>{project.category}</span>
+        </ListItem>
+        {project.tech && project.tech.length > 0 && (
+          <ListItem>
+            <Meta>Stack</Meta>
+            <span>{project.tech.join(', ')}</span>
+          </ListItem>
+        )}
+        {project.github && (
+          <ListItem>
+            <Meta>Source</Meta>
+            <Link href={project.github} target="_blank" color="teal.400">
+              {project.github} <ExternalLinkIcon mx="2px" />
+            </Link>
+          </ListItem>
+        )}
+        {project.demo && (
+          <ListItem>
+            <Meta>Website</Meta>
+            <Link href={project.demo} target="_blank" color="teal.400">
+              {project.demo} <ExternalLinkIcon mx="2px" />
+            </Link>
+          </ListItem>
+        )}
+        {project.pdfUrl && (
+          <ListItem>
+            <Meta>Paper / PDF</Meta>
+            <Link href={project.pdfUrl} target="_blank" color="teal.400">
+              View Publication <ExternalLinkIcon mx="2px" />
+            </Link>
+          </ListItem>
+        )}
+      </List>
 
-      {/* Header */}
-      <div className="mb-10">
-        {/* Category badge */}
-        <div className="flex flex-wrap items-center gap-3 mb-5">
-          <span
-            className="text-[10px] font-bold uppercase tracking-[0.25em] px-3 py-1.5 rounded-full border"
-            style={{ color: accentColor, backgroundColor: `${accentColor}15`, borderColor: `${accentColor}40` }}
-          >
-            {project.category}
-          </span>
-          {project.featured && (
-            <span className="text-[10px] font-bold uppercase tracking-widest px-3 py-1.5 rounded-full bg-brand-text/5 border border-brand-border text-brand-muted">
-              {t('Featured')}
-            </span>
-          )}
-          <span className="text-[10px] font-bold uppercase tracking-widest text-brand-muted/60">
-            {project.date}
-          </span>
+      {project.image && (
+        <div className="my-6">
+          <WorkImage src={project.image} alt={project.title} />
         </div>
-
-        <h1 className="text-5xl md:text-7xl font-bold tracking-tighter mb-8">{project.title}</h1>
-
-        {/* Tech stack chips */}
-        {project.tech.length > 0 && (
-          <div className="flex flex-wrap gap-2 mb-8">
-            {project.tech.map(tech => (
-              <span
-                key={tech}
-                className="text-xs font-mono px-3 py-1 rounded-lg bg-brand-card border border-brand-border text-brand-muted hover:text-brand-text hover:border-brand-text/20 transition-colors"
-              >
-                {tech}
-              </span>
-            ))}
-          </div>
-        )}
-
-        {/* Links */}
-        {(project.github || project.demo || project.pdfUrl) && (
-          <div className="flex flex-wrap gap-3 mb-10">
-            {project.github && (
-              <a
-                href={project.github}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex items-center gap-2 px-5 py-2.5 rounded-full bg-brand-text text-brand-bg text-xs font-bold uppercase tracking-widest hover:opacity-90 transition-opacity"
-              >
-                <Github size={14} /> GitHub
-              </a>
-            )}
-            {project.demo && (
-              <a
-                href={project.demo}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex items-center gap-2 px-5 py-2.5 rounded-full bg-brand-card border border-brand-border text-brand-text text-xs font-bold uppercase tracking-widest hover:bg-brand-text/5 transition-colors"
-              >
-                <ExternalLink size={14} /> Live Demo
-              </a>
-            )}
-            {project.pdfUrl && (
-              <a
-                href={project.pdfUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex items-center gap-2 px-5 py-2.5 rounded-full bg-brand-text text-brand-bg text-xs font-bold uppercase tracking-widest hover:opacity-90 transition-opacity"
-              >
-                <FileText size={14} /> View Paper
-              </a>
-            )}
-          </div>
-        )}
-      </div>
+      )}
 
 
       <div className="max-w-none">
@@ -315,7 +263,7 @@ export default function ProjectDetail() {
                 </div>
               ),
               thead: ({ children }) => <thead className="bg-brand-card/50 border-b border-brand-border/40">{children}</thead>,
-              th: ({ children }) => <th className="px-4 py-3 text-left text-xs font-bold uppercase tracking-widest text-brand-muted">{children}</th>,
+              th: ({ children }) => <th className="px-4 py-3 text-left text-xs font-semibold text-brand-muted">{children}</th>,
               td: ({ children }) => <td className="px-4 py-3 text-brand-text/80 border-t border-brand-border/20">{children}</td>,
               img: ({ src, alt }) => <img src={src} alt={alt} className="rounded-lg max-w-full my-6 border border-brand-border/30" />,
               code({ className, children }: any) {
@@ -328,7 +276,7 @@ export default function ProjectDetail() {
                   return (
                     <div className="my-8 rounded-xl overflow-hidden border border-brand-border/60 shadow-lg">
                       <div className="flex items-center justify-between px-5 py-2.5 bg-[#1e1e1e] border-b border-white/10">
-                        <span className="text-[10px] font-bold tracking-[0.2em] uppercase text-white/50">{lang || 'code'}</span>
+                        <span className="text-xs font-mono font-medium text-white/60">{lang || 'code'}</span>
                         <div className="flex gap-1.5">
                           <div className="w-3 h-3 rounded-full bg-[#ff5f57]" />
                           <div className="w-3 h-3 rounded-full bg-[#febc2e]" />
@@ -357,8 +305,6 @@ export default function ProjectDetail() {
           >
             {project.description}
           </ReactMarkdown>
-        </div>
-      </div>
         </div>
       </div>
     </motion.div>

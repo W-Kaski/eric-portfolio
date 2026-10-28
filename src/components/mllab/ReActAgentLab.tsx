@@ -1,6 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'motion/react';
 import { Bot, Search, Terminal, FileCode2, Check } from 'lucide-react';
+import {
+  Box,
+  Flex,
+  Button,
+  Text,
+  Badge,
+  useColorModeValue
+} from '@chakra-ui/react';
 import { useApp } from '../../context/AppContext';
 
 const steps = [
@@ -19,11 +27,24 @@ export default function ReActAgentLab() {
   const [currentStepIndex, setCurrentStepIndex] = useState(-1);
   const [playing, setPlaying] = useState(false);
 
+  // Theme-aware colors
+  const textColor = useColorModeValue('gray.800', 'gray.100');
+  const mutedTextColor = useColorModeValue('gray.600', 'gray.400');
+  const borderColor = useColorModeValue('blackAlpha.200', 'whiteAlpha.200');
+  const cardBg = useColorModeValue('white', 'whiteAlpha.100');
+  const thoughtBg = useColorModeValue('gray.50', 'whiteAlpha.50');
+  const actionBg = useColorModeValue('blue.50', 'rgba(66, 153, 225, 0.12)');
+  const actionBorder = useColorModeValue('blue.300', 'blue.500');
+  const obsBg = useColorModeValue('emerald.50', 'rgba(52, 211, 153, 0.12)');
+  const obsBorder = useColorModeValue('emerald.300', 'emerald.500');
+  const finishBg = useColorModeValue('teal.50', 'rgba(49, 151, 149, 0.15)');
+  const finishBorder = useColorModeValue('teal.400', 'teal.300');
+
   useEffect(() => {
     if (playing && currentStepIndex < steps.length) {
       const timer = setTimeout(() => {
         setCurrentStepIndex(prev => prev + 1);
-      }, currentStepIndex === -1 ? 500 : 1800); // 1.8s per step
+      }, currentStepIndex === -1 ? 500 : 1600);
       return () => clearTimeout(timer);
     } else if (playing && currentStepIndex >= steps.length) {
       setPlaying(false);
@@ -36,79 +57,117 @@ export default function ReActAgentLab() {
   };
 
   return (
-    <div className="h-full flex flex-col p-6 bg-transparent relative">
-      <div className="flex items-center justify-between gap-4 mb-6 pb-6 border-b border-white/10">
-        <div className="flex flex-col">
-          <span className="text-[10px] font-bold tracking-widest text-white/50 uppercase mb-1">{t('lab.react.userPrompt')}</span>
-          <span className="text-sm font-mono text-white/90">{t('lab.react.defaultPrompt')}</span>
-        </div>
-        <button 
+    <Box h="100%" display="flex" flexDirection="column" p={6}>
+      {/* Top Header */}
+      <Flex
+        alignItems={{ base: 'flex-start', sm: 'center' }}
+        justifyContent="space-between"
+        gap={4}
+        mb={6}
+        pb={4}
+        borderBottomWidth="1px"
+        borderColor={borderColor}
+        flexDirection={{ base: 'column', sm: 'row' }}
+      >
+        <Box>
+          <Text fontSize="xs" fontWeight="semibold" color={mutedTextColor} mb={1}>
+            {t('lab.react.userPrompt') || 'Prompt'}
+          </Text>
+          <Text fontSize="sm" fontFamily="mono" color={textColor} fontWeight="medium">
+            {t('lab.react.defaultPrompt') || 'What is the weather in Tokyo right now in Fahrenheit?'}
+          </Text>
+        </Box>
+        <Button
           onClick={startReAct}
-          disabled={playing}
-          className="px-6 py-2 bg-white text-black font-bold uppercase tracking-widest text-xs hover:bg-white/80 transition-colors disabled:opacity-50"
+          isLoading={playing}
+          colorScheme="teal"
+          size="sm"
+          px={5}
         >
-          {currentStepIndex >= steps.length ? 'Restart Agent' : (playing ? 'Processing...' : 'Start Execution')}
-        </button>
-      </div>
+          {currentStepIndex >= steps.length ? 'Restart Agent' : 'Start Execution'}
+        </Button>
+      </Flex>
 
-      <div className="flex-grow overflow-y-auto scrollbar-hide flex flex-col gap-4 pr-4">
+      {/* Step Trace Stream */}
+      <Flex direction="column" gap={3} flexGrow={1} overflowY="auto" pr={2}>
         {steps.map((step, idx) => {
           if (idx > currentStepIndex) return null;
-          
+
           let Icon = Bot;
-          let colorClass = "border-white/20 text-white/80";
-          let bgClass = "bg-white/5";
-          let label = "THOUGHT";
+          let label = "Thought";
+          let bg = thoughtBg;
+          let border = borderColor;
+          let badgeColor = "gray";
 
           if (step.type === 'action') {
             Icon = step.tool === 'WebSearch' ? Search : Terminal;
-            colorClass = "border-blue-500/50 text-blue-400";
-            bgClass = "bg-blue-500/10";
-            label = `ACTION: ${step.tool}`;
+            label = `Action: ${step.tool}`;
+            bg = actionBg;
+            border = actionBorder;
+            badgeColor = "blue";
           } else if (step.type === 'observation') {
             Icon = FileCode2;
-            colorClass = "border-emerald-500/50 text-emerald-400";
-            bgClass = "bg-emerald-500/10";
-            label = "OBSERVATION";
+            label = "Observation";
+            bg = obsBg;
+            border = obsBorder;
+            badgeColor = "green";
           } else if (step.type === 'finish') {
             Icon = Check;
-            colorClass = "border-white/80 text-white";
-            bgClass = "bg-white/10 shadow-[0_0_20px_rgba(255,255,255,0.05)]";
-            label = "FINAL ANSWER";
+            label = "Final Answer";
+            bg = finishBg;
+            border = finishBorder;
+            badgeColor = "teal";
           }
 
           return (
-            <motion.div 
+            <Box
+              as={motion.div}
               key={step.id}
-              initial={{ opacity: 0, x: -20 }}
-              animate={{ opacity: 1, x: 0 }}
-              className={`p-4 border rounded-lg flex items-start gap-4 ${colorClass} ${bgClass}`}
+              initial={{ opacity: 0, y: 8 }}
+              animate={{ opacity: 1, y: 0 }}
+              p={4}
+              borderRadius="lg"
+              borderWidth="1px"
+              borderColor={border}
+              bg={bg}
+              boxShadow="xs"
             >
-              <div className="mt-1 flex-shrink-0">
-                <Icon size={16} />
-              </div>
-              <div className="flex flex-col">
-                <span className="text-[9px] font-black uppercase tracking-widest opacity-60 mb-1">{label}</span>
-                {step.type === 'action' ? (
-                  <pre className="text-xs font-mono whitespace-pre-wrap">{step.args}</pre>
-                ) : (
-                  <p className="text-sm font-mono leading-relaxed">{step.text}</p>
-                )}
-              </div>
-            </motion.div>
-          )
+              <Flex alignItems="center" gap={2} mb={2}>
+                <Icon size={14} />
+                <Badge colorScheme={badgeColor} fontSize="10px" textTransform="none">
+                  {label}
+                </Badge>
+              </Flex>
+              {step.type === 'action' ? (
+                <Box
+                  as="pre"
+                  fontSize="xs"
+                  fontFamily="mono"
+                  p={2}
+                  borderRadius="md"
+                  bg={useColorModeValue('blackAlpha.50', 'blackAlpha.400')}
+                  color={textColor}
+                  whiteSpace="pre-wrap"
+                >
+                  {step.args}
+                </Box>
+              ) : (
+                <Text fontSize="sm" fontFamily="mono" color={textColor} lineHeight="1.6">
+                  {step.text}
+                </Text>
+              )}
+            </Box>
+          );
         })}
-        {playing && currentStepIndex < steps.length - 1 && (
-          <motion.div 
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            className="flex items-center gap-3 p-4 text-white/50"
-          >
-            <div className="w-4 h-4 border-2 border-white/50 border-t-white rounded-full animate-spin" />
-            <span className="text-[10px] font-bold uppercase tracking-widest text-white/60">{t('lab.react.processing')}</span>
-          </motion.div>
+
+        {currentStepIndex === -1 && !playing && (
+          <Flex flexGrow={1} alignItems="center" justifyContent="center" py={16}>
+            <Text fontSize="sm" color={mutedTextColor}>
+              Click "Start Execution" above to observe the ReAct thought-action loop.
+            </Text>
+          </Flex>
         )}
-      </div>
-    </div>
+      </Flex>
+    </Box>
   );
 }
