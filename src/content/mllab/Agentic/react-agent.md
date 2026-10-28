@@ -4,7 +4,7 @@ date: "2026-04-12"
 folder: "Agentic"
 category: "Agentic Systems"
 tags: ["ReAct", "Agents", "OpenManus", "LLM Routing"]
-description: "Visualizing the Reason and Act (ReAct) looping architecture where AI agents autonomously chain internal thoughts and tool calls."
+description: "Interactive breakdown of modern LLM agents: planning with internal thoughts, invoking tools, and learning from environment feedback in a closed loop."
 featured: true
 ---
 

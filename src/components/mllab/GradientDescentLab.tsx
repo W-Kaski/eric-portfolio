@@ -1,13 +1,13 @@
-import React, { useState, useEffect, useRef, useMemo } from 'react';
-import { motion, AnimatePresence } from 'motion/react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Play, Pause, RefreshCw, ChevronRight, Settings2 } from 'lucide-react';
 import { useApp } from '../../context/AppContext';
+import { Button, useColorMode, useColorModeValue } from '@chakra-ui/react';
 
 // --- Math Utilities ---
 const FUNCTIONS = {
   quadratic: (x: number, y: number) => 0.5 * (x * x + y * y),
   saddle: (x: number, y: number) => 0.4 * (x * x - y * y) + 10,
-  rosenbrock: (x: number, y: number) => (1 - x)**2 + 100 * (y - x**2)**2 / 100, // Scaled for vis
+  rosenbrock: (x: number, y: number) => (1 - x)**2 + 100 * (y - x**2)**2 / 100,
   complex: (x: number, y: number) => Math.sin(x) * Math.cos(y) * 5 + 5
 };
 
@@ -27,7 +27,10 @@ const GRADIENTS = {
 type FuncType = keyof typeof FUNCTIONS;
 
 export default function GradientDescentLab() {
-  const { t } = useApp();
+  const { t, lang } = useApp();
+  const { colorMode } = useColorMode();
+  const isDark = colorMode === 'dark';
+
   const [funcType, setFuncType] = useState<FuncType>('quadratic');
   const [lr, setLr] = useState(0.1);
   const [momentum, setMomentum] = useState(0);
@@ -37,6 +40,11 @@ export default function GradientDescentLab() {
   const [isAutoStepping, setIsAutoStepping] = useState(false);
   
   const canvasRef = useRef<HTMLCanvasElement>(null);
+
+  const canvasBg = useColorModeValue('rgba(0, 0, 0, 0.03)', 'rgba(0, 0, 0, 0.3)');
+  const canvasBorder = useColorModeValue('blackAlpha.200', 'whiteAlpha.200');
+  const activeBtnBg = useColorModeValue('teal.500', 'teal.300');
+  const activeBtnText = useColorModeValue('white', 'gray.900');
 
   // --- Core Step Logic ---
   const step = () => {
@@ -54,7 +62,7 @@ export default function GradientDescentLab() {
 
     setVelocity(newVelocity);
     setCurrentPos(newPos);
-    setPath(prev => [...prev, newPos].slice(-50)); // Keep last 50 points
+    setPath(prev => [...prev, newPos].slice(-50));
   };
 
   useEffect(() => {
@@ -81,7 +89,7 @@ export default function GradientDescentLab() {
 
     const width = canvas.width;
     const height = canvas.height;
-    const scale = 40; // Pixels per unit
+    const scale = 40;
     const centerX = width / 2;
     const centerY = height / 2;
 
@@ -90,23 +98,22 @@ export default function GradientDescentLab() {
 
     ctx.clearRect(0, 0, width, height);
 
-    // 1. Draw Background Heatmap (Subtle)
+    // 1. Draw Heatmap
     const stepSize = 10;
+    const baseColor = isDark ? '136, 204, 202' : '49, 151, 149';
     for (let x = 0; x < width; x += stepSize) {
       for (let y = 0; y < height; y += stepSize) {
         const valX = (x - centerX) / scale;
         const valY = -(y - centerY) / scale;
         const val = FUNCTIONS[funcType](valX, valY);
-        
-        // Normalize val for visualization (roughly 0 to 20 range)
-        const intensity = Math.max(0, Math.min(0.15, 0.15 - (val / 100)));
-        ctx.fillStyle = `rgba(216, 208, 196, ${intensity})`;
+        const intensity = Math.max(0, Math.min(0.12, 0.12 - (val / 120)));
+        ctx.fillStyle = `rgba(${baseColor}, ${intensity})`;
         ctx.fillRect(x, y, stepSize, stepSize);
       }
     }
 
-    // 2. Draw Grid (Higher contrast)
-    ctx.strokeStyle = 'rgba(255,255,255,0.08)';
+    // 2. Draw Grid
+    ctx.strokeStyle = isDark ? 'rgba(255, 255, 255, 0.08)' : 'rgba(0, 0, 0, 0.06)';
     ctx.beginPath();
     for (let x = -10; x <= 10; x++) {
       ctx.moveTo(centerX + x * scale, 0);
@@ -116,19 +123,17 @@ export default function GradientDescentLab() {
     }
     ctx.stroke();
 
-    // 3. Draw Contours (Function Aware)
+    // 3. Draw Contours
     ctx.lineWidth = 1;
     const levels = [2, 5, 10, 20, 40, 70];
     levels.forEach(level => {
       ctx.beginPath();
-      ctx.strokeStyle = `rgba(216, 208, 196, 0.15)`;
+      ctx.strokeStyle = isDark ? 'rgba(255, 255, 255, 0.15)' : 'rgba(0, 0, 0, 0.12)';
       
-      // Simple contour tracer for specific functions
       if (funcType === 'quadratic') {
         const r = Math.sqrt(level * 2) * scale;
         ctx.arc(centerX, centerY, r, 0, Math.PI * 2);
       } else if (funcType === 'saddle') {
-        // Draw hyperbolas for x^2 - y^2 = c
         for (let sx = -10; sx <= 10; sx += 0.2) {
           const sy = Math.sqrt(Math.max(0, sx * sx - level / 0.4));
           if (sy >= 0) {
@@ -138,17 +143,16 @@ export default function GradientDescentLab() {
           }
         }
       } else {
-        // Fallback for complex: just markers
         ctx.arc(centerX, centerY, Math.sqrt(level) * scale, 0, Math.PI * 2);
       }
       ctx.stroke();
     });
 
-    // 4. Draw Path (Higher contrast)
+    // 4. Draw Path
     if (path.length > 1) {
       ctx.beginPath();
-      ctx.strokeStyle = 'rgba(216, 208, 196, 0.6)';
-      ctx.lineWidth = 2;
+      ctx.strokeStyle = isDark ? 'rgba(136, 204, 202, 0.85)' : 'rgba(49, 151, 149, 0.9)';
+      ctx.lineWidth = 2.5;
       ctx.moveTo(toCanvasX(path[0].x), toCanvasY(path[0].y));
       for (let i = 1; i < path.length; i++) {
         ctx.lineTo(toCanvasX(path[i].x), toCanvasY(path[i].y));
@@ -156,50 +160,66 @@ export default function GradientDescentLab() {
       ctx.stroke();
     }
 
-    // Draw Current Point
+    // 5. Draw Current Point
     ctx.beginPath();
-    ctx.fillStyle = '#D8D0C4';
-    ctx.shadowBlur = 15;
-    ctx.shadowColor = 'rgba(216, 208, 196, 0.5)';
-    ctx.arc(toCanvasX(currentPos.x), toCanvasY(currentPos.y), 6, 0, Math.PI * 2);
+    ctx.fillStyle = isDark ? '#88ccca' : '#319795';
+    ctx.shadowBlur = 12;
+    ctx.shadowColor = isDark ? 'rgba(136, 204, 202, 0.8)' : 'rgba(49, 151, 149, 0.6)';
+    ctx.arc(toCanvasX(currentPos.x), toCanvasY(currentPos.y), 7, 0, Math.PI * 2);
     ctx.fill();
     ctx.shadowBlur = 0;
 
-  }, [currentPos, path]);
+  }, [currentPos, path, isDark, funcType]);
 
   return (
-    <div className="h-full flex flex-col p-8 bg-transparent">
+    <div className="h-full flex flex-col p-6 sm:p-8 bg-transparent">
       {/* Header Info */}
-      <div className="flex justify-between items-center mb-8 border-b border-white/10 pb-6 text-white min-h-[64px]">
+      <div className="flex justify-between items-center mb-6 border-b pb-4" style={{ borderColor: 'var(--border)' }}>
         <div>
-          <h3 className="text-[10px] font-bold tracking-[0.4em] uppercase mb-1">{t('lab.gradient.foundational')}</h3>
-          <p className="text-[9px] text-white/40 uppercase tracking-widest font-medium">{t('lab.gradient.trajectory')}</p>
+          <h3 className="text-sm font-semibold tracking-wide text-brand-text mb-0.5">
+            {t('lab.gradient.foundational')}
+          </h3>
+          <p className="text-xs text-brand-muted">
+            {t('lab.gradient.trajectory')}
+          </p>
         </div>
-        <div className="flex gap-4">
-          <button 
+        <div className="flex gap-3">
+          <Button
+            size="sm"
+            colorScheme="teal"
+            variant={isAutoStepping ? 'solid' : 'outline'}
+            borderRadius="lg"
+            fontSize="xs"
+            leftIcon={isAutoStepping ? <Pause size={14} /> : <Play size={14} />}
             onClick={() => setIsAutoStepping(!isAutoStepping)}
-            className="px-6 py-2 bg-white/5 border border-white/20 text-white hover:bg-white/10 transition-colors flex items-center gap-3 text-[9px] font-bold uppercase tracking-[0.2em]"
           >
-            {isAutoStepping ? <Pause size={12} /> : <Play size={12} />}
-            {isAutoStepping ? 'Pause' : 'Start Descent'}
-          </button>
-          <button 
+            {isAutoStepping
+              ? (lang === 'zh' ? '暂停' : 'Pause')
+              : (lang === 'zh' ? '开始下降' : 'Start Descent')}
+          </Button>
+          <Button
+            size="sm"
+            variant="outline"
+            borderRadius="lg"
+            fontSize="xs"
             onClick={reset}
-            className="p-2 bg-white/5 border border-white/10 text-white hover:bg-white/10 transition-colors"
           >
             <RefreshCw size={14} />
-          </button>
+          </Button>
         </div>
       </div>
 
-      <div className="flex-grow flex gap-8 relative overflow-hidden">
+      <div className="flex-grow flex flex-col md:flex-row gap-6 relative overflow-hidden">
         {/* Canvas Area */}
-        <div className="flex-grow relative bg-black/20 border border-white/5 overflow-hidden">
+        <div 
+          className="flex-grow relative rounded-xl border overflow-hidden min-h-[340px]"
+          style={{ backgroundColor: canvasBg, borderColor: 'var(--border)' }}
+        >
           <canvas 
             ref={canvasRef} 
             width={600} 
             height={400} 
-            className="w-full h-full object-cover"
+            className="w-full h-full object-cover cursor-crosshair"
             onClick={(e) => {
               const rect = canvasRef.current?.getBoundingClientRect();
               if (rect) {
@@ -211,68 +231,80 @@ export default function GradientDescentLab() {
               }
             }}
           />
-          <div className="absolute bottom-4 left-4 text-[9px] text-white/20 uppercase tracking-[0.2em]">
+          <div className="absolute bottom-3 left-3 text-[11px] text-brand-muted font-medium bg-brand-card/60 backdrop-blur px-2.5 py-1 rounded">
             {t('lab.gradient.teleportHint')}
           </div>
         </div>
 
         {/* Sidebar Controls */}
-        <div className="w-56 shrink-0 space-y-8">
+        <div className="w-full md:w-56 shrink-0 space-y-6">
           {/* Function Selector */}
           <div>
-            <div className="flex items-center gap-2 mb-4 text-[10px] font-bold uppercase tracking-widest text-white/60">
-              <Settings2 size={12} /> Function
+            <div className="flex items-center gap-2 mb-3 text-xs font-semibold text-brand-text">
+              <Settings2 size={13} /> {lang === 'zh' ? '目标损失函数' : 'Loss Function'}
             </div>
-            <div className="grid grid-cols-1 gap-1">
-              {(Object.keys(FUNCTIONS) as FuncType[]).map(f => (
-                <button
-                  key={f}
-                  onClick={() => { setFuncType(f); reset(); }}
-                  className={`text-[9px] uppercase tracking-widest py-2 px-3 text-left transition-all ${
-                    funcType === f ? 'bg-white text-black font-bold' : 'bg-white/5 text-white/60 hover:bg-white/10'
-                  }`}
-                >
-                  {f}
-                </button>
-              ))}
+            <div className="grid grid-cols-2 md:grid-cols-1 gap-1.5">
+              {(Object.keys(FUNCTIONS) as FuncType[]).map(f => {
+                const active = funcType === f;
+                return (
+                  <Button
+                    key={f}
+                    size="sm"
+                    variant={active ? 'solid' : 'ghost'}
+                    colorScheme="teal"
+                    justifyContent="flex-start"
+                    borderRadius="md"
+                    fontSize="xs"
+                    fontWeight={active ? 'bold' : 'normal'}
+                    onClick={() => { setFuncType(f); reset(); }}
+                  >
+                    {f}
+                  </Button>
+                );
+              })}
             </div>
           </div>
 
           {/* Hyperparameters */}
-          <div className="space-y-6">
-            <div className="space-y-3">
-              <div className="flex justify-between text-[9px] uppercase tracking-widest">
-                <span className="text-white/40">{t('lab.gradient.learningRate')}</span>
-                <span className="text-white">{lr.toFixed(3)}</span>
+          <div className="space-y-4">
+            <div className="space-y-2">
+              <div className="flex justify-between text-xs">
+                <span className="text-brand-muted">{t('lab.gradient.learningRate')}</span>
+                <span className="font-mono font-medium text-brand-text">{lr.toFixed(3)}</span>
               </div>
               <input 
                 type="range" min="0.001" max="0.5" step="0.001" value={lr} 
                 onChange={(e) => setLr(parseFloat(e.target.value))}
-                className="w-full accent-white h-1 bg-white/10 appearance-none"
+                className="w-full accent-teal-500 h-1.5 bg-brand-border/40 rounded appearance-none cursor-pointer"
               />
             </div>
 
-            <div className="space-y-3">
-              <div className="flex justify-between text-[9px] uppercase tracking-widest">
-                <span className="text-white/40">{t('lab.gradient.momentum')}</span>
-                <span className="text-white">{momentum.toFixed(2)}</span>
+            <div className="space-y-2">
+              <div className="flex justify-between text-xs">
+                <span className="text-brand-muted">{t('lab.gradient.momentum')}</span>
+                <span className="font-mono font-medium text-brand-text">{momentum.toFixed(2)}</span>
               </div>
               <input 
                 type="range" min="0" max="0.99" step="0.01" value={momentum} 
                 onChange={(e) => setMomentum(parseFloat(e.target.value))}
-                className="w-full accent-white h-1 bg-white/10 appearance-none"
+                className="w-full accent-teal-500 h-1.5 bg-brand-border/40 rounded appearance-none cursor-pointer"
               />
             </div>
           </div>
 
-          <div className="pt-4 border-t border-white/10">
-            <button 
+          <div className="pt-2 border-t" style={{ borderColor: 'var(--border)' }}>
+            <Button 
+              size="sm"
+              w="full"
+              variant="outline"
+              borderRadius="lg"
+              fontSize="xs"
+              leftIcon={<ChevronRight size={14} />}
               onClick={step}
-              disabled={isAutoStepping}
-              className="w-full py-3 bg-white/5 border border-white/10 text-white hover:bg-white/10 disabled:opacity-30 disabled:pointer-events-none transition-all flex items-center justify-center gap-3 text-[9px] font-bold uppercase tracking-[0.2em]"
+              isDisabled={isAutoStepping}
             >
-              <ChevronRight size={12} /> Manual Step
-            </button>
+              {lang === 'zh' ? '单步执行 (Step)' : 'Manual Step'}
+            </Button>
           </div>
         </div>
       </div>

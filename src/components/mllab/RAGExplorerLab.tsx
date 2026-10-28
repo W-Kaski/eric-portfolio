@@ -1,6 +1,15 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { Database, Search, ChevronRight, FileText } from 'lucide-react';
+import { Database, FileText } from 'lucide-react';
+import {
+  Box,
+  Flex,
+  Input,
+  Button,
+  Text,
+  Badge,
+  useColorModeValue
+} from '@chakra-ui/react';
 import { useApp } from '../../context/AppContext';
 
 const vectorDB = [
@@ -32,118 +41,286 @@ export default function RAGExplorerLab() {
           setStep(3); // retrieving top 2
           setTimeout(() => {
             setStep(4); // augmented
-          }, 2000);
-        }, 2000);
-      }, 1500);
-    }, 500);
+          }, 1800);
+        }, 1800);
+      }, 1400);
+    }, 400);
   };
 
   const topK = [vectorDB[2], vectorDB[4]]; // Machine learning & Generative AI
 
+  // Theme colors
+  const cardBg = useColorModeValue('white', 'gray.800');
+  const spaceBg = useColorModeValue('blackAlpha.50', 'blackAlpha.500');
+  const textColor = useColorModeValue('gray.800', 'gray.100');
+  const mutedTextColor = useColorModeValue('gray.600', 'gray.400');
+  const inputBg = useColorModeValue('white', 'whiteAlpha.100');
+  const borderColor = useColorModeValue('blackAlpha.200', 'whiteAlpha.200');
+  const activeStepBg = useColorModeValue('teal.50', 'rgba(49, 151, 149, 0.15)');
+  const activeStepBorder = useColorModeValue('teal.400', 'teal.300');
+
   return (
-    <div className="h-full flex flex-col p-6 bg-transparent relative">
-      <div className="flex items-center justify-between gap-4 mb-6">
-        <div className="flex bg-black/40 border border-white/10 rounded-lg overflow-hidden flex-grow max-w-md">
-          <input 
+    <Box h="100%" display="flex" flexDirection="column" p={6}>
+      {/* Search Toolbar */}
+      <Flex alignItems="center" gap={4} mb={6} flexWrap="wrap">
+        <Flex flexGrow={1} maxW="520px" gap={2}>
+          <Input 
             type="text" 
             value={query}
             onChange={(e) => setQuery(e.target.value)}
-            className="bg-transparent border-none outline-none text-white text-sm px-4 py-2 w-full font-mono"
-            disabled={step > 0}
+            disabled={step > 0 && step < 4}
+            bg={inputBg}
+            color={textColor}
+            borderColor={borderColor}
+            _focus={{ borderColor: 'teal.400', boxShadow: '0 0 0 1px #319795' }}
+            fontSize="sm"
+            fontFamily="mono"
           />
-          <button 
-            className="px-4 bg-white/10 text-white font-bold text-xs uppercase tracking-wider hover:bg-white hover:text-black transition-colors"
+          <Button 
+            colorScheme="teal"
             onClick={playSimulation}
-            disabled={step > 0}
+            isLoading={step > 0 && step < 4}
+            fontSize="sm"
+            px={6}
           >
-            {t('lab.rag.run')}
-          </button>
-        </div>
-        <button onClick={reset} className="text-xs text-white/50 uppercase font-bold tracking-widest hover:text-white transition-colors">{t('lab.rag.reset')}</button>
-      </div>
+            {t('lab.rag.run') || 'Run'}
+          </Button>
+        </Flex>
+        <Button 
+          variant="ghost" 
+          size="sm" 
+          onClick={reset}
+          color={mutedTextColor}
+          _hover={{ color: textColor }}
+        >
+          {t('lab.rag.reset') || 'Reset'}
+        </Button>
+      </Flex>
 
-      <div className="flex flex-grow gap-6">
+      {/* Main Simulation View */}
+      <Flex flexGrow={1} gap={6} flexDirection={{ base: 'column', md: 'row' }} minH="440px">
         {/* Status Pipeline */}
-        <div className="w-1/3 flex flex-col gap-4 border-r border-white/10 pr-6">
-          <div className={`p-4 rounded border transition-all duration-500 ${step >= 1 ? 'border-emerald-500/50 bg-emerald-500/5' : 'border-white/10 opacity-40'}`}>
-            <h3 className="text-[10px] font-bold uppercase tracking-widest text-white/60 mb-2">1. Embedding Model</h3>
-            <p className="text-xs font-mono text-white/90">{t('lab.rag.embeddingModel')}</p>
+        <Flex w={{ base: '100%', md: '35%' }} direction="column" gap={3}>
+          {/* Step 1 */}
+          <Box
+            p={3.5}
+            borderRadius="lg"
+            borderWidth="1px"
+            borderColor={step >= 1 ? activeStepBorder : borderColor}
+            bg={step >= 1 ? activeStepBg : cardBg}
+            transition="all 0.3s ease"
+            opacity={step === 0 ? 0.8 : 1}
+          >
+            <Flex justifyContent="space-between" alignItems="center" mb={1}>
+              <Text fontSize="xs" fontWeight="bold" color={step >= 1 ? 'teal.500' : mutedTextColor}>
+                1. Embedding Model
+              </Text>
+              {step === 1 && <Badge colorScheme="teal" fontSize="9px">Processing</Badge>}
+            </Flex>
+            <Text fontSize="xs" fontFamily="mono" color={textColor}>
+              {t('lab.rag.embeddingModel') || 'text-embedding-3-small'}
+            </Text>
             {step === 1 && (
-              <motion.div initial={{width:0}} animate={{width:'100%'}} className="h-0.5 bg-emerald-500 mt-2" transition={{duration: 1.5}}/>
+              <motion.div
+                style={{ height: '2px', backgroundColor: '#319795', marginTop: '8px' }}
+                initial={{ width: 0 }}
+                animate={{ width: '100%' }}
+                transition={{ duration: 1.4 }}
+              />
             )}
-          </div>
+          </Box>
 
-          <div className={`p-4 rounded border transition-all duration-500 ${step >= 2 ? 'border-emerald-500/50 bg-emerald-500/5' : 'border-white/10 opacity-40'}`}>
-            <h3 className="text-[10px] font-bold uppercase tracking-widest text-white/60 mb-2">2. Vector Database</h3>
-            <div className="flex items-center gap-2">
-              <Database size={14} className="text-emerald-500"/>
-              <span className="text-xs font-mono text-white/90">{t('lab.rag.pgvector')}</span>
-            </div>
-          </div>
+          {/* Step 2 */}
+          <Box
+            p={3.5}
+            borderRadius="lg"
+            borderWidth="1px"
+            borderColor={step >= 2 ? activeStepBorder : borderColor}
+            bg={step >= 2 ? activeStepBg : cardBg}
+            transition="all 0.3s ease"
+            opacity={step < 2 ? 0.7 : 1}
+          >
+            <Flex justifyContent="space-between" alignItems="center" mb={1}>
+              <Text fontSize="xs" fontWeight="bold" color={step >= 2 ? 'teal.500' : mutedTextColor}>
+                2. Vector Database
+              </Text>
+              {step === 2 && <Badge colorScheme="teal" fontSize="9px">Searching</Badge>}
+            </Flex>
+            <Flex alignItems="center" gap={2}>
+              <Database size={14} className="text-teal-500" />
+              <Text fontSize="xs" fontFamily="mono" color={textColor}>
+                {t('lab.rag.pgvector') || 'PGVector Search'}
+              </Text>
+            </Flex>
+          </Box>
 
+          {/* Step 3: Retrieved Context */}
           <AnimatePresence>
             {step >= 3 && (
-              <motion.div 
-                initial={{opacity: 0, y: 10}} animate={{opacity: 1, y: 0}}
-                className="p-4 rounded border border-emerald-500/50 bg-emerald-500/5 mt-auto"
+              <Box
+                as={motion.div}
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                p={3.5}
+                borderRadius="lg"
+                borderWidth="1px"
+                borderColor="teal.400"
+                bg={activeStepBg}
+                mt="auto"
               >
-                <h3 className="text-[10px] font-bold uppercase tracking-widest text-emerald-400 mb-2">{t('lab.rag.retrievedContext')}</h3>
+                <Text fontSize="xs" fontWeight="bold" color="teal.500" mb={2}>
+                  {t('lab.rag.retrievedContext') || 'Retrieved Context'}
+                </Text>
                 {topK.map(k => (
-                  <div key={k.id} className="text-[9px] text-white/80 font-mono mb-1 truncate border-l-2 border-emerald-500/50 pl-2">
+                  <Box
+                    key={k.id}
+                    fontSize="11px"
+                    fontFamily="mono"
+                    color={textColor}
+                    mb={2}
+                    borderLeftWidth="2px"
+                    borderColor="teal.400"
+                    pl={2}
+                  >
                     {k.text}
-                  </div>
+                  </Box>
                 ))}
-              </motion.div>
+              </Box>
             )}
           </AnimatePresence>
-        </div>
+        </Flex>
 
         {/* 2D Vector Space Visualizer */}
-        <div className="w-2/3 relative rounded bg-black/30 border border-white/5 overflow-hidden">
-          {vectorDB.map(v => (
-            <div 
-               key={v.id} 
-               className={`absolute w-3 h-3 rounded-full transition-all duration-1000 -ml-1.5 -mt-1.5 shadow-[0_0_10px_rgba(255,255,255,0.2)] ${step >= 3 && topK.find(t=>t.id===v.id) ? 'bg-emerald-400 shadow-[0_0_15px_rgba(52,211,153,0.8)] scale-150' : 'bg-white/20'}`}
-               style={{ left: `${v.coords[0]}%`, top: `${v.coords[1]}%` }}
-            >
-              <span className="absolute left-4 -top-1 w-32 text-[8px] font-mono text-white/60 whitespace-nowrap">{v.text.substring(0, 20)}...</span>
-            </div>
-          ))}
+        <Box
+          w={{ base: '100%', md: '65%' }}
+          position="relative"
+          borderRadius="lg"
+          borderWidth="1px"
+          borderColor={borderColor}
+          bg={spaceBg}
+          overflow="hidden"
+          minH="320px"
+        >
+          {vectorDB.map(v => {
+            const isMatch = step >= 3 && topK.some(t => t.id === v.id);
+            return (
+              <Box
+                key={v.id}
+                position="absolute"
+                w="12px"
+                h="12px"
+                borderRadius="full"
+                bg={isMatch ? 'teal.400' : 'gray.400'}
+                boxShadow={isMatch ? '0 0 12px rgba(49, 151, 149, 0.8)' : 'none'}
+                transform={isMatch ? 'translate(-50%, -50%) scale(1.4)' : 'translate(-50%, -50%)'}
+                transition="all 0.8s ease"
+                left={`${v.coords[0]}%`}
+                top={`${v.coords[1]}%`}
+              >
+                <Text
+                  position="absolute"
+                  left="16px"
+                  top="-6px"
+                  w="200px"
+                  fontSize="10px"
+                  fontFamily="mono"
+                  color={isMatch ? 'teal.500' : mutedTextColor}
+                  fontWeight={isMatch ? 'bold' : 'normal'}
+                  whiteSpace="nowrap"
+                  pointerEvents="none"
+                >
+                  {v.text.substring(0, 24)}...
+                </Text>
+              </Box>
+            );
+          })}
 
           {queryCoords && step >= 2 && (
-            <motion.div 
-               initial={{ scale: 0, opacity: 0 }}
-               animate={{ scale: 1, opacity: 1 }}
-               className="absolute w-4 h-4 bg-emerald-500/80 rounded-full shadow-[0_0_20px_rgba(16,185,129,0.8)] -ml-2 -mt-2 z-10 flex items-center justify-center"
-               style={{ left: `${queryCoords[0]}%`, top: `${queryCoords[1]}%` }}
+            <Box
+              as={motion.div}
+              initial={{ scale: 0, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              position="absolute"
+              w="16px"
+              h="16px"
+              borderRadius="full"
+              bg="teal.500"
+              boxShadow="0 0 16px rgba(49, 151, 149, 0.9)"
+              transform="translate(-50%, -50%)"
+              left={`${queryCoords[0]}%`}
+              top={`${queryCoords[1]}%`}
+              zIndex={10}
+              display="flex"
+              alignItems="center"
+              justifyContent="center"
             >
-              <div className="w-1 h-1 bg-white rounded-full"></div>
+              <Box w="4px" h="4px" bg="white" borderRadius="full" />
               {step >= 3 && (
-                <motion.svg className="absolute inset-0 w-48 h-48 -ml-24 -mt-24 pointer-events-none" initial={{opacity:0}} animate={{opacity:1}}>
-                  <circle cx="50%" cy="50%" r="35" fill="none" stroke="rgba(16,185,129,0.5)" strokeDasharray="4 4" />
-                  <circle cx="50%" cy="50%" r="65" fill="none" stroke="rgba(16,185,129,0.2)" strokeDasharray="4 4" />
+                <motion.svg
+                  className="absolute pointer-events-none"
+                  style={{ width: '180px', height: '180px', transform: 'translate(-50%, -50%)', left: '8px', top: '8px' }}
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                >
+                  <circle cx="50%" cy="50%" r="35" fill="none" stroke="#319795" strokeWidth="1" strokeDasharray="4 4" />
+                  <circle cx="50%" cy="50%" r="65" fill="none" stroke="#319795" strokeWidth="0.8" strokeDasharray="4 4" opacity="0.6" />
                 </motion.svg>
               )}
-            </motion.div>
+            </Box>
           )}
 
+          {/* Augmented Prompt Overlay */}
           {step === 4 && (
-            <motion.div 
-              initial={{opacity: 0}} animate={{opacity: 1}}
-              className="absolute inset-0 bg-black/80 flex flex-col items-center justify-center p-6 backdrop-blur-sm z-20"
+            <Box
+              as={motion.div}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              position="absolute"
+              inset={0}
+              bg={useColorModeValue('rgba(255, 255, 255, 0.92)', 'rgba(26, 32, 44, 0.92)')}
+              backdropFilter="blur(6px)"
+              display="flex"
+              flexDirection="column"
+              alignItems="center"
+              justifyContent="center"
+              p={6}
+              zIndex={20}
             >
-              <FileText size={32} className="text-white mb-4" />
-              <h2 className="text-lg font-bold uppercase tracking-widest text-white mb-4">{t('lab.rag.promptAugmented')}</h2>
-              <div className="bg-[#0a0a0a] border border-white/10 p-4 rounded text-left w-full max-w-lg shadow-2xl">
-                <p className="text-[10px] text-white/50 font-mono mb-2">{t('lab.rag.systemPrompt')}</p>
-                <p className="text-xs text-white/90 font-mono mb-1">{t('lab.rag.contextLabel')}</p>
-                {topK.map(k => <p key={k.id} className="text-xs text-emerald-400 font-mono border-l border-emerald-500/50 pl-2 mb-1">{k.text}</p>)}
-                <p className="text-xs text-white/90 font-mono mt-4 mb-1">{t('lab.rag.userQueryLabel')}{query}</p>
-              </div>
-            </motion.div>
+              <FileText size={28} className="text-teal-500 mb-2" />
+              <Text fontSize="md" fontWeight="bold" color={textColor} mb={4}>
+                {t('lab.rag.promptAugmented') || 'Prompt Augmented'}
+              </Text>
+              
+              <Box
+                bg={cardBg}
+                borderWidth="1px"
+                borderColor={borderColor}
+                p={4}
+                borderRadius="lg"
+                textAlign="left"
+                w="full"
+                maxW="480px"
+                boxShadow="md"
+              >
+                <Text fontSize="10px" color={mutedTextColor} fontFamily="mono" mb={2}>
+                  {t('lab.rag.systemPrompt') || 'SYSTEM: Answer user questions using the context below.'}
+                </Text>
+                <Text fontSize="xs" fontWeight="bold" color="teal.500" fontFamily="mono" mb={1}>
+                  {t('lab.rag.contextLabel') || 'CONTEXT:'}
+                </Text>
+                {topK.map(k => (
+                  <Text key={k.id} fontSize="xs" color={textColor} fontFamily="mono" borderLeftWidth="2px" borderColor="teal.400" pl={2} mb={1}>
+                    {k.text}
+                  </Text>
+                ))}
+                <Text fontSize="xs" fontWeight="bold" color={textColor} fontFamily="mono" mt={3} mb={1}>
+                  {t('lab.rag.userQueryLabel') || 'USER QUERY: '}{query}
+                </Text>
+              </Box>
+            </Box>
           )}
-        </div>
-      </div>
-    </div>
+        </Box>
+      </Flex>
+    </Box>
   );
 }

@@ -2,12 +2,18 @@ import React, { useMemo, useState } from 'react';
 import { Canvas } from '@react-three/fiber';
 import { OrbitControls, Stars } from '@react-three/drei';
 import { useApp } from '../../context/AppContext';
+import { Button, useColorMode, useColorModeValue } from '@chakra-ui/react';
 
 type Algorithm = 'pca' | 'tsne' | 'umap';
 
 export default function DimReductionLab() {
-  const { t } = useApp();
+  const { t, lang } = useApp();
+  const { colorMode } = useColorMode();
+  const isDark = colorMode === 'dark';
   const [algo, setAlgo] = useState<Algorithm>('tsne');
+
+  const controlsBg = useColorModeValue('whiteAlpha.800', 'blackAlpha.600');
+  const controlsBorder = useColorModeValue('blackAlpha.200', 'whiteAlpha.200');
 
   const points = useMemo(() => {
     const clusters = [
@@ -35,40 +41,59 @@ export default function DimReductionLab() {
 
   return (
     <div className="h-full flex flex-col relative overflow-hidden bg-transparent">
-      
-      <div className="absolute top-8 left-8 z-10">
-        <div className="flex bg-white/5 p-1 border border-white/10 backdrop-blur-md">
-          {(['pca', 'tsne', 'umap'] as Algorithm[]).map(a => (
-            <button key={a} onClick={() => setAlgo(a)}
-              className={`px-5 py-2 text-[10px] font-bold tracking-[0.2em] uppercase transition-colors ${
-                algo === a ? 'bg-brand-text text-brand-bg' : 'text-white/70 hover:text-white hover:bg-white/5'
-              }`}>
-              {a.toUpperCase()}
-            </button>
-          ))}
+      {/* Top Left Controls */}
+      <div className="absolute top-6 left-6 z-10">
+        <div 
+          className="flex p-1.5 rounded-xl border backdrop-blur-md shadow-sm gap-1"
+          style={{ backgroundColor: controlsBg, borderColor: controlsBorder }}
+        >
+          {(['pca', 'tsne', 'umap'] as Algorithm[]).map(a => {
+            const active = algo === a;
+            return (
+              <Button
+                key={a}
+                size="xs"
+                variant={active ? 'solid' : 'ghost'}
+                colorScheme="teal"
+                borderRadius="lg"
+                fontWeight={active ? 'bold' : 'medium'}
+                onClick={() => setAlgo(a)}
+              >
+                {a.toUpperCase()}
+              </Button>
+            );
+          })}
         </div>
       </div>
 
-      <div className="flex-grow">
+      {/* 3D Canvas */}
+      <div className="flex-grow min-h-[380px]">
         <Canvas camera={{ position: [0, 0, 15] }}>
-          <ambientLight intensity={0.4} />
-          <pointLight position={[10, 10, 10]} />
+          <ambientLight intensity={isDark ? 0.6 : 0.9} />
+          <pointLight position={[10, 10, 10]} intensity={1.2} />
           
           <group>
             {points.map((p, i) => (
               <mesh key={i} position={p.position as [number, number, number]}>
-                <boxGeometry args={[0.5, 0.5, 0.5]} />
-                <meshBasicMaterial color={p.color} transparent={false} opacity={1.0} />
+                <boxGeometry args={[0.45, 0.45, 0.45]} />
+                <meshStandardMaterial 
+                  color={p.color} 
+                  roughness={0.2}
+                  metalness={0.1}
+                />
               </mesh>
             ))}
           </group>
 
           <OrbitControls enablePan={true} enableZoom={true} autoRotate autoRotateSpeed={0.8} />
-          <Stars radius={100} depth={50} count={2000} factor={4} saturation={1} fade speed={1} />
+          {isDark && (
+            <Stars radius={100} depth={50} count={1500} factor={4} saturation={1} fade speed={1} />
+          )}
         </Canvas>
       </div>
       
-      <div className="absolute bottom-8 left-8 z-10 pointer-events-none text-brand-muted text-[9px] font-bold tracking-widest uppercase opacity-40">
+      {/* Bottom hint */}
+      <div className="absolute bottom-6 left-6 z-10 pointer-events-none text-xs text-brand-muted bg-brand-card/60 backdrop-blur px-2.5 py-1 rounded">
         {t('lab.dim.orbitHint')}
       </div>
     </div>

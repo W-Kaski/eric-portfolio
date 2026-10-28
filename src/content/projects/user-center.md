@@ -3,6 +3,7 @@ title: user-center
 category: Fullstack
 color: "#1890FF"
 date: 2024-04-14
+image: /projects/user-center.png
 github: "https://github.com/W-Kaski/user-center"
 ---
 

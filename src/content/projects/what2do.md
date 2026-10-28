@@ -1,10 +1,10 @@
 ---
 title: What2Do
 category: Fullstack
-# image: "https://images.unsplash.com/photo-1541339907198-e08756dedf3f?q=80&w=800&auto=format&fit=crop"
+image: /projects/what2do.png
+featured: true
 color: "#F59E0B"
 date: 2026-03-01
-# demo: "ek-flowity.site"
 ---
 
 

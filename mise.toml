@@ -1,0 +1,37 @@
+# Local workspace entry points generated from existing manifests.
+[tasks.status]
+description = "Show this repository working tree state"
+run = "git status --short"
+
+[tasks."npm:dev"]
+description = "Run package.json script dev"
+run = "npm run 'dev'"
+raw = true
+
+[tasks."npm:build"]
+description = "Run package.json script build"
+run = "npm run 'build'"
+raw = true
+
+[tasks."npm:preview"]
+description = "Run package.json script preview"
+run = "npm run 'preview'"
+raw = true
+
+[tasks."npm:clean"]
+description = "Run package.json script clean"
+run = "npm run 'clean'"
+raw = true
+
+[tasks."npm:lint"]
+description = "Run package.json script lint"
+run = "npm run 'lint'"
+raw = true
+
+[tasks."install:node"]
+description = "Install dependencies using the existing package manifest"
+run = "npm ci"
+
+[tasks.files]
+description = "Show this project top-level files"
+run = "ls -la"

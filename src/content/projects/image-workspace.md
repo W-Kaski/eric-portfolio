@@ -3,6 +3,8 @@ title: Image Workspace
 category: Fullstack
 color: "#10B981"
 date: 2025-03-01
+image: /projects/image-workspace.png
+featured: true
 github: "https://github.com/W-Kaski/image-workspace"
 demo: "https://www.img.anio.me/"
 ---

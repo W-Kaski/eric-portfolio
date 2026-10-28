@@ -11,6 +11,10 @@
     "lint": "tsc --noEmit"
   },
   "dependencies": {
+    "@chakra-ui/icons": "^2.1.1",
+    "@chakra-ui/react": "^2.8.2",
+    "@emotion/react": "^11.11.1",
+    "@emotion/styled": "^11.11.0",
     "@react-three/drei": "10.7.7",
     "@react-three/fiber": "9.5.0",
     "@tailwindcss/typography": "0.5.19",
@@ -30,6 +34,7 @@
     "motion": "12.23.24",
     "react": "19.0.0",
     "react-dom": "19.0.0",
+    "react-icons": "^4.11.0",
     "react-markdown": "10.1.0",
     "react-router-dom": "7.13.1",
     "react-syntax-highlighter": "16.1.1",

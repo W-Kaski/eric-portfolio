@@ -37,7 +37,7 @@
   ],
   "timeline": [
     {
-      "year": "2023 — 2028 (Expected)",
+      "year": "2023 — 2027 (Expected)",
       "role": "B.Sc. Computer Science (Specialist)",
       "company": "University of Toronto"
     },
@@ -45,6 +45,11 @@
       "year": "2026",
       "role": "Qwen2.5 QLoRA Text-to-SQL Benchmark",
       "company": "ML engineering benchmark · QLoRA rank ablation, SQL parse validation, SQLite execution check, vLLM / Transformers serving comparison"
+    },
+    {
+      "year": "2026",
+      "role": "Personal Knowledge Agent",
+      "company": "Domain-driven knowledge base & RAG question answering · FastAPI + LangGraph · Hybrid retrieval, controlled verification & SSE streaming"
     },
     {
       "year": "2026",

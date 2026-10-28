@@ -2,6 +2,15 @@ import React, { useState, useEffect, useRef } from 'react';
 import { motion } from 'motion/react';
 import { useApp } from '../../context/AppContext';
 import { MousePointer2, RefreshCw } from 'lucide-react';
+import {
+  Box,
+  Flex,
+  Button,
+  ButtonGroup,
+  IconButton,
+  Text,
+  useColorModeValue
+} from '@chakra-ui/react';
 
 type Point = { x: number; y: number; cls: 0 | 1 };
 type ModelType = 'logistic' | 'svm_rbf' | 'nn';
@@ -117,42 +126,74 @@ export default function DecisionBoundaryLab() {
 
   }, [points, model]);
 
-  return (
-    <div className="h-full flex flex-col p-6 bg-transparent">
-      
-      {/* Toolbar */}
-      <div className="flex flex-wrap items-center justify-between mb-6 gap-4">
-        
-        <div className="flex gap-2 bg-white/5 p-1 border border-white/10">
-          {(['logistic', 'svm_rbf', 'nn'] as const).map(m => (
-            <button key={m} onClick={() => setModel(m)}
-              className={`px-4 py-2 text-[10px] font-bold tracking-[0.2em] uppercase transition-colors ${
-                model === m ? 'bg-brand-text text-brand-bg' : 'text-white/70 hover:text-white hover:bg-white/5'
-              }`}>
-              {m === 'logistic' ? 'Logistic' : m === 'svm_rbf' ? 'SVM (RBF)' : 'Neural Net'}
-            </button>
-          ))}
-        </div>
+  const borderColor = useColorModeValue('blackAlpha.200', 'whiteAlpha.200');
+  const textColor = useColorModeValue('gray.800', 'gray.100');
+  const mutedColor = useColorModeValue('gray.500', 'gray.400');
 
-        <div className="flex items-center gap-4">
-          <div className="flex gap-2">
+  return (
+    <Box h="100%" display="flex" flexDirection="column" p={6}>
+      {/* Toolbar */}
+      <Flex flexWrap="wrap" alignItems="center" justifyContent="space-between" mb={4} gap={4}>
+        <ButtonGroup size="sm" isAttached variant="outline">
+          {(['logistic', 'svm_rbf', 'nn'] as const).map(m => (
+            <Button
+              key={m}
+              onClick={() => setModel(m)}
+              colorScheme={model === m ? 'teal' : 'gray'}
+              variant={model === m ? 'solid' : 'outline'}
+              fontSize="xs"
+              textTransform="none"
+            >
+              {m === 'logistic' ? 'Logistic Regression' : m === 'svm_rbf' ? 'SVM (RBF Kernel)' : 'Neural Network'}
+            </Button>
+          ))}
+        </ButtonGroup>
+
+        <Flex alignItems="center" gap={3}>
+          <Text fontSize="xs" color={mutedColor} fontWeight="medium">
+            Class:
+          </Text>
+          <Flex gap={2}>
             {[0, 1].map(cls => (
-              <button key={cls} onClick={() => setActiveClass(cls as 0|1)}
-                className={`w-6 h-6 border transition-transform ${
-                  activeClass === cls ? 'scale-110 border-white' : 'border-transparent opacity-50 hover:opacity-100'
-                }`}
-                style={{ backgroundColor: colors[cls] }}
+              <Box
+                as="button"
+                key={cls}
+                onClick={() => setActiveClass(cls as 0 | 1)}
+                w="24px"
+                h="24px"
+                borderRadius="md"
+                transition="all 0.2s"
+                transform={activeClass === cls ? 'scale(1.15)' : 'scale(1)'}
+                boxShadow={activeClass === cls ? '0 0 0 2px #319795' : 'none'}
+                opacity={activeClass === cls ? 1 : 0.6}
+                bg={colors[cls]}
               />
             ))}
-          </div>
-          <button onClick={() => setPoints([])} className="text-brand-muted hover:text-white transition-colors">
-            <RefreshCw size={14} />
-          </button>
-        </div>
-      </div>
+          </Flex>
+          <IconButton
+            aria-label="Reset points"
+            icon={<RefreshCw size={14} />}
+            size="sm"
+            variant="ghost"
+            onClick={() => setPoints([])}
+            color={mutedColor}
+            _hover={{ color: textColor }}
+          />
+        </Flex>
+      </Flex>
 
       {/* Canvas Area */}
-      <div className="relative flex-grow overflow-hidden border border-white/10 cursor-crosshair bg-black/20">
+      <Box
+        position="relative"
+        flexGrow={1}
+        overflow="hidden"
+        borderRadius="lg"
+        borderWidth="1px"
+        borderColor={borderColor}
+        cursor="crosshair"
+        bg={useColorModeValue('blackAlpha.50', 'blackAlpha.400')}
+        minH="360px"
+      >
         <canvas
           ref={canvasRef}
           width={100} 
@@ -179,13 +220,21 @@ export default function DecisionBoundaryLab() {
         </svg>
 
         {points.length === 0 && (
-          <div className="absolute inset-0 flex flex-col items-center justify-center text-white/30 pointer-events-none">
-            <MousePointer2 size={24} className="mb-3 opacity-30" />
-            <p className="text-[10px] font-bold tracking-[0.3em] uppercase text-center">{t('lab.decision.addDataPoints')}</p>
-          </div>
+          <Flex
+            position="absolute"
+            inset={0}
+            direction="column"
+            alignItems="center"
+            justifyContent="center"
+            pointerEvents="none"
+          >
+            <MousePointer2 size={24} className="mb-2 opacity-40 text-teal-500" />
+            <Text fontSize="xs" fontWeight="medium" color={mutedColor}>
+              {t('lab.decision.addDataPoints') || 'Click on canvas to add data points'}
+            </Text>
+          </Flex>
         )}
-      </div>
-
-    </div>
+      </Box>
+    </Box>
   );
 }

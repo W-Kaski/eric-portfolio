@@ -4,6 +4,7 @@ date: "2026-04-14"
 category: "Research"
 tags: ["Machine Learning", "Safe RL", "Reinforcement Learning", "Model-Based RL"]
 excerpt: "A structured breakdown of mitigating shield-induced instability in Safe Reinforcement Learning using cost penalties and KL regularization."
+image: /projects/sgps-safe-rl.png
 pdfUrl: "/papers/SGPS.pdf"
 github: "https://github.com/Dream-ABC/sgps-safe-rl"
 ---
